@@ -56,6 +56,7 @@ export class MainMenu extends LitElement {
   private _onClickHelp() {
     console.log("Help Clicked")
     this.playSound()
+    this.navigateToHelp()
   }
   private _onClickSettings() {
     console.log("Settings Clicked")
@@ -66,6 +67,10 @@ export class MainMenu extends LitElement {
     audio.volume = 1;
     audio.play()
   }
+  private navigateToHelp() {
+    window.location.href = '/help'
+  }
+
 
 
   static styles = css`
