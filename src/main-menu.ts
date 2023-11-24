@@ -47,15 +47,24 @@ export class MainMenu extends LitElement {
 
   private _onClickLocal() {
     console.log("Play Local Clicked")
+    this.playSound()
   }
   private _onClickBot() {
     console.log("Play Bot Clicked")
+    this.playSound()
   }
   private _onClickHelp() {
     console.log("Help Clicked")
+    this.playSound()
   }
   private _onClickSettings() {
     console.log("Settings Clicked")
+    this.playSound()
+  }
+  private playSound() {
+    var audio = new Audio('button.wav')
+    audio.volume = 1;
+    audio.play()
   }
 
 
