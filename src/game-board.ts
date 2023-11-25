@@ -5,6 +5,8 @@ import { LitElement, html, css } from 'lit';
 export class gameBoard extends LitElement {
   @property({ type: Array }) board: string[][] = [];
   @property({ type: String }) currentPlayer: string = 'Red';
+  @property({ type: Boolean }) enableMoves: boolean = true;
+  @property({ type: Boolean }) eventListenerAdded: boolean = false;
 
   constructor() {
     super();
@@ -40,22 +42,22 @@ export class gameBoard extends LitElement {
   }
 
   private handleCellClick(col: number) {
+    if (!this.enableMoves) {
+      return;
+    }
     const row = this.findAvailableRow(col);
     if (row !== -1) {
-      this.updateComplete.then(() => {
-        const token = this.shadowRoot!.querySelector(`.token-${row}-${col}`) as HTMLElement;
-        if (token) {
-          this.addEventListener('animationend', () => this.handleAnimationEnd(row, col));
-        }
-      });
       this.board[row][col] = this.currentPlayer;
       this.currentPlayer = this.currentPlayer === 'Red' ? 'Yellow' : 'Red';
+      this.enableMoves = false;
     }
   }
 
   updated() {
-    // This is a terrible hack to get the animationend event to fire when the token drops
-    // TODO: Find a better way to do this
+    if (this.eventListenerAdded) {
+      return;
+    }
+    this.eventListenerAdded = true;
     const cells = this.shadowRoot!.querySelectorAll('.cell');
     if (cells) {
       for (let i = 0; i < cells.length; i++) {
@@ -76,6 +78,7 @@ export class gameBoard extends LitElement {
   private handleAnimationEnd(row: number, col: number) {
     // play sound, check win?
     console.log("Animation Ended")
+    this.enableMoves = true;
     this.playSound()
   }
 
