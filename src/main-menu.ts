@@ -48,10 +48,12 @@ export class MainMenu extends LitElement {
   private _onClickLocal() {
     console.log("Play Local Clicked")
     this.playSound()
+    this.navigate("/game")
   }
   private _onClickBot() {
     console.log("Play Bot Clicked")
     this.playSound()
+    this.navigate("/game")
   }
   private _onClickHelp() {
     console.log("Help Clicked")
@@ -63,6 +65,7 @@ export class MainMenu extends LitElement {
     this.playSound()
   }
   private playSound() {
+    // TODO: unify sound playing into a single function shared between components
     var audio = new Audio('button.wav')
     audio.volume = 1;
     audio.play()
