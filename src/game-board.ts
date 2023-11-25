@@ -12,48 +12,6 @@ export class gameBoard extends LitElement {
 
   }
 
-  static styles = css`
-    :host {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 2rem;
-        text-align: center;
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: repeat(7, 50px);
-      gap: 5px;
-    }
-  
-    .cell {
-      position: relative;
-      width: 50px;
-      height: 50px;
-      border: 1px solid #333;
-      cursor: pointer;
-      overflow: visible;
-    }
-  
-    .token {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      animation: drop 0.5s ease-in-out;
-    }
-  
-    .Red { background-color: #ff5252; }
-    .Yellow { background-color: #ffd740; }
-  
-    @keyframes drop {
-      from {
-        transform: translateY(calc(-55px * var(--rowIndex, 0)));
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
-  `;
 
   initBoard() {
     this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
@@ -77,6 +35,7 @@ export class gameBoard extends LitElement {
           )
         )}
       </div>
+      <button @click=${this.onClickMainMenu}>Main Menu</button>
     `;
   }
 
@@ -116,12 +75,85 @@ export class gameBoard extends LitElement {
   }
   private handleAnimationEnd(row: number, col: number) {
     // play sound, check win?
-    // TODO: unify sound playing into a single function shared between components
     console.log("Animation Ended")
+    this.playSound()
+  }
+
+  private onClickMainMenu() {
+    console.log("Main Menu Clicked")
+    this.playSound()
+    window.location.href = '/'
+  }
+
+  private playSound() {
+    // TODO: unify sound playing into a single function shared between components
     var audio = new Audio('button.wav')
     audio.volume = 1;
     audio.play()
   }
+
+  static styles = css`
+  :host {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(7, 50px);
+    gap: 5px;
+  }
+
+  .cell {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #333;
+    cursor: pointer;
+    overflow: visible;
+  }
+
+  .token {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: drop 0.5s ease-in-out;
+  }
+
+  .Red { background-color: #ff5252; }
+  .Yellow { background-color: #ffd740; }
+
+  @keyframes drop {
+    from {
+      transform: translateY(calc(-55px * var(--rowIndex, 0)));
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    height:50px;
+    width:100px;
+    margin: 25px;
+  }
+  button:hover {
+    border-color: #646cff;
+  }
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+`;
 }
 
 declare global {
