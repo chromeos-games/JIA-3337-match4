@@ -1,25 +1,18 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 
-/**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
- */
+
+let volume: number | undefined;
+
+if (typeof volume === 'undefined') {
+  volume = 1;
+}
 @customElement('main-menu')
 export class MainMenu extends LitElement {
-  /**
-   * Copy for the read the docs hint.
-   */
-  @property()
-  docsHint = 'Click on the Vite and Lit logos to learn more'
-
-  /**
-   * The number of times the button has been clicked.
-   */
-  @property({ type: Number })
-  count = 0
+  connectedCallback() {
+    super.connectedCallback()
+    playSound('button.wav')
+  }
 
   render() {
     return html`
@@ -47,28 +40,18 @@ export class MainMenu extends LitElement {
 
   private _onClickLocal() {
     console.log("Play Local Clicked")
-    this.playSound()
     this.navigate("/game")
   }
   private _onClickBot() {
     console.log("Play Bot Clicked")
-    this.playSound()
     this.navigate("/game")
   }
   private _onClickHelp() {
     console.log("Help Clicked")
-    this.playSound()
     this.navigate("/help")
   }
   private _onClickSettings() {
     console.log("Settings Clicked")
-    this.playSound()
-  }
-  private playSound() {
-    // TODO: unify sound playing into a single function shared between components
-    var audio = new Audio('button.wav')
-    audio.volume = 1;
-    audio.play()
   }
   private navigate(location: string) {
     window.location.href = location
@@ -158,8 +141,24 @@ export class MainMenu extends LitElement {
   `
 }
 
+function playSound(filename: string) {
+  var audio = new Audio(filename)
+  if (typeof volume === 'number') {
+    audio.volume = volume;
+  }
+  audio.play().catch(function(error) {
+    console.log(error);
+  });
+}
+
+function changeVolume(newVolume: number) {
+  volume = newVolume
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     'main-menu': MainMenu
   }
 }
+
+export {volume, playSound, changeVolume};

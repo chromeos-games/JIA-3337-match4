@@ -1,5 +1,6 @@
 import { customElement, property } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
+import {playSound} from './main-menu.ts';
 
 @customElement('game-board')
 export class gameBoard extends LitElement {
@@ -7,6 +8,12 @@ export class gameBoard extends LitElement {
   @property({ type: String }) currentPlayer: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
+
+  connectedCallback() {
+    super.connectedCallback()
+  
+    playSound('button.wav')
+  }
 
   constructor() {
     super();
@@ -45,6 +52,7 @@ export class gameBoard extends LitElement {
     if (!this.enableMoves) {
       return;
     }
+  
     const row = this.findAvailableRow(col);
     if (row !== -1) {
       this.board[row][col] = this.currentPlayer;
@@ -77,22 +85,14 @@ export class gameBoard extends LitElement {
   }
   private handleAnimationEnd(row: number, col: number) {
     // play sound, check win?
+    playSound('token.wav')
     console.log("Animation Ended")
     this.enableMoves = true;
-    this.playSound()
   }
 
   private onClickMainMenu() {
     console.log("Main Menu Clicked")
-    this.playSound()
     window.location.href = '/'
-  }
-
-  private playSound() {
-    // TODO: unify sound playing into a single function shared between components
-    var audio = new Audio('button.wav')
-    audio.volume = 1;
-    audio.play()
   }
 
   static styles = css`
@@ -155,6 +155,14 @@ export class gameBoard extends LitElement {
   button:focus,
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+  }
+  @media (prefers-color-scheme: light) {
+    a:hover {
+      color: #747bff;
+    }
+    button {
+      background-color: #f9f9f9;
+    }
   }
 `;
 }

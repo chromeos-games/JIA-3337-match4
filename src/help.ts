@@ -1,9 +1,18 @@
 import { LitElement, css, html } from 'lit'
 import { customElement} from 'lit/decorators.js'
+import {changeVolume, playSound} from './main-menu.ts';
 
+
+changeVolume(0.1 )
 
 @customElement('help-page')
 export class HelpPage extends LitElement {
+
+  connectedCallback() {
+    super.connectedCallback()
+    playSound('button.wav')
+    
+  }
 
   render() {
     return html`
