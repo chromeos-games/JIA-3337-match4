@@ -1,9 +1,15 @@
 import { LitElement, css, html } from 'lit'
 import { customElement} from 'lit/decorators.js'
-import { getCookie, setCookie } from 'typescript-cookie'
+import {playSound} from './main-menu.ts';
 
 @customElement('settings-page')
 export class SettingsPage extends LitElement {
+
+  connectedCallback() {
+    super.connectedCallback()
+    playSound('button.wav')
+    
+  }
 
     render() {
         return html`
@@ -110,17 +116,6 @@ export class SettingsPage extends LitElement {
   `
   
 }
-
-var slider = document.getElementById("vol_input");
-
-if (slider != null) {
-  slider.oninput = function() {
-    if (slider != null) {
-      setCookie('volume', slider.value)
-    }
-  }
-}
-
 
 declare global {
     interface HTMLElementTagNameMap {
