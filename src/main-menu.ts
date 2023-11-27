@@ -56,6 +56,7 @@ export class MainMenu extends LitElement {
   }
   private _onClickSettings() {
     console.log("Settings Clicked")
+    this.navigate("/settings")
   }
   private navigate(location: string) {
     window.location.href = location
