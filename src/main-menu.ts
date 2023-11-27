@@ -1,12 +1,16 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
+import { getCookie, setCookie } from 'typescript-cookie'
 
-
-let volume: number | undefined;
-
-if (typeof volume === 'undefined') {
-  volume = 1;
+var val = getCookie('volume')
+if(typeof val === 'string') {
+  var volume = parseFloat(val)
+  console.log(volume)
 }
+else {
+  volume = 1
+}
+
 @customElement('main-menu')
 export class MainMenu extends LitElement {
   connectedCallback() {
@@ -151,14 +155,10 @@ function playSound(filename: string) {
   });
 }
 
-function changeVolume(newVolume: number) {
-  volume = newVolume
-}
-
 declare global {
   interface HTMLElementTagNameMap {
     'main-menu': MainMenu
   }
 }
 
-export {volume, playSound, changeVolume};
+export {playSound};

@@ -1,9 +1,9 @@
 import { LitElement, css, html } from 'lit'
 import { customElement} from 'lit/decorators.js'
-import {changeVolume, playSound} from './main-menu.ts';
+import {playSound} from './main-menu.ts';
+import { getCookie, setCookie } from 'typescript-cookie'
 
-
-changeVolume(0.1 )
+setCookie('volume', '1')
 
 @customElement('help-page')
 export class HelpPage extends LitElement {
@@ -28,6 +28,7 @@ export class HelpPage extends LitElement {
           Back
         </button>
       </div>
+
     `
   }
 
@@ -115,6 +116,7 @@ export class HelpPage extends LitElement {
         background-color: #f9f9f9;
       }
     }
+    
   `
 }
 declare global {
