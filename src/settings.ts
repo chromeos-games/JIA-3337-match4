@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement} from 'lit/decorators.js'
-
+import { getCookie, setCookie } from 'typescript-cookie'
 
 @customElement('settings-page')
 export class SettingsPage extends LitElement {
@@ -9,7 +9,7 @@ export class SettingsPage extends LitElement {
         return html`
         <h1 class='h1'>Settings</h1>
         <img src="src/assets/volume-off.svg" alt="volume-off" style="width:50px;height:50px;"/>
-            <input id="vol_input" type="range" min="0" max="100" step="1" />
+            <input class="slider" id="vol_input" type="range" min="0" max="100" step="1" />
         <img src="src/assets/volume-up.svg" alt="volume-up" style="width:50px;height:50px;"/>
         <div class="card">
         <button @click=${this._onClickBack} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
@@ -108,7 +108,19 @@ export class SettingsPage extends LitElement {
       }
     }
   `
+  
 }
+
+var slider = document.getElementById("vol_input");
+
+if (slider != null) {
+  slider.oninput = function() {
+    if (slider != null) {
+      setCookie('volume', slider.value)
+    }
+  }
+}
+
 
 declare global {
     interface HTMLElementTagNameMap {

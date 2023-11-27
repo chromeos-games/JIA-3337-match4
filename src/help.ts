@@ -1,9 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement} from 'lit/decorators.js'
 import {playSound} from './main-menu.ts';
-import { getCookie, setCookie } from 'typescript-cookie'
-
-setCookie('volume', '1')
 
 @customElement('help-page')
 export class HelpPage extends LitElement {
