@@ -11,6 +11,9 @@ export class SettingsPage extends LitElement {
     super.connectedCallback()
     var flatVol = getCookie('volume')
     this.vol = flatVol ? parseFloat(flatVol) : 0.5
+    if (typeof this.vol !== 'number' || this.vol < 0 || this.vol > 1) {
+      this.vol = 0.5;
+    }
     playSound('button.wav')
     
   }
