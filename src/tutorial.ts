@@ -21,7 +21,6 @@ export class tutorialBoard extends LitElement {
 
   }
 
-
   initBoard() {
     this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
   }
@@ -30,7 +29,10 @@ export class tutorialBoard extends LitElement {
   render() {
     let turnName = this.currentPlayer === 'Red' ? 'Your' : "Opponent's";
     return html`
-      <h1>Match4 - ${turnName} Turn</h1>
+      <h2>Match4 - ${turnName} Turn</h2>
+      <p>Click on a column of the game board to drop a token</p>
+      <p>The computer will play against you.</p>
+      <p>Be the first to connect 4 to win!</p>
       <div class="board">
         ${this.board.map((row, rowIndex) =>
           row.map((cell, colIndex) =>
@@ -50,21 +52,20 @@ export class tutorialBoard extends LitElement {
   }
 
   private handleCellClick(col: number) {
+    console.log("Cell Clicked")
     if (!this.enableMoves) {
+      console.log("move disabled")
       return;
     }
     
     const row = this.findAvailableRow(col);
+    console.log("Row: " + row + " Col: " + col)
     if (row !== -1) {
       this.board[row][col] = this.currentPlayer;
       this.currentPlayer = this.currentPlayer === 'Red' ? 'Yellow' : 'Red';
       this.enableMoves = false;
     }
-    // Simulate opponent's move. Tutorial opponent cannot act intelligently.
-    if (this.currentPlayer === 'Yellow') {
-        console.log("Simulating Opponent's Move")
-        document.querySelector(".cell")?.dispatchEvent(new Event('click'));
-    }
+
   }
 
   updated() {
@@ -94,6 +95,11 @@ export class tutorialBoard extends LitElement {
     playSound('token.wav')
     console.log("Animation Ended")
     this.enableMoves = true;
+    // Simulate opponent's move. Tutorial opponent cannot act intelligently.
+    if (this.currentPlayer === 'Yellow') {
+        console.log("Simulating Opponent's Move")
+        this.handleCellClick(Math.floor(Math.random() * 7));
+    }
   }
 
   private onClickBack() {
