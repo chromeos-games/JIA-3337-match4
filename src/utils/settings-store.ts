@@ -7,7 +7,7 @@ export class SettingsStore {
     static set volume(value: number) {
         // validate sound
         if (typeof value !== 'number' || value < 0 || value > 1) {
-            throw new Error('Invalid volume value to set')
+            throw new Error('Invalid volume value to set: ' + value)
         }
         Storage.set('volume', value.toString())
     }
