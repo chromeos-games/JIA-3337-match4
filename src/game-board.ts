@@ -1,17 +1,26 @@
 import { customElement, property } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
 import {playSound} from './main-menu.ts';
+import { getCookie } from 'typescript-cookie';
 
 @customElement('game-board')
 export class gameBoard extends LitElement {
   @property({ type: Array }) board: string[][] = [];
-  @property({ type: String }) currentPlayer: string = 'Red';
+  @property({ type: String }) currentPlayer: string = 'Player 1';
+  @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
+  
+  
+
+  player1Color: string = getCookie('player1Color') || '#ff5252'; // Default red
+  player2Color: string = getCookie('player2Color') || '#ffd740'; // Default yellow, replace with cookie or setting
 
   connectedCallback() {
     super.connectedCallback()
-  
+    this.currentPlayer = 'Player 1'
+    this.currentPlayerColor = this.player1Color;
+
     playSound('button.wav')
   }
 
@@ -29,24 +38,24 @@ export class gameBoard extends LitElement {
 
   render() {
     return html`
-      <h1>Match4 - ${this.currentPlayer}'s Turn</h1>
-      <div class="board">
-        ${this.board.map((row, rowIndex) =>
-          row.map((cell, colIndex) =>
-            html`
-              <div class="cell" @click=${() => this.handleCellClick(colIndex)}>
-                ${cell
-                  ? html`<div class="token ${cell}" style="--rowIndex: ${rowIndex};"></div>`
-                  : null
-                }
-              </div>
-            `
-          )
-        )}
-      </div>
-      <button @click=${this.onClickMainMenu}>Main Menu</button>
-    `;
-  }
+    <h1>Match4 - ${this.currentPlayer}'s Turn</h1>
+    <div class="board">
+      ${this.board.map((row, rowIndex) =>
+        row.map((cell, colIndex) =>
+          html`
+            <div class="cell" @click=${() => this.handleCellClick(colIndex)}>
+              ${cell
+                ? html`<div class="token" style="background-color: ${cell}; --rowIndex: ${rowIndex};"></div>`
+                : null
+              }
+            </div>
+          `
+        )
+      )}
+    </div>
+    <button @click=${this.onClickMainMenu}>Main Menu</button>
+  `;
+}
 
   private handleCellClick(col: number) {
     if (!this.enableMoves) {
@@ -55,9 +64,17 @@ export class gameBoard extends LitElement {
   
     const row = this.findAvailableRow(col);
     if (row !== -1) {
-      this.board[row][col] = this.currentPlayer;
-      this.currentPlayer = this.currentPlayer === 'Red' ? 'Yellow' : 'Red';
+      this.board[row][col] = this.currentPlayerColor;
+      this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
       this.enableMoves = false;
+    }
+
+    if (this.currentPlayer === 'Player 1') {
+      this.currentPlayerColor = this.player2Color;
+      this.currentPlayer = 'Player 2';
+    } else {
+      this.currentPlayerColor = this.player1Color;
+      this.currentPlayer = 'Player 1';
     }
   }
 
@@ -122,11 +139,11 @@ export class gameBoard extends LitElement {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    background-color: var(--player-color);
     animation: drop 0.5s ease-in-out;
   }
 
-  .Red { background-color: #ff5252; }
-  .Yellow { background-color: #ffd740; }
+  
 
   @keyframes drop {
     from {
