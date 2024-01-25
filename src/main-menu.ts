@@ -1,16 +1,7 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import { getCookie, setCookie } from 'typescript-cookie'
 import { style } from './style'
-
-var val = getCookie('volume')
-if(typeof val === 'string') {
-  var volume = parseFloat(val)
-  console.log(volume)
-}
-else {
-  volume = 1
-}
+import { SettingsStore } from './utils/settings-store'
 
 @customElement('main-menu')
 export class MainMenu extends LitElement {
@@ -68,9 +59,7 @@ export class MainMenu extends LitElement {
 
 function playSound(filename: string) {
   var audio = new Audio(filename)
-  if (typeof volume === 'number') {
-    audio.volume = volume;
-  }
+  audio.volume = SettingsStore.volume
   audio.play().catch(function(error) {
     console.log(error);
   });
