@@ -3,22 +3,11 @@ import { customElement, property } from 'lit/decorators.js';
 import {playSound} from './main-menu.ts';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
-
-
-const availableColors = [
-  { name: 'Red', value: '#ff0000' },
-  { name: 'Green', value: '#00ff00' },
-  { name: 'Blue', value: '#0000ff' },
-  { name: 'Orange', value: '#ffa500' },
-  { name: 'Brown', value: '#a52a2a' },
-  { name: 'White', value: '#ffffff' }
-];
-
-
+import { tokenColor } from './enums.ts';
 @customElement('settings-page')
 export class SettingsPage extends LitElement {
-  @property({ type: String }) selectedColorPlayer1 = getCookie('player1Color') || '#ff0000';
-  @property({ type: String }) selectedColorPlayer2 = getCookie('player2Color') || '#ffd740';
+  @property({ type: tokenColor }) selectedColorPlayer1 = SettingsStore.player1TokenColor;
+  @property({ type: tokenColor }) selectedColorPlayer2 = SettingsStore.player2TokenColor;
   
   vol = 0.5
   connectedCallback() {
@@ -29,26 +18,20 @@ export class SettingsPage extends LitElement {
 
   
 
-  selectColor(player: string, color: string) {
-    if (player === 'player1') {
+  selectColor(player: int, color: tokenColor) {
+    // TODO: show a message if the colors are the same
+    if (player === 1) {
+      if (this.selectedColorPlayer2 === color) {
+        return
+      }
       this.selectedColorPlayer1 = color;
-      setCookie('player1Color', color);
-    } else if (player === 'player2') {
+      SettingsStore.player1TokenColor = color;
+    } else if (player === 2) {
+      if (this.selectedColorPlayer1 === color) {
+        return
+      }
       this.selectedColorPlayer2 = color;
-      setCookie('player2Color', color);
-    }
-    playSound('button.wav');
-  }
-
-  
-
-  selectColor(player: string, color: string) {
-    if (player === 'player1') {
-      this.selectedColorPlayer1 = color;
-      setCookie('player1Color', color);
-    } else if (player === 'player2') {
-      this.selectedColorPlayer2 = color;
-      setCookie('player2Color', color);
+      SettingsStore.player2TokenColor = color;
     }
     playSound('button.wav');
   }
@@ -69,26 +52,27 @@ export class SettingsPage extends LitElement {
           Back
         </button>
         </div>
+        <div id="display-message"></div>
         <h2>Player 1 Color:</h2>
     <div class="color-selection">
-      ${availableColors.map(color => html`
+      ${(Object.keys(tokenColor) as Array<keyof typeof tokenColor>).map(color => html`
         <div class="color-box" 
-             style="background-color: ${color.value};" 
-             @click=${() => this.selectColor('player1', color.value)}
-             ?selected=${this.selectedColorPlayer1 === color.value}>
+             style="background-color: ${tokenColor[color]};" 
+             @click=${() => this.selectColor(1, tokenColor[color])}
+             ?selected=${this.selectedColorPlayer1 === tokenColor[color]}>
         </div>
       `)}
     </div>
 
     <h2>Player 2 Color:</h2>
     <div class="color-selection">
-      ${availableColors.map(color => html`
-        <div class="color-box" 
-             style="background-color: ${color.value};" 
-             @click=${() => this.selectColor('player2', color.value)}
-             ?selected=${this.selectedColorPlayer2 === color.value}>
-        </div>
-      `)}
+    ${(Object.keys(tokenColor) as Array<keyof typeof tokenColor>).map(color => html`
+    <div class="color-box" 
+         style="background-color: ${tokenColor[color]};" 
+         @click=${() => this.selectColor(2, tokenColor[color])}
+         ?selected=${this.selectedColorPlayer2 === tokenColor[color]}>
+    </div>
+  `)}
     </div>
   `;
         
