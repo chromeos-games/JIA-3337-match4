@@ -3,7 +3,11 @@ import {tokenColor} from '../enums';
   
 export class SettingsStore {
     static get volume(): number {
-        return parseFloat(Storage.get('volume')) || 0.5
+        let  ret = parseFloat(Storage.get('volume'))
+        if (isNaN(ret)) {
+            return 0.5
+        }
+        return ret
     }
     static set volume(value: number) {
         // validate sound

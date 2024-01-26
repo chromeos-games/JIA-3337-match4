@@ -9,7 +9,6 @@ export class SettingsPage extends LitElement {
   @property({ type: tokenColor }) selectedColorPlayer1 = SettingsStore.player1TokenColor;
   @property({ type: tokenColor }) selectedColorPlayer2 = SettingsStore.player2TokenColor;
   
-  vol = 0.5
   connectedCallback() {
     super.connectedCallback()
     playSound('button.wav')
