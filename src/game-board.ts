@@ -1,7 +1,7 @@
 import { customElement, property } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
 import {playSound} from './main-menu.ts';
-import { getCookie } from 'typescript-cookie';
+import { SettingsStore } from './utils/settings-store.ts';
 
 @customElement('game-board')
 export class gameBoard extends LitElement {
@@ -13,8 +13,8 @@ export class gameBoard extends LitElement {
   
   
 
-  player1Color: string = getCookie('player1Color') || '#ff5252'; // Default red
-  player2Color: string = getCookie('player2Color') || '#ffd740'; // Default yellow, replace with cookie or setting
+  player1Color: string = SettingsStore.player1TokenColor;
+  player2Color: string = SettingsStore.player2TokenColor;
 
   connectedCallback() {
     super.connectedCallback()
