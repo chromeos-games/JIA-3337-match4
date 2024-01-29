@@ -12,7 +12,8 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * How to play screen fully filled out with images
 * How to play video will play a sample game automatically
 * How to play has an option for the user to play a test game
-
+* Storage system with settings persisted in the device (Internal)
+  
 ### Bug Fixes
 * N/A
 
