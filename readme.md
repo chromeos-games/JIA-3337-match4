@@ -6,7 +6,7 @@ ChromeOS Game where two players play against each other to create 4 in a row
 
 ## Version 0.1.0
 ### Features
-* Game board functions and alternating colors of tiles can be stacked on top of each other
+* Game board functions and tiles of alternating colors can be stacked on top of each other
 * Game tile colors can be changed in settings
 * Volume slider functions and sound can be changed in settings
 * How to play screen fully filled out with images
