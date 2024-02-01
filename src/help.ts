@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit'
+import { LitElement, html } from 'lit'
 import { customElement} from 'lit/decorators.js'
 import {playSound} from './main-menu.ts';
 import { style } from './style.ts';

@@ -72,8 +72,13 @@ button:focus-visible {
 input[type="range"] {
     width: 400px;
     margin: 0;
-  }
+}
 
+input[type="radio"] {
+  border-radius: 10%;
+  width:25px;
+  margin-right: 0px;
+}
 
 @media (prefers-color-scheme: light) {
   a:hover {

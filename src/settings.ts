@@ -15,9 +15,7 @@ export class SettingsPage extends LitElement {
 
   }
 
-  
-
-  selectColor(player: int, color: tokenColor) {
+  selectColor(player: number, color: tokenColor) {
     // TODO: show a message if the colors are the same
     if (player === 1) {
       if (this.selectedColorPlayer2 === color) {
@@ -44,7 +42,7 @@ export class SettingsPage extends LitElement {
         return html`
         <h1 class='h1'>Settings</h1>
         <img src="src/assets/volume-off.svg" alt="volume-off" style="width:50px;height:50px;"/>
-            <input class="slider" id="vol_input" value=${SettingsStore.volume} type="range" min="0" max="1" step="0.01" @change=${e => this.updateSlider(parseFloat(e.target.value))} />
+            <input class="slider" id="vol_input" value=${SettingsStore.volume} type="range" min="0" max="1" step="0.01" @change=${(e: { target: { value: string; }; }) => this.updateSlider(parseFloat(e.target.value))} />
         <img src="src/assets/volume-up.svg" alt="volume-up" style="width:50px;height:50px;"/>
         <div class="card">
         <button @click=${this._onClickBack} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">

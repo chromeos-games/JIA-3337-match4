@@ -38,5 +38,12 @@ export class SettingsStore {
         }
         Storage.set('player2TokenColor', value)
     }
+    //player that moves first, bot is always player 2
+    static get firstPlayer(): string {
+        return Storage.get('firstPlayer') || "p1"
+    }
+    static set firstPlayer(value: string) {
+        Storage.set('firstPlayer', value)
+    }
 
 }
