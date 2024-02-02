@@ -17,6 +17,21 @@ export class SettingsStore {
         Storage.set('volume', value.toString())
     }
 
+    static get scale(): number {
+        let ret = parseFloat(Storage.get('scale'))
+        if (isNaN(ret)) {
+            return 1.0
+        }
+        return ret
+    }
+
+    static set scale(value: number) {
+        if (typeof value !== 'number' || value < 0 || value > 5) {
+            throw new Error('Invalid scale value to set: ' + value)
+        }
+        Storage.set('scale', value.toString())
+    }
+
     static get player1TokenColor(): tokenColor {
         return Storage.get('player1TokenColor') as tokenColor || tokenColor.Red
     }

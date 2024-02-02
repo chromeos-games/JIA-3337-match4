@@ -10,9 +10,8 @@ export class gameBoard extends LitElement {
   @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
-  
-  
 
+  gameScale: number = SettingsStore.scale;
   player1Color: string = SettingsStore.player1TokenColor;
   player2Color: string = SettingsStore.player2TokenColor;
 
@@ -39,7 +38,7 @@ export class gameBoard extends LitElement {
   render() {
     return html`
     <h1>Match4 - ${this.currentPlayer}'s Turn</h1>
-    <div class="board">
+    <div class="board" style="--game-scale: ${this.gameScale};">
       ${this.board.map((row, rowIndex) =>
         row.map((cell, colIndex) =>
           html`
@@ -124,6 +123,7 @@ export class gameBoard extends LitElement {
     display: grid;
     grid-template-columns: repeat(7, 50px);
     gap: 5px;
+    transform: scale(var(--game-scale))
   }
 
   .cell {
@@ -154,6 +154,7 @@ export class gameBoard extends LitElement {
     }
   }
   button {
+    position: relative;
     border-radius: 8px;
     border: 1px solid transparent;
     font-size: 1em;
