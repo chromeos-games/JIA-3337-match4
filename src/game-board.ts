@@ -28,11 +28,9 @@ export class gameBoard extends LitElement {
 
   }
 
-
   initBoard() {
     this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
   }
-
 
   render() {
     return html`
@@ -57,6 +55,7 @@ export class gameBoard extends LitElement {
 
   private handleCellClick(col: number) {
     if (!this.enableMoves) {
+      console.log("Moves are disabled")
       return;
     }
   
@@ -66,7 +65,7 @@ export class gameBoard extends LitElement {
       this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
       this.enableMoves = false;
     }
-
+    this.checkWinner();
     if (this.currentPlayer === 'Player 1') {
       this.currentPlayerColor = this.player2Color;
       this.currentPlayer = 'Player 2';
@@ -103,6 +102,31 @@ export class gameBoard extends LitElement {
     playSound('token.wav')
     console.log("Animation Ended")
     this.enableMoves = true;
+  }
+
+  private checkWinner() {
+    //tokens are stored as colors
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < 7; col++) {
+        if (this.board[row][col]) {
+          //we start in the top left which means we only need to check right, down, and diagonally right and left
+          if (this.board[row][col] === this.board[row][col + 1] && this.board[row][col] === this.board[row][col + 2] && this.board[row][col] === this.board[row][col + 3]) {
+            this.handleWin();
+          } else if (this.board[row][col] === this.board[row + 1][col] && this.board[row][col] === this.board[row][col + 2] && this.board[row][col] === this.board[row][col + 3]) {
+            this.handleWin();
+          } else if (this.board[row][col] === this.board[row + 1][col + 1] && this.board[row][col] === this.board[row + 2][col + 2] && this.board[row][col] === this.board[row + 3][col + 3]) {
+            this.handleWin();
+          } else if (this.board[row][col] === this.board[row + 1][col - 1] && this.board[row][col] === this.board[row + 2][col - 2] && this.board[row][col] === this.board[row + 3][col - 3]) {
+            this.handleWin();
+          }
+        }
+        return
+      }
+    }
+  }
+
+  private handleWin() {
+    console.log("Game Won!")
   }
 
   private onClickMainMenu() {
