@@ -37,7 +37,10 @@ export class SettingsPage extends LitElement {
     SettingsStore.volume = value
   }
 
-
+  updateScale(value: number) {
+    console.log(value)
+    SettingsStore.scale = value
+  }
     render() {
         return html`
         <h1 class='h1'>Settings</h1>
@@ -50,7 +53,10 @@ export class SettingsPage extends LitElement {
         </button>
         </div>
         <div id="display-message"></div>
-        <h2>Player 1 Color:</h2>
+    <h2>Game Scale:
+    <input class="slider" id="scale_input" value=${SettingsStore.scale} type="range" min="0.5" max="1.5" step="0.01" @change=${e => this.updateScale(parseFloat(e.target.value))} />
+    </h2>
+    <h2>Player 1 Color:</h2>
     <div class="color-selection">
       ${(Object.keys(tokenColor) as Array<keyof typeof tokenColor>).map(color => html`
         <div class="color-box" 
