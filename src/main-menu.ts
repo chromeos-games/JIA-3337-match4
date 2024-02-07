@@ -1,5 +1,5 @@
-import { LitElement, css, html } from 'lit'
-import { customElement, property } from 'lit/decorators.js'
+import { LitElement, html } from 'lit'
+import { customElement } from 'lit/decorators.js'
 import { style } from './style'
 import { SettingsStore } from './utils/settings-store'
 
@@ -36,11 +36,11 @@ export class MainMenu extends LitElement {
 
   private _onClickLocal() {
     console.log("Play Local Clicked")
-    this.navigate("/game")
+    this.navigate("/setup")
   }
   private _onClickBot() {
     console.log("Play Bot Clicked")
-    this.navigate("/game")
+    this.navigate("/setup")
   }
   private _onClickHelp() {
     console.log("Help Clicked")

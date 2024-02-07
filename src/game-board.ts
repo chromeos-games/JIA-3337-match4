@@ -5,21 +5,22 @@ import { SettingsStore } from './utils/settings-store.ts';
 
 @customElement('game-board')
 export class gameBoard extends LitElement {
+  @property({ type: String }) firstPlayer = SettingsStore.firstPlayer;
   @property({ type: Array }) board: string[][] = [];
-  @property({ type: String }) currentPlayer: string = 'Player 1';
   @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
+  
+  currentPlayer: string = this.firstPlayer === 'p1' ? 'Player 1' : 'Player 2';
 
   gameScale: number = SettingsStore.scale;
+
   player1Color: string = SettingsStore.player1TokenColor;
   player2Color: string = SettingsStore.player2TokenColor;
 
   connectedCallback() {
     super.connectedCallback()
-    this.currentPlayer = 'Player 1'
-    this.currentPlayerColor = this.player1Color;
-
+    this.currentPlayerColor = this.firstPlayer === 'p1' ? this.player1Color : this.player2Color;
     playSound('button.wav')
   }
 
