@@ -10,6 +10,7 @@ export class gameBoard extends LitElement {
   @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
+  @property({ type: Boolean}) win:boolean = false;
   
 
   currentPlayer: string = this.firstPlayer === 'p1' ? 'Player 1' : 'Player 2';
@@ -54,24 +55,26 @@ export class gameBoard extends LitElement {
 }
 
   private handleCellClick(col: number) {
-    if (!this.enableMoves) {
+    if (!this.enableMoves || this.win) {
       console.log("Moves are disabled")
       return;
     }
-  
     const row = this.findAvailableRow(col);
     if (row !== -1) {
       this.board[row][col] = this.currentPlayerColor;
       this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
       this.enableMoves = false;
-    }
-    this.checkWinner();
-    if (this.currentPlayer === 'Player 1') {
-      this.currentPlayerColor = this.player2Color;
-      this.currentPlayer = 'Player 2';
-    } else {
-      this.currentPlayerColor = this.player1Color;
-      this.currentPlayer = 'Player 1';
+      this.checkWinner(row, col);
+      if (this.currentPlayer === 'Player 1') {
+        this.currentPlayerColor = this.player2Color;
+        this.currentPlayer = 'Player 2';
+      } else {
+        this.currentPlayerColor = this.player1Color;
+        this.currentPlayer = 'Player 1';
+      }
+      if (!this.win) {
+        playSound('token.wav');
+      }
     }
   }
 
@@ -99,33 +102,90 @@ export class gameBoard extends LitElement {
   }
   private handleAnimationEnd(row: number, col: number) {
     // play sound, check win?
-    playSound('token.wav')
     console.log("Animation Ended")
     this.enableMoves = true;
   }
 
-  private checkWinner() {
-    //tokens are stored as colors
-    for (let row = 0; row < 6; row++) {
-      for (let col = 0; col < 7; col++) {
-        if (this.board[row][col]) {
-          //we start in the top left which means we only need to check right, down, and diagonally right and left
-          if (this.board[row][col] === this.board[row][col + 1] && this.board[row][col] === this.board[row][col + 2] && this.board[row][col] === this.board[row][col + 3]) {
-            this.handleWin();
-          } else if (this.board[row][col] === this.board[row + 1][col] && this.board[row][col] === this.board[row][col + 2] && this.board[row][col] === this.board[row][col + 3]) {
-            this.handleWin();
-          } else if (this.board[row][col] === this.board[row + 1][col + 1] && this.board[row][col] === this.board[row + 2][col + 2] && this.board[row][col] === this.board[row + 3][col + 3]) {
-            this.handleWin();
-          } else if (this.board[row][col] === this.board[row + 1][col - 1] && this.board[row][col] === this.board[row + 2][col - 2] && this.board[row][col] === this.board[row + 3][col - 3]) {
-            this.handleWin();
-          }
+  // Rewrote checkWinner function for cases where a single piece wins in multiple ways
+  // Also optimized it to only check possible wins from last move
+  private checkWinner(row: number, col: number) {
+    let winPositions: number[][] = [];
+    console.log("Row: ", row, "Col: ", col);
+    let color = this.board[row][col];
+    // Check 4 in a row
+    if (col <= 3) {
+      if (color === this.board[row][col + 1] && color === this.board[row][col + 2] && color === this.board[row][col + 3]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row, col + i]);
         }
-        return
       }
     }
+    if (col >= 2) {
+      if (color === this.board[row][col - 1] && color === this.board[row][col - 2] && color === this.board[row][col - 3]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row, col - i]);
+        }
+      }
+    }
+    // Check 4 in a column
+    if (row <= 2) {
+      if (color === this.board[row + 1][col] && color === this.board[row + 2][col] && color === this.board[row + 3][col]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row + i, col]);
+        }
+      }
+    }
+    if (row >= 3) {
+      if (color === this.board[row - 1][col] && color === this.board[row - 2][col] && color === this.board[row - 3][col]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row - i, col]);
+        }
+      }
+    }
+    // Check 4 in a diagonal
+    // Right-down diagonal
+    
+    if (row <= 2 && col <= 3) {
+      if (color === this.board[row + 1][col + 1] && color === this.board[row + 2][col + 2] && color === this.board[row + 3][col + 3]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row + i, col + i]);
+        }
+      }
+    }
+    // Left-down diagonal
+    if (row <= 2 && col >= 2) {
+      if (color === this.board[row + 1][col - 1] && color === this.board[row + 2][col - 2] && color === this.board[row + 3][col - 3]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row + i, col - i]);
+        }
+      }
+    }
+    // Left-up diagonal
+    if (row >= 3 && col >= 2) {
+      if (color === this.board[row - 1][col - 1] && color === this.board[row - 2][col - 2] && color === this.board[row - 3][col - 3]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row - i, col - i]);
+        }
+      }
+    }
+    // Right-up diagonal
+    if (row >= 3 && col <= 3) {
+      if (color === this.board[row - 1][col + 1] && color === this.board[row - 2][col + 2] && color === this.board[row - 3][col + 3]) {
+        for (let i = 0; i < 4; i++) {
+          winPositions.push([row - i, col + i]);
+        }
+      }
+    }
+    if (winPositions.length != 0) {
+      this.handleWin(winPositions);
+      return winPositions;
+    }
+    return null;
   }
 
-  private handleWin() {
+  private handleWin(winPositions: number[][]) {
+    playSound('button.wav');
+    this.win = true;
     console.log("Game Won!")
   }
 
