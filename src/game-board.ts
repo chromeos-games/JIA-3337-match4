@@ -163,7 +163,7 @@ export class gameBoard extends LitElement {
   }
 
   private handleWin() {
-    setTimeout(function(){playSound('button.wav')}, 1500);
+    setTimeout(function(){playSound('button.wav')}, 1600);
     this.win = true;
     console.log("Game Won!")
   }
