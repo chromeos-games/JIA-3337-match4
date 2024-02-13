@@ -10,7 +10,8 @@ export class gameBoard extends LitElement {
   @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
-  @property({ type: Boolean}) win:boolean = false;
+  @property({ type: Boolean}) win: boolean = false;
+  @property({ type: Array}) winPositions: number[][] = [];
   
 
   currentPlayer: string = this.firstPlayer === 'p1' ? 'Player 1' : 'Player 2';
@@ -33,6 +34,8 @@ export class gameBoard extends LitElement {
     this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
   }
 
+  
+
   render() {
     return html`
     <h1>Match4 - ${this.currentPlayer}'s Turn</h1>
@@ -40,7 +43,7 @@ export class gameBoard extends LitElement {
       ${this.board.map((row, rowIndex) =>
         row.map((cell, colIndex) =>
           html`
-            <div class="cell" @click=${() => this.handleCellClick(colIndex)}>
+            <div class="cell ${this.winFrames(rowIndex, colIndex)}" @click=${() => this.handleCellClick(colIndex)}>
               ${cell
                 ? html`<div class="token" style="background-color: ${cell}; --rowIndex: ${rowIndex};"></div>`
                 : null
@@ -49,10 +52,22 @@ export class gameBoard extends LitElement {
           `
         )
       )}
+      
     </div>
     <button @click=${this.onClickMainMenu}>Main Menu</button>
   `;
 }
+
+  private winFrames(row: number, col: number) {
+    if (!this.win) {
+      return;
+    }
+    for (let i = 0; i < this.winPositions.length; i++) {
+      if (row == this.winPositions[i][0] && col == this.winPositions[i][1])
+       // return html`style="width:49px; height:49px; border: 2px solid #009900; animation: flicker 1.5s ease-in-out; animation-delay .5s; cursor: default;"`
+        return 'winFrame';
+      }
+  }
 
   private handleCellClick(col: number) {
     if (!this.enableMoves || this.win) {
@@ -64,7 +79,7 @@ export class gameBoard extends LitElement {
       this.board[row][col] = this.currentPlayerColor;
       this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
       this.enableMoves = false;
-      this.checkWinner(row, col);
+      this.checkWinner();
       if (this.currentPlayer === 'Player 1') {
         this.currentPlayerColor = this.player2Color;
         this.currentPlayer = 'Player 2';
@@ -72,9 +87,7 @@ export class gameBoard extends LitElement {
         this.currentPlayerColor = this.player1Color;
         this.currentPlayer = 'Player 1';
       }
-      if (!this.win) {
-        playSound('token.wav');
-      }
+      playSound('token.wav');
     }
   }
 
@@ -107,84 +120,50 @@ export class gameBoard extends LitElement {
   }
 
   // Rewrote checkWinner function for cases where a single piece wins in multiple ways
-  // Also optimized it to only check possible wins from last move
-  private checkWinner(row: number, col: number) {
-    let winPositions: number[][] = [];
-    console.log("Row: ", row, "Col: ", col);
-    let color = this.board[row][col];
-    // Check 4 in a row
-    if (col <= 3) {
-      if (color === this.board[row][col + 1] && color === this.board[row][col + 2] && color === this.board[row][col + 3]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row, col + i]);
+  private checkWinner() {
+    //tokens are stored as colors
+    for (let row = 0; row < 6; row++) {
+      for (let col = 0; col < 7; col++) {
+        if (this.board[row][col]) {
+          let color = this.board[row][col];
+          //we start in the top left which means we only need to check right, down, and diagonally right and left
+          if (color === this.getBoardElement(row, col + 1) && color === this.getBoardElement(row, col + 2) && color === this.getBoardElement(row, col + 3)) {
+            for (let i = 0; i < 4; i++) {
+              this.winPositions.push([row, col + i]);
+            }
+          } else if (color === this.getBoardElement(row + 1, col) && color === this.getBoardElement(row + 2, col) && color === this.getBoardElement(row + 3, col)) {
+            for (let i = 0; i < 4; i++) {
+              this.winPositions.push([row + i, col]);
+            }
+          } else if (color === this.getBoardElement(row + 1, col + 1) && color === this.getBoardElement(row + 2, col + 2) && color === this.getBoardElement(row + 3, col + 3)) {
+            for (let i = 0; i < 4; i++) {
+              this.winPositions.push([row + i, col + i]);
+            }
+          } else if (color === this.getBoardElement(row + 1, col - 1) && color === this.getBoardElement(row + 2, col - 2) && color === this.getBoardElement(row + 3, col - 3)) {
+            for (let i = 0; i < 4; i++) {
+              this.winPositions.push([row + i, col - i]);
+            }
+          }
         }
       }
     }
-    if (col >= 2) {
-      if (color === this.board[row][col - 1] && color === this.board[row][col - 2] && color === this.board[row][col - 3]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row, col - i]);
-        }
-      }
+    if(this.winPositions.length != 0) {
+      this.handleWin();
     }
-    // Check 4 in a column
-    if (row <= 2) {
-      if (color === this.board[row + 1][col] && color === this.board[row + 2][col] && color === this.board[row + 3][col]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row + i, col]);
-        }
-      }
-    }
-    if (row >= 3) {
-      if (color === this.board[row - 1][col] && color === this.board[row - 2][col] && color === this.board[row - 3][col]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row - i, col]);
-        }
-      }
-    }
-    // Check 4 in a diagonal
-    // Right-down diagonal
-    
-    if (row <= 2 && col <= 3) {
-      if (color === this.board[row + 1][col + 1] && color === this.board[row + 2][col + 2] && color === this.board[row + 3][col + 3]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row + i, col + i]);
-        }
-      }
-    }
-    // Left-down diagonal
-    if (row <= 2 && col >= 2) {
-      if (color === this.board[row + 1][col - 1] && color === this.board[row + 2][col - 2] && color === this.board[row + 3][col - 3]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row + i, col - i]);
-        }
-      }
-    }
-    // Left-up diagonal
-    if (row >= 3 && col >= 2) {
-      if (color === this.board[row - 1][col - 1] && color === this.board[row - 2][col - 2] && color === this.board[row - 3][col - 3]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row - i, col - i]);
-        }
-      }
-    }
-    // Right-up diagonal
-    if (row >= 3 && col <= 3) {
-      if (color === this.board[row - 1][col + 1] && color === this.board[row - 2][col + 2] && color === this.board[row - 3][col + 3]) {
-        for (let i = 0; i < 4; i++) {
-          winPositions.push([row - i, col + i]);
-        }
-      }
-    }
-    if (winPositions.length != 0) {
-      this.handleWin(winPositions);
-      return winPositions;
-    }
-    return null;
   }
 
-  private handleWin(winPositions: number[][]) {
-    playSound('button.wav');
+  private getBoardElement(row: number, col: number) {
+    if (row < 0 || row >= this.board.length) {
+      return "Invalid";
+    }
+    if (col < 0 || col >= this.board[0].length) {
+      return "Invalid";
+    }
+    return this.board[row][col];
+  }
+
+  private handleWin() {
+    setTimeout(function(){playSound('button.wav')}, 1500);
     this.win = true;
     console.log("Game Won!")
   }
@@ -225,8 +204,6 @@ export class gameBoard extends LitElement {
     animation: drop 0.5s ease-in-out;
   }
 
-  
-
   @keyframes drop {
     from {
       transform: translateY(calc(-55px * var(--rowIndex, 0)));
@@ -235,6 +212,26 @@ export class gameBoard extends LitElement {
       transform: translateY(0);
     }
   }
+
+  .winFrame {
+    position: relative;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #333;
+    animation: flicker 1.5s ease-in-out;
+    animation-delay: .5s;
+  }
+
+  @keyframes flicker {
+    25%, 75% {
+      opacity: 0;
+    }
+    0%, 50%, 100% {
+      opacity: 1;
+    }
+  }
+
   button {
     border-radius: 8px;
     border: 1px solid transparent;
