@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit'
+ import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';

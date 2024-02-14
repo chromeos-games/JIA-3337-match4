@@ -71,12 +71,12 @@ export class gameBoard extends LitElement {
       this.enableMoves = false;
     }
 
-    if (this.currentPlayer === 'Player 1') {
+    if (this.currentPlayer === this.p1_name) {
       this.currentPlayerColor = this.player2Color;
-      this.currentPlayer = 'Player 2';
+      this.currentPlayer = this.p2_name;
     } else {
       this.currentPlayerColor = this.player1Color;
-      this.currentPlayer = 'Player 1';
+      this.currentPlayer = this.p1_name;
     }
   }
 
