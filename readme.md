@@ -17,7 +17,7 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * Fixed volume slider not playing a test sound when changed
 
 ### Known Issues
-* 
+* Two players cannot have the same name
 
 ## Version 0.1.0
 ### Features
