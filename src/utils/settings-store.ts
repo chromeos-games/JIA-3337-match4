@@ -61,4 +61,28 @@ export class SettingsStore {
         Storage.set('firstPlayer', value)
     }
 
+
+    static get p1_name(): string {
+        return Storage.get('p1_name')
+    }
+    static set p1_name(value: string) {
+        Storage.set('p1_name', value)
+    }
+
+    static get p2_name(): string {
+        return Storage.get('p2_name')
+    }
+    static set p2_name(value: string) {
+        Storage.set('p2_name', value)
+    }
+
+    static get difficulty(): string {
+        return Storage.get('difficulty')
+    }
+    static set difficulty(value: string) {
+        Storage.set('difficulty', value)
+    }
+
+    
+
 }

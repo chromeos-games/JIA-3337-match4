@@ -6,12 +6,14 @@ import { SettingsStore } from './utils/settings-store.ts';
 @customElement('game-board')
 export class gameBoard extends LitElement {
   @property({ type: String }) firstPlayer = SettingsStore.firstPlayer;
+  @property({ type: String }) p1_name = SettingsStore.p1_name;
+  @property({ type: String }) p2_name = SettingsStore.p2_name;
   @property({ type: Array }) board: string[][] = [];
   @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
   
-  currentPlayer: string = this.firstPlayer === 'p1' ? 'Player 1' : 'Player 2';
+  currentPlayer: string = this.firstPlayer === 'p1' ? this.p1_name : this.p2_name;
 
   gameScale: number = SettingsStore.scale;
 
