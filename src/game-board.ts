@@ -12,6 +12,7 @@ export class gameBoard extends LitElement {
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
   @property({ type: Boolean}) win: boolean = false;
   @property({ type: Array}) winPositions: number[][] = [];
+  @property({ type: Boolean}) displayWin: boolean = false;
   
 
   currentPlayer: string = this.firstPlayer === 'p1' ? 'Player 1' : 'Player 2';
@@ -37,8 +38,9 @@ export class gameBoard extends LitElement {
   
 
   render() {
+    let winningPlayer = this.currentPlayer === 'Red' ? 'Player 2' : "Player 1"
     return html`
-    <h1>Match4 - ${this.currentPlayer}'s Turn</h1>
+    <h1>Match 4${this.displayWin ? null : " - " + this.currentPlayer + "'s turn"}</h1>
     <div class="board">
       ${this.board.map((row, rowIndex) =>
         row.map((cell, colIndex) =>
@@ -52,9 +54,15 @@ export class gameBoard extends LitElement {
           `
         )
       )}
-      
     </div>
-    <button @click=${this.onClickMainMenu}>Main Menu</button>
+    <div class="${this.displayWin ? 'winHolder' : 'hidden'}">
+        <div class ="winWindow">
+          <h2> ${winningPlayer} Wins!</h2>
+          <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
+          <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
+      </div>
+    </div>
+    <button @click=${this.onClickMainMenu} style="${this.displayWin ? "visibility: hidden;" : null}">Main Menu</button>
   `;
 }
 
@@ -64,7 +72,6 @@ export class gameBoard extends LitElement {
     }
     for (let i = 0; i < this.winPositions.length; i++) {
       if (row == this.winPositions[i][0] && col == this.winPositions[i][1])
-       // return html`style="width:49px; height:49px; border: 2px solid #009900; animation: flicker 1.5s ease-in-out; animation-delay .5s; cursor: default;"`
         return 'winFrame';
       }
   }
@@ -164,6 +171,7 @@ export class gameBoard extends LitElement {
 
   private handleWin() {
     setTimeout(function(){playSound('button.wav')}, 1600);
+    setTimeout(() =>{this.displayWin = true}, 2500);
     this.win = true;
     console.log("Game Won!")
   }
@@ -171,6 +179,11 @@ export class gameBoard extends LitElement {
   private onClickMainMenu() {
     console.log("Main Menu Clicked")
     window.location.href = '/'
+  }
+
+  private onClickBack() {
+    console.log("Back Clicked")
+    window.history.back()
   }
 
   static styles = css`
@@ -211,6 +224,29 @@ export class gameBoard extends LitElement {
     to {
       transform: translateY(0);
     }
+  }
+
+  .hidden {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+
+  .winHolder {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .winWindow {
+    position: relative;
+    width: 400px;
+    height: 200px;
+    background-color: #242424;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
   }
 
   .winFrame {
