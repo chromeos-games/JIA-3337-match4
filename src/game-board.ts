@@ -20,6 +20,10 @@ export class gameBoard extends LitElement {
   player1Color: string = SettingsStore.player1TokenColor;
   player2Color: string = SettingsStore.player2TokenColor;
 
+  //First number indicates who went first. 0 (false) means P1, 1 (true) means P2
+  //Erase currGame if starting new game
+  currGame: string = SettingsStore.curr_game;
+
   connectedCallback() {
     super.connectedCallback()
     this.currentPlayerColor = this.firstPlayer === 'p1' ? this.player1Color : this.player2Color;
@@ -35,6 +39,26 @@ export class gameBoard extends LitElement {
 
   initBoard() {
     this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
+    if (this.currGame.length != 0){
+      console.log('loading previous game')
+      //Set the correct current player
+      if (parseInt(this.currGame[0])===0) {
+        this.currentPlayer = this.p1_name
+        this.currentPlayerColor = this.player1Color
+      } else {
+        this.currentPlayer = this.p2_name
+        this.currentPlayerColor = this.player2Color
+      }
+
+      for (let i = 1; i < this.currGame.length; i++){
+        console.log(parseInt(this.currGame[i]))
+        this.makeMove(parseInt(this.currGame[i]))
+      }
+
+      this.currGame = this.currGame
+    } else {
+      this.currGame = this.firstPlayer === 'p1' ? '0' : '1'
+    }
   }
 
 
@@ -64,21 +88,33 @@ export class gameBoard extends LitElement {
       return;
     }
   
-    const row = this.findAvailableRow(col);
-    if (row !== -1) {
-      this.board[row][col] = this.currentPlayerColor;
-      this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
-      this.enableMoves = false;
-    }
-
-    if (this.currentPlayer === this.p1_name) {
-      this.currentPlayerColor = this.player2Color;
-      this.currentPlayer = this.p2_name;
-    } else {
-      this.currentPlayerColor = this.player1Color;
-      this.currentPlayer = this.p1_name;
+    if (this.makeMove(col)){
+      this.currGame += col.toString()
+      SettingsStore.curr_game = this.currGame
+      console.log(col)
+      console.log(this.currGame)
     }
   }
+
+private makeMove(col: number): boolean {
+  const row = this.findAvailableRow(col);
+  if (row === -1){
+    return false;
+  }
+  this.board[row][col] = this.currentPlayerColor;
+  //Chen: Why do we change colors twice here? Once here and another in the if-else block below
+  this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
+  this.enableMoves = false;
+
+  if (this.currentPlayer === this.p1_name) {
+    this.currentPlayerColor = this.player2Color;
+    this.currentPlayer = this.p2_name;
+  } else {
+    this.currentPlayerColor = this.player1Color;
+    this.currentPlayer = this.p1_name;
+  }
+  return true
+}
 
   updated() {
     if (this.eventListenerAdded) {

@@ -83,6 +83,10 @@ export class SettingsStore {
         Storage.set('difficulty', value)
     }
 
-    
-
+    static get curr_game(): string {
+        return Storage.get('curr_game')
+    }    
+    static set curr_game(value: string) {
+        Storage.set('curr_game', value)
+    }
 }
