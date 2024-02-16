@@ -36,11 +36,11 @@ export class MainMenu extends LitElement {
 
   private _onClickLocal() {
     console.log("Play Local Clicked")
-    this.navigate("/setup")
+    this.navigate("/setup-local")
   }
   private _onClickBot() {
     console.log("Play Bot Clicked")
-    this.navigate("/setup")
+    this.navigate("/setup-bot")
   }
   private _onClickHelp() {
     console.log("Help Clicked")

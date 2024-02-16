@@ -4,6 +4,21 @@ ChromeOS Game where two players play against each other to create 4 in a row
 
 # Release Notes
 
+## Version 0.2.0
+### Features
+* Game ends when either player reaches 4 in a row and a victory message displays
+* Player move order can be selected after pressing play
+* Player move order can be randomized if desired
+* Player names can be changed
+* AI difficulty setting can be changed, but no AI implemented yet
+
+### Bug Fixes
+* Fixed tutorial video play button shifting when playing video
+* Fixed volume slider not playing a test sound when changed
+
+### Known Issues
+* Two players cannot have the same name
+
 ## Version 0.1.0
 ### Features
 * Game board functions and tiles of alternating colors can be stacked on top of each other

@@ -6,6 +6,8 @@ import { SettingsStore } from './utils/settings-store.ts';
 @customElement('game-board')
 export class gameBoard extends LitElement {
   @property({ type: String }) firstPlayer = SettingsStore.firstPlayer;
+  @property({ type: String }) p1_name = SettingsStore.p1_name;
+  @property({ type: String }) p2_name = SettingsStore.p2_name;
   @property({ type: Array }) board: string[][] = [];
   @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
@@ -14,8 +16,10 @@ export class gameBoard extends LitElement {
   @property({ type: Array}) winPositions: number[][] = [];
   @property({ type: Boolean}) displayWin: boolean = false;
   
+  currentPlayer: string = this.firstPlayer === 'p1' ? this.p1_name : this.p2_name;
 
-  currentPlayer: string = this.firstPlayer === 'p1' ? 'Player 1' : 'Player 2';
+  gameScale: number = SettingsStore.scale;
+
   player1Color: string = SettingsStore.player1TokenColor;
   player2Color: string = SettingsStore.player2TokenColor;
 
@@ -41,7 +45,7 @@ export class gameBoard extends LitElement {
     let winningPlayer = this.currentPlayer === 'Red' ? 'Player 2' : "Player 1"
     return html`
     <h1>Match 4${this.displayWin ? null : " - " + this.currentPlayer + "'s turn"}</h1>
-    <div class="board">
+    <div class="board" style="--game-scale: ${this.gameScale};">
       ${this.board.map((row, rowIndex) =>
         row.map((cell, colIndex) =>
           html`
@@ -87,12 +91,12 @@ export class gameBoard extends LitElement {
       this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
       this.enableMoves = false;
       this.checkWinner();
-      if (this.currentPlayer === 'Player 1') {
+      if (this.currentPlayer === this.p1_name) {
         this.currentPlayerColor = this.player2Color;
-        this.currentPlayer = 'Player 2';
+        this.currentPlayer = this.p2_name;
       } else {
         this.currentPlayerColor = this.player1Color;
-        this.currentPlayer = 'Player 1';
+        this.currentPlayer = this.p1_name;
       }
       playSound('token.wav');
     }
@@ -198,6 +202,7 @@ export class gameBoard extends LitElement {
     display: grid;
     grid-template-columns: repeat(7, 50px);
     gap: 5px;
+    transform: scale(var(--game-scale))
   }
 
   .cell {
@@ -269,6 +274,7 @@ export class gameBoard extends LitElement {
   }
 
   button {
+    position: relative;
     border-radius: 8px;
     border: 1px solid transparent;
     font-size: 1em;

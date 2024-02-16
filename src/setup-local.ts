@@ -1,26 +1,32 @@
-import { LitElement, css, html } from 'lit'
+ import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
 
-@customElement('setup-page')
+@customElement('setup-local-page')
 export class SetupPage extends LitElement {
   @property({ type: String }) firstPlayer = 'p1';
+  @property({ type: String }) p1_name = 'Player 1';
+  @property({ type: String }) p2_name = 'Player 2';
+  
 
   render() {
     return html`
       <slot></slot>
       <div class="card-deck">
       <legend>Select Who Goes First</legend>
-        <div class="card">
-          <input type="radio" id = "p1" style = "position:relative" value = "p1" name="firstPlayer"
+      <div class="card">
+          <input type="text" id = "p1_name" style = "position:relative; right:70px"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
+          <input type="text" id = "p2_name" style = "position:relative; left:70px"  placeholder = "Player 2 Name" @change=${this.onChangeP2Name}/>
+        <br>
+        <br>
+        <input type="radio" id = "p1" style = "position:relative; right:120px" value = "p1" name="firstPlayer"
             ?checked=${this.firstPlayer === 'p1'} @change=${this._onClickRadio}/>
-            <label for="p1"> Player 1 </label>
-        </div>
-        <div class="card">
-          <input type="radio" id = "p2" style = "position:relative" value = "p2" name="firstPlayer"
+            <label style = "position:relative; right:120px" for="p1"> Player 1 </label>
+          <input type="radio" id = "p2" style = "position:relative; left:100px" value = "p2" name="firstPlayer"
             ?checked=${this.firstPlayer === 'p2'} @change=${this._onClickRadio} />
-            <label for= "p2"> Player 2 </label>
+            <label style = "position:relative; left:100px" for= "p2"> Player 2 </label>
+          
         </div>
         <div class="card">
           <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px" >
@@ -37,17 +43,35 @@ export class SetupPage extends LitElement {
   }
   private _onClickRadio(e: { target: { value: string; }; }) {
     this.firstPlayer = e.target.value
+    console.log(this.firstPlayer)
   }
 
   private onClickRandom() {
     this.firstPlayer = Math.random() < 0.5 ? 'p1' : 'p2'
+    console.log(this.firstPlayer)
+    
   }
+
+  private onChangeP1Name(e: {target: { value: string; }}){
+    this.p1_name = e.target.value
+    console.log(e.target.value)
+  }
+
+  private onChangeP2Name(e: {target: { value: string; }}){
+    this.p2_name = e.target.value
+    console.log(e.target.value)
+  }
+
 
   private _onClickStart() {
     console.log("Start Clicked")
     SettingsStore.firstPlayer = this.firstPlayer
+    SettingsStore.p1_name = this.p1_name
+    SettingsStore.p2_name = this.p2_name
+    
     this.navigate("/game")
   }
+  
 
   private navigate(location: string) {
     window.location.href = location

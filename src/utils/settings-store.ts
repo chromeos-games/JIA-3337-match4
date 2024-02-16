@@ -17,6 +17,21 @@ export class SettingsStore {
         Storage.set('volume', value.toString())
     }
 
+    static get scale(): number {
+        let ret = parseFloat(Storage.get('scale'))
+        if (isNaN(ret)) {
+            return 1.0
+        }
+        return ret
+    }
+
+    static set scale(value: number) {
+        if (typeof value !== 'number' || value < 0 || value > 5) {
+            throw new Error('Invalid scale value to set: ' + value)
+        }
+        Storage.set('scale', value.toString())
+    }
+
     static get player1TokenColor(): tokenColor {
         return Storage.get('player1TokenColor') as tokenColor || tokenColor.Red
     }
@@ -45,5 +60,29 @@ export class SettingsStore {
     static set firstPlayer(value: string) {
         Storage.set('firstPlayer', value)
     }
+
+
+    static get p1_name(): string {
+        return Storage.get('p1_name')
+    }
+    static set p1_name(value: string) {
+        Storage.set('p1_name', value)
+    }
+
+    static get p2_name(): string {
+        return Storage.get('p2_name')
+    }
+    static set p2_name(value: string) {
+        Storage.set('p2_name', value)
+    }
+
+    static get difficulty(): string {
+        return Storage.get('difficulty')
+    }
+    static set difficulty(value: string) {
+        Storage.set('difficulty', value)
+    }
+
+    
 
 }
