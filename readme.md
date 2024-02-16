@@ -11,6 +11,7 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * Player move order can be randomized if desired
 * Player names can be changed
 * AI difficulty setting can be changed, but no AI implemented yet
+* Games can be paused by leaving the screen and continued by pressing the continue button in the main menu
 
 ### Bug Fixes
 * Fixed tutorial video play button shifting when playing video
