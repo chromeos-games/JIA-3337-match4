@@ -56,11 +56,11 @@ export class gameBoard extends LitElement {
       )}
     </div>
     <div class="${this.displayWin ? 'winHolder' : 'hidden'}">
-        <div class ="winWindow">
+        <div class ="${this.displayWin ? 'winWindow' : 'hidden'}">
           <h2> ${winningPlayer} Wins!</h2>
           <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
           <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
-      </div>
+        </div>
     </div>
     <button @click=${this.onClickMainMenu} style="${this.displayWin ? "visibility: hidden;" : null}">Main Menu</button>
   `;
