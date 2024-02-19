@@ -34,7 +34,9 @@ export class SettingsPage extends LitElement {
   }
 
   updateSlider(value: number) {
+    
     SettingsStore.volume = value
+    playSound('button.wav')
   }
 
   updateScale(value: number) {
