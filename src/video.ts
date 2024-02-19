@@ -49,7 +49,7 @@ export class VideoPage extends LitElement {
         </div>
       </div>
       
-      <button @click=${this.onTriggerTutorial}> ${this.slideIndex == 0 ? 'Start' : (this.slideIndex == this.moves.length ? 'Reset' : '')} 
+      <button @click=${this.onTriggerTutorial}> ${this.slideIndex == 0 ? 'Start' : (this.slideIndex == this.moves.length ? 'Reset' : 'Playing')} 
         </button>
       <button @click=${this.onClickBack}> Back </button>
     `
