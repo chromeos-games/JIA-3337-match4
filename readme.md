@@ -19,7 +19,7 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * Fixed scaled game overlapping with text and menu button
 
 ### Known Issues
-* Two players cannot have the same name
+* N/A
 
 ## Version 0.1.0
 ### Features

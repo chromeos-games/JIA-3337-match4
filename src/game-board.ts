@@ -1,82 +1,48 @@
-import { customElement, property } from 'lit/decorators.js';
-import { LitElement, html, css } from 'lit';
-import { playSound } from './main-menu.ts';
-import { SettingsStore } from './utils/settings-store.ts';
+import { customElement, property } from 'lit/decorators.js'
+import { LitElement, html, css } from 'lit'
+import { playSound } from './main-menu.ts'
+import { SettingsStore } from './utils/settings-store.ts'
+import { BoardController } from './board-controller.ts'
 
 @customElement('game-board')
-export class gameBoard extends LitElement {
-  @property({ type: String }) firstPlayer = SettingsStore.firstPlayer;
-  @property({ type: String }) p1_name = SettingsStore.p1_name;
-  @property({ type: String }) p2_name = SettingsStore.p2_name;
-  @property({ type: Array }) board: string[][] = [];
-  @property({ type: String }) currentPlayerColor: string = 'Red';
-  @property({ type: Boolean }) enableMoves: boolean = true;
-  @property({ type: Boolean }) eventListenerAdded: boolean = false;
-  @property({ type: Boolean }) win: boolean = false;
-  @property({ type: Array }) winPositions: number[][] = [];
-  @property({ type: Boolean }) displayWin: boolean = false;
+export class gameBoardView extends LitElement {
 
-  currentPlayer: string = this.firstPlayer === 'p1' ? this.p1_name : this.p2_name;
+  @property({ type: Boolean }) enableMoves: boolean = true
+  @property({ type: Boolean }) eventListenerAdded: boolean = false
+  @property({ type: Boolean }) win: boolean = false
+  @property({ type: Array }) winPositions: number[][] = []
+  @property({ type: Boolean }) displayWin: boolean = false
+  @property({ type: BoardController }) boardController
+  @property({ type: Array }) viewBoard: string[][] = []
 
-  gameScale: number = SettingsStore.scale;
+  gameScale: number = SettingsStore.scale
 
-  player1Color: string = SettingsStore.player1TokenColor;
-  player2Color: string = SettingsStore.player2TokenColor;
-
-  //First number indicates who went first. 0 (false) means P1, 1 (true) means P2
-  //Erase currGame if starting new game
-  currGame: string = SettingsStore.curr_game;
+  player1Color: string = SettingsStore.player1TokenColor
+  player2Color: string = SettingsStore.player2TokenColor
 
   connectedCallback() {
     super.connectedCallback()
-    this.currentPlayerColor = this.firstPlayer === 'p1' ? this.player1Color : this.player2Color;
     playSound('button.wav')
   }
 
   constructor() {
-    super();
-    this.initBoard();
-
+    super()
+    this.viewBoard = Array.from({ length: 6 }, () => Array(7).fill(null))
+    this.boardController = new BoardController(this)
   }
-
-  initBoard() {
-    this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
-    if (this.currGame.length != 0) {
-      console.log('loading previous game')
-      //Set the correct current player
-      if (parseInt(this.currGame[0]) === 0) {
-        this.currentPlayer = this.p1_name
-        this.currentPlayerColor = this.player1Color
-      } else {
-        this.currentPlayer = this.p2_name
-        this.currentPlayerColor = this.player2Color
-      }
-
-      for (let i = 1; i < this.currGame.length; i++) {
-        console.log(parseInt(this.currGame[i]))
-        this.makeMove(parseInt(this.currGame[i]))
-      }
-
-      this.currGame = this.currGame
-    } else {
-      this.currGame = this.firstPlayer === 'p1' ? '0' : '1'
-    }
-  }
-
-
 
   render() {
-    let winningPlayer = this.currentPlayer === 'Red' ? 'Player 2' : "Player 1"
+    let winningPlayer = this.getNameOfPlayer(this.boardController.currentPlayerID)
     return html`
     <div style="--game-scale: ${this.gameScale}; transform: scale(var(--game-scale));">
-      <h1">Match 4${this.displayWin ? null : " - " + this.currentPlayer + "'s turn"}</h1>
+      <h1">Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
       <div class="board">
-        ${this.board.map((row, rowIndex) =>
-      row.map((cell, colIndex) =>
+        ${this.viewBoard.map((row, rowIndex) =>
+      row.map((player, colIndex) =>
         html`
               <div class="cell ${this.winFrames(rowIndex, colIndex)}" @click=${() => this.handleCellClick(colIndex)}>
-                ${cell
-            ? html`<div class="token" style="background-color: ${cell}; --rowIndex: ${rowIndex};"></div>`
+                ${this.getColorForPlayer(player)
+            ? html`<div class="token" style="background-color: ${this.getColorForPlayer(player)}; --rowIndex: ${rowIndex};"></div>`
             : null
           }
               </div>
@@ -93,128 +59,54 @@ export class gameBoard extends LitElement {
       </div>
       <button @click=${this.onClickMainMenu} style="${this.displayWin ? "visibility: hidden;" : null}">Main Menu</button>
     </div>
-  `;
+  `
   }
 
   private winFrames(row: number, col: number) {
     if (!this.win) {
-      return;
+      return
     }
     for (let i = 0; i < this.winPositions.length; i++) {
       if (row == this.winPositions[i][0] && col == this.winPositions[i][1])
-        return 'winFrame';
+        return 'winFrame'
     }
   }
 
   private handleCellClick(col: number) {
     if (!this.enableMoves || this.win) {
       console.log("Moves are disabled")
-      return;
+      return
     }
-    if (this.makeMove(col)) {
-      this.currGame += col.toString()
-      SettingsStore.curr_game = this.currGame
-      console.log(col)
-      console.log(this.currGame)
-    }
+    this.boardController.makeMove(col)
   }
 
-  private makeMove(col: number): boolean {
-    const row = this.findAvailableRow(col);
-    if (row === -1) {
-      return false;
-    }
-    this.board[row][col] = this.currentPlayerColor;
-    //Chen: Why do we change colors twice here? Once here and another in the if-else block below
-    this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
-    this.enableMoves = false;
-    this.checkWinner();
-    if (this.currentPlayer === this.p1_name) {
-      this.currentPlayerColor = this.player2Color;
-      this.currentPlayer = this.p2_name;
-    } else {
-      this.currentPlayerColor = this.player1Color;
-      this.currentPlayer = this.p1_name;
-    }
-    playSound('token.wav');
-    return true
-  }
+
 
   updated() {
     if (this.eventListenerAdded) {
-      return;
+      return
     }
-    this.eventListenerAdded = true;
-    const cells = this.shadowRoot!.querySelectorAll('.cell');
+    this.eventListenerAdded = true
+    const cells = this.shadowRoot!.querySelectorAll('.cell')
     if (cells) {
       for (let i = 0; i < cells.length; i++) {
-        const cell = cells[i];
-        cell.addEventListener('animationend', () => this.handleAnimationEnd(i, 0));
+        const cell = cells[i]
+        cell.addEventListener('animationend', () => this.handleAnimationEnd(i, 0))
       }
     }
   }
 
-  private findAvailableRow(col: number): number {
-    for (let row = 5; row >= 0; row--) {
-      if (!this.board[row][col]) {
-        return row;
-      }
-    }
-    return -1; // Column is full
-  }
+
   private handleAnimationEnd(row: number, col: number) {
     // play sound, check win?
     console.log("Animation Ended")
-    this.enableMoves = true;
-  }
-
-  // Rewrote checkWinner function for cases where a single piece wins in multiple ways
-  private checkWinner() {
-    //tokens are stored as colors
-    for (let row = 0; row < 6; row++) {
-      for (let col = 0; col < 7; col++) {
-        if (this.board[row][col]) {
-          let color = this.board[row][col];
-          //we start in the top left which means we only need to check right, down, and diagonally right and left
-          if (color === this.getBoardElement(row, col + 1) && color === this.getBoardElement(row, col + 2) && color === this.getBoardElement(row, col + 3)) {
-            for (let i = 0; i < 4; i++) {
-              this.winPositions.push([row, col + i]);
-            }
-          } else if (color === this.getBoardElement(row + 1, col) && color === this.getBoardElement(row + 2, col) && color === this.getBoardElement(row + 3, col)) {
-            for (let i = 0; i < 4; i++) {
-              this.winPositions.push([row + i, col]);
-            }
-          } else if (color === this.getBoardElement(row + 1, col + 1) && color === this.getBoardElement(row + 2, col + 2) && color === this.getBoardElement(row + 3, col + 3)) {
-            for (let i = 0; i < 4; i++) {
-              this.winPositions.push([row + i, col + i]);
-            }
-          } else if (color === this.getBoardElement(row + 1, col - 1) && color === this.getBoardElement(row + 2, col - 2) && color === this.getBoardElement(row + 3, col - 3)) {
-            for (let i = 0; i < 4; i++) {
-              this.winPositions.push([row + i, col - i]);
-            }
-          }
-        }
-      }
-    }
-    if (this.winPositions.length != 0) {
-      this.handleWin();
-    }
-  }
-
-  private getBoardElement(row: number, col: number) {
-    if (row < 0 || row >= this.board.length) {
-      return "Invalid";
-    }
-    if (col < 0 || col >= this.board[0].length) {
-      return "Invalid";
-    }
-    return this.board[row][col];
+    this.enableMoves = true
   }
 
   private handleWin() {
-    setTimeout(function () { playSound('button.wav') }, 1600);
-    setTimeout(() => { this.displayWin = true }, 2500);
-    this.win = true;
+    setTimeout(function () { playSound('button.wav') }, 1600)
+    setTimeout(() => { this.displayWin = true }, 2500)
+    this.win = true
     console.log("Game Won!")
   }
 
@@ -227,6 +119,41 @@ export class gameBoard extends LitElement {
     console.log("Back Clicked")
     window.history.back()
   }
+
+  onMove(row: number, col: number, value: string): void {
+    this.viewBoard[row][col] = value
+    playSound('token.wav')
+  }
+
+  onWin(winPositions: number[][]) {
+    this.winPositions = winPositions
+    this.handleWin()
+  }
+
+  onMovesEnabledChanged(isEnabled: boolean) {
+    this.enableMoves = isEnabled
+  }
+
+  private getColorForPlayer(player: string) {
+    if (player === 'p1') {
+      return this.player1Color
+    } else if (player === 'p2') {
+      return this.player2Color
+    } else {
+      return null
+    }
+  }
+
+  private getNameOfPlayer(player: string) {
+    if (player === 'p1') {
+      return SettingsStore.p1_name
+    } else if (player === 'p2') {
+      return SettingsStore.p2_name
+    } else {
+      return null
+    }
+  }
+
 
   static styles = css`
   :host {
@@ -344,6 +271,6 @@ export class gameBoard extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'game-board': gameBoard
+    'game-board': gameBoardView
   }
 }
