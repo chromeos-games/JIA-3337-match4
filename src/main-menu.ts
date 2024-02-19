@@ -21,6 +21,9 @@ export class MainMenu extends LitElement {
         <button @click=${this._onClickBot} part="button" style = "position:relative; left:70px; background:#ff5252; color:#242424">
           Play Bot
         </button>
+        <button @click=${this._onClickContinue} part="button" style = "position:relative; left:100px; background:#ff5252; color:#242424">
+          Continue
+        </button>
       </div>
       
       <div class="card">
@@ -33,7 +36,10 @@ export class MainMenu extends LitElement {
       </div>
     `
   }
-
+  private _onClickContinue() {
+    console.log("Continue Clicked")
+    this.navigate("/game")
+  }
   private _onClickLocal() {
     console.log("Play Local Clicked")
     this.navigate("/setup-local")
