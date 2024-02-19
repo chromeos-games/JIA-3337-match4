@@ -14,12 +14,12 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * Games can be paused by leaving the screen and continued by pressing the continue button in the main menu
 
 ### Bug Fixes
-* Fixed tutorial video play button shifting when playing video
 * Fixed volume slider not playing a test sound when changed
 * Fixed scaled game overlapping with text and menu button
 
 ### Known Issues
 * Randomizing which player goes first doesn't work sometimes 
+* Tutorial video play button shifts when playing video
 
 ## Version 0.1.0
 ### Features
