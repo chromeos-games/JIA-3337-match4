@@ -1,6 +1,6 @@
 import { customElement, property } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
-import {playSound} from './main-menu.ts';
+import { playSound } from './main-menu.ts';
 import { SettingsStore } from './utils/settings-store.ts';
 
 @customElement('game-board')
@@ -12,10 +12,10 @@ export class gameBoard extends LitElement {
   @property({ type: String }) currentPlayerColor: string = 'Red';
   @property({ type: Boolean }) enableMoves: boolean = true;
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
-  @property({ type: Boolean}) win: boolean = false;
-  @property({ type: Array}) winPositions: number[][] = [];
-  @property({ type: Boolean}) displayWin: boolean = false;
-  
+  @property({ type: Boolean }) win: boolean = false;
+  @property({ type: Array }) winPositions: number[][] = [];
+  @property({ type: Boolean }) displayWin: boolean = false;
+
   currentPlayer: string = this.firstPlayer === 'p1' ? this.p1_name : this.p2_name;
 
   gameScale: number = SettingsStore.scale;
@@ -41,10 +41,10 @@ export class gameBoard extends LitElement {
 
   initBoard() {
     this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
-    if (this.currGame.length != 0){
+    if (this.currGame.length != 0) {
       console.log('loading previous game')
       //Set the correct current player
-      if (parseInt(this.currGame[0])===0) {
+      if (parseInt(this.currGame[0]) === 0) {
         this.currentPlayer = this.p1_name
         this.currentPlayerColor = this.player1Color
       } else {
@@ -52,7 +52,7 @@ export class gameBoard extends LitElement {
         this.currentPlayerColor = this.player2Color
       }
 
-      for (let i = 1; i < this.currGame.length; i++){
+      for (let i = 1; i < this.currGame.length; i++) {
         console.log(parseInt(this.currGame[i]))
         this.makeMove(parseInt(this.currGame[i]))
       }
@@ -63,36 +63,38 @@ export class gameBoard extends LitElement {
     }
   }
 
-  
+
 
   render() {
     let winningPlayer = this.currentPlayer === 'Red' ? 'Player 2' : "Player 1"
     return html`
-    <h1>Match 4${this.displayWin ? null : " - " + this.currentPlayer + "'s turn"}</h1>
-    <div class="board" style="--game-scale: ${this.gameScale};">
-      ${this.board.map((row, rowIndex) =>
-        row.map((cell, colIndex) =>
-          html`
-            <div class="cell ${this.winFrames(rowIndex, colIndex)}" @click=${() => this.handleCellClick(colIndex)}>
-              ${cell
-                ? html`<div class="token" style="background-color: ${cell}; --rowIndex: ${rowIndex};"></div>`
-                : null
-              }
-            </div>
-          `
-        )
-      )}
+    <div style="--game-scale: ${this.gameScale}; transform: scale(var(--game-scale));">
+      <h1">Match 4${this.displayWin ? null : " - " + this.currentPlayer + "'s turn"}</h1>
+      <div class="board">
+        ${this.board.map((row, rowIndex) =>
+      row.map((cell, colIndex) =>
+        html`
+              <div class="cell ${this.winFrames(rowIndex, colIndex)}" @click=${() => this.handleCellClick(colIndex)}>
+                ${cell
+            ? html`<div class="token" style="background-color: ${cell}; --rowIndex: ${rowIndex};"></div>`
+            : null
+          }
+              </div>
+            `
+      )
+    )}
+      </div>
+      <div class="${this.displayWin ? 'winHolder' : 'hidden'}">
+          <div class ="${this.displayWin ? 'winWindow' : 'hidden'}">
+            <h2> ${winningPlayer} Wins!</h2>
+            <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
+            <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
+          </div>
+      </div>
+      <button @click=${this.onClickMainMenu} style="${this.displayWin ? "visibility: hidden;" : null}">Main Menu</button>
     </div>
-    <div class="${this.displayWin ? 'winHolder' : 'hidden'}">
-        <div class ="${this.displayWin ? 'winWindow' : 'hidden'}">
-          <h2> ${winningPlayer} Wins!</h2>
-          <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
-          <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
-        </div>
-    </div>
-    <button @click=${this.onClickMainMenu} style="${this.displayWin ? "visibility: hidden;" : null}">Main Menu</button>
   `;
-}
+  }
 
   private winFrames(row: number, col: number) {
     if (!this.win) {
@@ -101,7 +103,7 @@ export class gameBoard extends LitElement {
     for (let i = 0; i < this.winPositions.length; i++) {
       if (row == this.winPositions[i][0] && col == this.winPositions[i][1])
         return 'winFrame';
-      }
+    }
   }
 
   private handleCellClick(col: number) {
@@ -109,7 +111,7 @@ export class gameBoard extends LitElement {
       console.log("Moves are disabled")
       return;
     }
-    if (this.makeMove(col)){
+    if (this.makeMove(col)) {
       this.currGame += col.toString()
       SettingsStore.curr_game = this.currGame
       console.log(col)
@@ -117,26 +119,26 @@ export class gameBoard extends LitElement {
     }
   }
 
-private makeMove(col: number): boolean {
-  const row = this.findAvailableRow(col);
-  if (row === -1){
-    return false;
+  private makeMove(col: number): boolean {
+    const row = this.findAvailableRow(col);
+    if (row === -1) {
+      return false;
+    }
+    this.board[row][col] = this.currentPlayerColor;
+    //Chen: Why do we change colors twice here? Once here and another in the if-else block below
+    this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
+    this.enableMoves = false;
+    this.checkWinner();
+    if (this.currentPlayer === this.p1_name) {
+      this.currentPlayerColor = this.player2Color;
+      this.currentPlayer = this.p2_name;
+    } else {
+      this.currentPlayerColor = this.player1Color;
+      this.currentPlayer = this.p1_name;
+    }
+    playSound('token.wav');
+    return true
   }
-  this.board[row][col] = this.currentPlayerColor;
-  //Chen: Why do we change colors twice here? Once here and another in the if-else block below
-  this.currentPlayerColor = this.currentPlayerColor === this.player1Color ? this.player2Color : this.player1Color;
-  this.enableMoves = false;
-  this.checkWinner();
-  if (this.currentPlayer === this.p1_name) {
-    this.currentPlayerColor = this.player2Color;
-    this.currentPlayer = this.p2_name;
-  } else {
-    this.currentPlayerColor = this.player1Color;
-    this.currentPlayer = this.p1_name;
-  }
-  playSound('token.wav');
-  return true
-}
 
   updated() {
     if (this.eventListenerAdded) {
@@ -194,7 +196,7 @@ private makeMove(col: number): boolean {
         }
       }
     }
-    if(this.winPositions.length != 0) {
+    if (this.winPositions.length != 0) {
       this.handleWin();
     }
   }
@@ -210,8 +212,8 @@ private makeMove(col: number): boolean {
   }
 
   private handleWin() {
-    setTimeout(function(){playSound('button.wav')}, 1600);
-    setTimeout(() =>{this.displayWin = true}, 2500);
+    setTimeout(function () { playSound('button.wav') }, 1600);
+    setTimeout(() => { this.displayWin = true }, 2500);
     this.win = true;
     console.log("Game Won!")
   }
@@ -238,7 +240,6 @@ private makeMove(col: number): boolean {
     display: grid;
     grid-template-columns: repeat(7, 50px);
     gap: 5px;
-    transform: scale(var(--game-scale))
   }
 
   .cell {
