@@ -35,7 +35,7 @@ export class gameBoardView extends LitElement {
     let winningPlayer = this.getNameOfPlayer(this.boardController.currentPlayerID)
     return html`
     <div style="--game-scale: ${this.gameScale}; transform: scale(var(--game-scale));">
-      <h1">Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
+      <h1>Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
       <div class="board">
         ${this.viewBoard.map((row, rowIndex) =>
       row.map((player, colIndex) =>
@@ -91,16 +91,23 @@ export class gameBoardView extends LitElement {
     if (cells) {
       for (let i = 0; i < cells.length; i++) {
         const cell = cells[i]
-        cell.addEventListener('animationend', () => this.handleAnimationEnd(i, 0))
+        cell.addEventListener('animationend', () => this.handleAnimationEnd())
       }
     }
   }
 
+  private doBotMove() {
+    let computedMove = this.boardController.getBotMove()
+    this.handleCellClick(computedMove)
+  }
 
-  private handleAnimationEnd(row: number, col: number) {
-    // play sound, check win?
+
+  private handleAnimationEnd() {
     console.log("Animation Ended")
     this.enableMoves = true
+    if (this.getNameOfPlayer(this.boardController.currentPlayerID) === 'Bot' && !this.win) {
+      this.doBotMove()
+    }
   }
 
   private handleWin() {

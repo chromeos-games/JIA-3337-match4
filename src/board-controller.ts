@@ -5,6 +5,7 @@ import { gameBoardView } from './game-board.ts'
 export class BoardController {
     firstPlayer: string = SettingsStore.firstPlayer
     winPositions: number[][] = []
+    botMovePosition: number = -1
     win: boolean = false
     enableMoves: boolean = true
     currentPlayerID: string = this.firstPlayer
@@ -42,13 +43,13 @@ export class BoardController {
             console.log("Moves are disabled")
             return false;
         }
-        const row = this.board.findAvailableRow(col);
+        const row = this.board.checkValidColumn(col);
         if (row === -1) {
             return false;
         }
         this.enableMoves = false;
         this.view.onMovesEnabledChanged(false);
-        this.board.setRow(row, col, this.currentPlayerID)
+        this.board.setSquare(row, col, this.currentPlayerID)
         if (store) {
             SettingsStore.curr_game += col.toString()
         }
@@ -67,26 +68,66 @@ export class BoardController {
         return true
     }
 
+    public getBotMove(): number {
+        //first check if we can get 4 in a row
+        //this must be the 7th or higher move
+        if (SettingsStore.curr_game.length >= 7) {
+            for (let row = 0; row < 6; row++) {
+                for (let col = 0; col < 7; col++) {
+                    if (this.board.getSquare(row, col)) {
+                        let bot = this.board.getSquare(row, col)
+                        //we start in the top left which means we only need to check right, down, and diagonally right and left
+                        if (bot === this.board.getSquare(row, col + 1) && bot === this.board.getSquare(row, col + 2)) {
+                            //potential win, check for blocking. If the square is null bot can win
+                            if(!this.board.getSquare(row, col + 3)){
+                                this.botMovePosition = col + 3
+                            }
+                        } else if (bot === this.board.getSquare(row + 1, col) && bot === this.board.getSquare(row + 2, col)) {
+                            if(!this.board.getSquare(row + 3, col)){
+                                this.botMovePosition = col
+                            }
+                        } else if (bot === this.board.getSquare(row + 1, col + 1) && bot === this.board.getSquare(row + 2, col + 2)) {
+                            if (!this.board.getSquare(row + 3, col + 3)){
+                                this.botMovePosition = col + 3
+                            }
+                        } else if (bot === this.board.getSquare(row + 1, col - 1) && bot === this.board.getSquare(row + 2, col - 2)) {
+                            if (!this.board.getSquare(row + 3, col - 3)){
+                                this.botMovePosition = col - 3
+                            }
+                        }
+                    }
+                }
+            }
+          
+        }
+        if (this.botMovePosition === -1) {
+            return 2
+        } else {
+            return this.botMovePosition
+        }
+    }
+
+
     private checkWinner() {
         //tokens are stored as colors
         for (let row = 0; row < 6; row++) {
             for (let col = 0; col < 7; col++) {
-                if (this.board.getRow(row, col)) {
-                    let player = this.board.getRow(row, col)
+                if (this.board.getSquare(row, col)) {
+                    let player = this.board.getSquare(row, col)
                     //we start in the top left which means we only need to check right, down, and diagonally right and left
-                    if (player === this.board.getRow(row, col + 1) && player === this.board.getRow(row, col + 2) && player === this.board.getRow(row, col + 3)) {
+                    if (player === this.board.getSquare(row, col + 1) && player === this.board.getSquare(row, col + 2) && player === this.board.getSquare(row, col + 3)) {
                         for (let i = 0; i < 4; i++) {
                             this.winPositions.push([row, col + i])
                         }
-                    } else if (player === this.board.getRow(row + 1, col) && player === this.board.getRow(row + 2, col) && player === this.board.getRow(row + 3, col)) {
+                    } else if (player === this.board.getSquare(row + 1, col) && player === this.board.getSquare(row + 2, col) && player === this.board.getSquare(row + 3, col)) {
                         for (let i = 0; i < 4; i++) {
                             this.winPositions.push([row + i, col])
                         }
-                    } else if (player === this.board.getRow(row + 1, col + 1) && player === this.board.getRow(row + 2, col + 2) && player === this.board.getRow(row + 3, col + 3)) {
+                    } else if (player === this.board.getSquare(row + 1, col + 1) && player === this.board.getSquare(row + 2, col + 2) && player === this.board.getSquare(row + 3, col + 3)) {
                         for (let i = 0; i < 4; i++) {
                             this.winPositions.push([row + i, col + i])
                         }
-                    } else if (player === this.board.getRow(row + 1, col - 1) && player === this.board.getRow(row + 2, col - 2) && player === this.board.getRow(row + 3, col - 3)) {
+                    } else if (player === this.board.getSquare(row + 1, col - 1) && player === this.board.getSquare(row + 2, col - 2) && player === this.board.getSquare(row + 3, col - 3)) {
                         for (let i = 0; i < 4; i++) {
                             this.winPositions.push([row + i, col - i])
                         }
