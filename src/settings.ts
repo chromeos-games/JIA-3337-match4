@@ -49,11 +49,7 @@ export class SettingsPage extends LitElement {
         <img src="src/assets/volume-off.svg" alt="volume-off" style="width:50px;height:50px;"/>
             <input class="slider" id="vol_input" value=${SettingsStore.volume} type="range" min="0" max="1" step="0.01" @change=${(e: { target: { value: string; }; }) => this.updateSlider(parseFloat(e.target.value))} />
         <img src="src/assets/volume-up.svg" alt="volume-up" style="width:50px;height:50px;"/>
-        <div class="card">
-        <button @click=${this._onClickBack} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
-          Back
-        </button>
-        </div>
+  
         <div id="display-message"></div>
     <h2>Game Scale:
     <input class="slider" id="scale_input" value=${SettingsStore.scale} type="range" min="0.5" max="1.5" step="0.01" @change=${(e: { target: { value: string; }; }) => this.updateScale(parseFloat(e.target.value))} />
@@ -72,12 +68,17 @@ export class SettingsPage extends LitElement {
     <h2>Player 2 Color:</h2>
     <div class="color-selection">
     ${(Object.keys(tokenColor) as Array<keyof typeof tokenColor>).map(color => html`
-    <div class="color-box" 
+      <div class="color-box" 
          style="background-color: ${tokenColor[color]};" 
          @click=${() => this.selectColor(2, tokenColor[color])}
          ?selected=${this.selectedColorPlayer2 === tokenColor[color]}>
+      </div>
+    `)}
     </div>
-  `)}
+    <div class="card">
+      <button @click=${this._onClickBack} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
+          Back
+      </button>
     </div>
   `;
         

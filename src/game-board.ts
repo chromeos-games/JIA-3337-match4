@@ -35,7 +35,7 @@ export class gameBoardView extends LitElement {
     let winningPlayer = this.getNameOfPlayer(this.boardController.currentPlayerID)
     return html`
     <div style="--game-scale: ${this.gameScale}; transform: scale(var(--game-scale));">
-      <h1">Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
+      <h1>Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
       <div class="board">
         ${this.viewBoard.map((row, rowIndex) =>
       row.map((player, colIndex) =>
