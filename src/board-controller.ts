@@ -5,7 +5,6 @@ import { gameBoardView } from './game-board.ts'
 export class BoardController {
     firstPlayer: string = SettingsStore.firstPlayer
     winPositions: number[][] = []
-    botMovePosition: number = -1
     win: boolean = false
     enableMoves: boolean = true
     currentPlayerID: string = this.firstPlayer
@@ -69,6 +68,7 @@ export class BoardController {
     }
 
     public getBotMove(): number {
+        let botMovePosition = -1
         //first check if we can get 4 in a row
         //this must be the 7th or higher move
         if (SettingsStore.curr_game.length >= 7) {
@@ -80,19 +80,19 @@ export class BoardController {
                         if (bot === this.board.getSquare(row, col + 1) && bot === this.board.getSquare(row, col + 2)) {
                             //potential win, check for blocking. If the square is null bot can win
                             if(!this.board.getSquare(row, col + 3)){
-                                this.botMovePosition = col + 3
+                                return col + 3
                             }
                         } else if (bot === this.board.getSquare(row + 1, col) && bot === this.board.getSquare(row + 2, col)) {
                             if(!this.board.getSquare(row + 3, col)){
-                                this.botMovePosition = col
+                                return col
                             }
                         } else if (bot === this.board.getSquare(row + 1, col + 1) && bot === this.board.getSquare(row + 2, col + 2)) {
                             if (!this.board.getSquare(row + 3, col + 3)){
-                                this.botMovePosition = col + 3
+                                return col + 3
                             }
                         } else if (bot === this.board.getSquare(row + 1, col - 1) && bot === this.board.getSquare(row + 2, col - 2)) {
                             if (!this.board.getSquare(row + 3, col - 3)){
-                                this.botMovePosition = col - 3
+                                return col - 3
                             }
                         }
                     }
@@ -100,10 +100,10 @@ export class BoardController {
             }
           
         }
-        if (this.botMovePosition === -1) {
+        if (botMovePosition === -1) {
             return 2
         } else {
-            return this.botMovePosition
+            return botMovePosition
         }
     }
 
