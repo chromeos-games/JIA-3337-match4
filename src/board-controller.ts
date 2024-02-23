@@ -75,24 +75,27 @@ export class BoardController {
             for (let row = 0; row < 6; row++) {
                 for (let col = 0; col < 7; col++) {
                     if (this.board.getSquare(row, col)) {
-                        let bot = this.board.getSquare(row, col)
-                        //we start in the top left which means we only need to check right, down, and diagonally right and left
-                        if (bot === this.board.getSquare(row, col + 1) && bot === this.board.getSquare(row, col + 2)) {
-                            //potential win, check for blocking. If the square is null bot can win
-                            if(!this.board.getSquare(row, col + 3)){
-                                return col + 3
-                            }
-                        } else if (bot === this.board.getSquare(row + 1, col) && bot === this.board.getSquare(row + 2, col)) {
-                            if(!this.board.getSquare(row + 3, col)){
-                                return col
-                            }
-                        } else if (bot === this.board.getSquare(row + 1, col + 1) && bot === this.board.getSquare(row + 2, col + 2)) {
-                            if (!this.board.getSquare(row + 3, col + 3)){
-                                return col + 3
-                            }
-                        } else if (bot === this.board.getSquare(row + 1, col - 1) && bot === this.board.getSquare(row + 2, col - 2)) {
-                            if (!this.board.getSquare(row + 3, col - 3)){
-                                return col - 3
+                        if (this.board.getSquare(row, col) === 'p2') {
+                            let bot = this.board.getSquare(row, col)
+                            console.log("bot is " + bot)
+                            //we start in the top left which means we only need to check right, down, and diagonally right and left
+                            if (bot === this.board.getSquare(row, col + 1) && bot === this.board.getSquare(row, col + 2)) {
+                                //potential win, check for blocking. If the square is null bot can win
+                                if(!this.board.getSquare(row, col + 3)){
+                                    return col + 3
+                                }
+                            } else if (bot === this.board.getSquare(row + 1, col) && bot === this.board.getSquare(row + 2, col)) {
+                                if(!this.board.getSquare(row + 3, col)){
+                                    return col
+                                }
+                            } else if (bot === this.board.getSquare(row + 1, col + 1) && bot === this.board.getSquare(row + 2, col + 2)) {
+                                if (!this.board.getSquare(row + 3, col + 3)){
+                                    return col + 3
+                                }
+                            } else if (bot === this.board.getSquare(row + 1, col - 1) && bot === this.board.getSquare(row + 2, col - 2)) {
+                                if (!this.board.getSquare(row + 3, col - 3)){
+                                    return col - 3
+                                }
                             }
                         }
                     }
