@@ -36,7 +36,7 @@ export class BoardController {
             SettingsStore.curr_game = this.firstPlayer === 'p1' ? '0' : '1'
         }
     }
-
+    
     public makeMove(col: number, store: boolean = true): boolean {
         if (!this.enableMoves || this.win) {
             console.log("Moves are disabled")
@@ -68,8 +68,55 @@ export class BoardController {
     }
 
     public getBotMove(): number {
-        let botMovePosition = -1
-        //first check if we can get 4 in a row
+        //if the board is full, the game is a draw
+        //need to add a function to deal with a draw somewhere else, right now the game just goes on forever
+        if (SettingsStore.curr_game.length >= 6*7) {
+            return -1
+        }
+        let botMovePosition = this.checkThreeInARow()
+        if (botMovePosition !== -1) {
+            return botMovePosition
+        } else {
+            let bestScore = -100
+            for (let row = 0; row < 6; row++) {
+                for (let col = 0; col < 7; col++) {
+                    if (this.board.getSquare(row, col)) {
+                        if (this.board.getSquare(row, col) === 'p2') {
+                            let score = this.minMaxSolver(row, col)[0]
+                            let column = this.minMaxSolver(row, col)[1]
+                            //this is set up assuming the bot will take the most positive score. It could still be negative if there are no good moves to play.
+                            if (score > bestScore) {
+                                return column
+                            }
+                        }               
+                    }
+                }
+            }
+            return botMovePosition
+        }
+
+
+    }
+
+    private minMaxSolver(row: number, col: number): [number, number]{
+        let exploredPosition = this.minMaxSolverHelper(row, col, 0, 0)
+        return exploredPosition
+    }
+
+    private minMaxSolverHelper(row: number, col: number, depth: number, score: number) : [number, number]{
+        if (depth >= 4) {
+            return [score, col]
+        }
+        depth = depth + 1
+        //TODO
+        //implement the AI here. The bot will try to maximize the score, and will assume the player is minimizing the score
+        this.minMaxSolverHelper(row, col, depth, score)
+        return [score, col]
+
+    }
+    //the code could be made more efficent by having this function end the game, but it would require changes to the overall flow of the code
+    private checkThreeInARow(): number{
+        //check if we can get 4 in a row
         //this must be the 7th or higher move
         if (SettingsStore.curr_game.length >= 7) {
             for (let row = 0; row < 6; row++) {
@@ -77,7 +124,6 @@ export class BoardController {
                     if (this.board.getSquare(row, col)) {
                         if (this.board.getSquare(row, col) === 'p2') {
                             let bot = this.board.getSquare(row, col)
-                            console.log("bot is " + bot)
                             //we start in the top left which means we only need to check right, down, and diagonally right and left
                             if (bot === this.board.getSquare(row, col + 1) && bot === this.board.getSquare(row, col + 2)) {
                                 //potential win, check for blocking. If the square is null bot can win
@@ -101,15 +147,9 @@ export class BoardController {
                     }
                 }
             }
-          
         }
-        if (botMovePosition === -1) {
-            return 2
-        } else {
-            return botMovePosition
-        }
+        return -1
     }
-
 
     private checkWinner() {
         //tokens are stored as colors
