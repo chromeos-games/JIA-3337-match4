@@ -9,6 +9,7 @@ export class SetupPage extends LitElement {
   @property({ type: String }) p1_name = 'Player 1';
   @property({ type: String }) p2_name = 'Bot';
   @property({ type: String }) difficulty = 'medium';
+  @property({ type: Boolean }) randomize = false;
   
   
 
@@ -51,9 +52,10 @@ export class SetupPage extends LitElement {
     console.log(this.firstPlayer)
   }
 
-  private onClickRandom() {
-    this.firstPlayer = Math.random() < 0.5 ? 'p1' : 'p2'
-    console.log(this.firstPlayer)
+  private onClickRandom(e: { target: { style: string; }; }) {
+    this.randomize = !this.randomize
+    e.target.style = this.randomize ? "position:relative; height:55px; background-color: yellow" : "position:relative; height:55px; background-color: white"
+    console.log("randomize: " + this.randomize)
     
   }
 
@@ -78,7 +80,7 @@ export class SetupPage extends LitElement {
 
   private _onClickStart() {
     console.log("Start Clicked")
-    SettingsStore.firstPlayer = this.firstPlayer
+    SettingsStore.firstPlayer = this.randomize ? (Math.random() < 0.5 ? 'p1' : 'p2'): this.firstPlayer
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name
     SettingsStore.difficulty = this.difficulty
