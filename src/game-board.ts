@@ -91,16 +91,22 @@ export class gameBoardView extends LitElement {
     if (cells) {
       for (let i = 0; i < cells.length; i++) {
         const cell = cells[i]
-        cell.addEventListener('animationend', () => this.handleAnimationEnd(i, 0))
+        cell.addEventListener('animationend', () => this.handleAnimationEnd())
       }
     }
   }
 
+  private doBotMove() {
+    let computedMove = this.boardController.getBotMove()
+    this.handleCellClick(computedMove)
+  }
 
-  private handleAnimationEnd(row: number, col: number) {
-    // play sound, check win?
-    console.log("Animation Ended")
+
+  private handleAnimationEnd() {
     this.enableMoves = true
+    if (this.getNameOfPlayer(this.boardController.currentPlayerID) === 'Bot' && !this.win) {
+      this.doBotMove()
+    }
   }
 
   private handleWin() {

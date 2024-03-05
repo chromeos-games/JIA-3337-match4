@@ -4,11 +4,12 @@ export class BoardModel {
         this.board = Array.from({ length: 6 }, () => Array(7).fill(null))
     }
 
-    public setRow(row: number, col: number, value: string) {
+    public setSquare(row: number, col: number, value: string) {
         this.board[row][col] = value
     }
 
-    public findAvailableRow(col: number): number {
+    public checkValidColumn(col: number): number {
+        //if the column is valid, return the row the token falls into
         for (let row = 5; row >= 0; row--) {
             if (!this.board[row][col]) {
                 return row
@@ -17,7 +18,7 @@ export class BoardModel {
         return -1 // Column is full
     }
 
-    public getRow(row: number, col: number) {
+    public getSquare(row: number, col: number) {
         if (row < 0 || row >= this.board.length) {
             return "Invalid"
         }
