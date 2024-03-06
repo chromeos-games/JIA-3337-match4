@@ -49,6 +49,7 @@ export class BoardController {
         this.enableMoves = false;
         this.view.onMovesEnabledChanged(false);
         this.board.setSquare(row, col, this.currentPlayerID)
+        this.board.move_num += 1
         if (store) {
             SettingsStore.curr_game += col.toString()
         }
@@ -152,6 +153,12 @@ export class BoardController {
     }
 
     private checkWinner() {
+        //draw check
+        if (this.board.move_num >= 42){
+            this.win = true
+            this.view.onDraw(this.winPositions)
+        }
+        
         //tokens are stored as colors
         for (let row = 0; row < 6; row++) {
             for (let col = 0; col < 7; col++) {
