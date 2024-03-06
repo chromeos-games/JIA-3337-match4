@@ -9,6 +9,12 @@ export class SetupPage extends LitElement {
   @property({ type: String }) p1_name = 'Player 1';
   @property({ type: String }) p2_name = 'Bot';
   @property({ type: String }) difficulty = 'medium';
+  @property({ type: Object }) easy_button: { style: any; } | undefined;
+  @property({ type: Object }) med_button: { style: any; } | undefined;
+  @property({ type: Object }) hard_button: { style: any; } | undefined;
+  
+  
+
   
   
 
@@ -18,9 +24,9 @@ export class SetupPage extends LitElement {
       <div class="card-deck">
       <input type="text" id = "p1_name" style = "position:relative;"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
       <div class="card">
-      <button @click=${this.onClickEasy} part="button" style = "position:relative; height:125px; width:125px; right:20px; background:lime" > Easy </button>
-      <button @click=${this.onClickMedium} part="button" style = "position:relative; height:125px; width:125px; background:yellow" > Medium </button>
-      <button @click=${this.onClickHard} part="button" style = "position:relative; height:125px; width:125px; left:20px; background:#ff5252" > Hard </button>
+      <button @click=${this.onClickEasy} part="button" style = "position:relative; height:125px; width:125px; right:20px; background:white" > Easy </button>
+      <button @click=${this.onClickMedium} part="button" style = "position:relative; height:125px; width:125px; background:white" > Medium </button>
+      <button @click=${this.onClickHard} part="button" style = "position:relative; height:125px; width:125px; left:20px; background:white" > Hard </button>
   </div>
 
       <legend>Select Who Goes First</legend>
@@ -62,17 +68,38 @@ export class SetupPage extends LitElement {
     console.log(e.target.value)
   }
 
-  private onClickEasy(){
+  private onClickEasy(e: { target: { style: string; }; }){
     this.difficulty = 'easy'
+    this.resetButtons()
+    e.target.style = "position:relative; height:125px; width:125px; right:20px; background:lime"
     console.log('easy')
+    this.easy_button = e.target
   }
-  private onClickMedium(){
+  private onClickMedium(e: { target: { style: string; }; }){
     this.difficulty = 'medium'
+    this.resetButtons()
+    e.target.style = "position:relative; height:125px; width:125px; background:yellow"
     console.log("medium")
+    this.med_button = e.target
   }
-  private onClickHard(){
+  private onClickHard(e: { target: { style: string; }; }){
     this.difficulty = 'hard'
+    this.resetButtons()
+    e.target.style = "position:relative; height:125px; width:125px; left:20px; background:#ff5252"
     console.log('hard')
+    this.hard_button = e.target
+  }
+
+  private resetButtons(){
+    if (this.easy_button != undefined){
+      this.easy_button.style = "position:relative; height:125px; width:125px; right:20px; background:white"
+    }
+    if (this.med_button != undefined){
+      this.med_button.style = "position:relative; height:125px; width:125px; background:white"
+    }
+    if(this.hard_button != undefined){
+      this.hard_button.style = "position:relative; height:125px; width:125px; left:20px; background:white"
+    }
   }
 
 
