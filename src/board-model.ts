@@ -1,6 +1,8 @@
 export class BoardModel {
     board: string[][];
+    move_num: number;
     constructor() {
+        this.move_num = 0
         this.board = Array.from({ length: 6 }, () => Array(7).fill(null))
     }
 
