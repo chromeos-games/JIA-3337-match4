@@ -12,6 +12,7 @@ export class gameBoardView extends LitElement {
   @property({ type: Boolean }) win: boolean = false
   @property({ type: Array }) winPositions: number[][] = []
   @property({ type: Boolean }) displayWin: boolean = false
+  @property({ type: Boolean }) displayDraw: boolean = false
   @property({ type: BoardController }) boardController
   @property({ type: Array }) viewBoard: string[][] = []
 
@@ -50,9 +51,9 @@ export class gameBoardView extends LitElement {
       )
     )}
       </div>
-      <div class="${this.displayWin ? 'winHolder' : 'hidden'}">
-          <div class ="${this.displayWin ? 'winWindow' : 'hidden'}">
-            <h2> ${winningPlayer} Wins!</h2>
+      <div class="${this.displayWin || this.displayDraw ? 'winHolder' : 'hidden'}">
+          <div class ="${this.displayWin || this.displayDraw ? 'winWindow' : 'hidden'}">
+            <h2> ${this.displayWin ? winningPlayer + " Wins!" : "Draw!"}</h2>
             <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
             <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
           </div>
@@ -91,23 +92,36 @@ export class gameBoardView extends LitElement {
     if (cells) {
       for (let i = 0; i < cells.length; i++) {
         const cell = cells[i]
-        cell.addEventListener('animationend', () => this.handleAnimationEnd(i, 0))
+        cell.addEventListener('animationend', () => this.handleAnimationEnd())
       }
     }
   }
 
+  private doBotMove() {
+    let computedMove = this.boardController.getBotMove()
+    this.handleCellClick(computedMove)
+  }
 
-  private handleAnimationEnd(row: number, col: number) {
-    // play sound, check win?
-    console.log("Animation Ended")
+
+  private handleAnimationEnd() {
     this.enableMoves = true
+    if (this.getNameOfPlayer(this.boardController.currentPlayerID) === 'Bot' && !this.win) {
+      this.doBotMove()
+    }
   }
 
   private handleWin() {
-    setTimeout(function () { playSound('button.wav') }, 1600)
+    setTimeout(function () { playSound('button.wav') }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
     console.log("Game Won!")
+  }
+
+  private handleDraw() {
+    setTimeout(function () { playSound('button.wav') }, 800)
+    setTimeout(() => { this.displayDraw = true }, 800)
+    this.win = true
+    console.log("Game draw.")
   }
 
   private onClickMainMenu() {
@@ -128,6 +142,11 @@ export class gameBoardView extends LitElement {
   onWin(winPositions: number[][]) {
     this.winPositions = winPositions
     this.handleWin()
+  }
+
+  onDraw(winPositions: number[][]) {
+    this.winPositions = winPositions
+    this.handleDraw()
   }
 
   onMovesEnabledChanged(isEnabled: boolean) {

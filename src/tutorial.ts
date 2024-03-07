@@ -77,7 +77,7 @@ export class tutorialBoard extends LitElement {
     if (cells) {
       for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
-        cell.addEventListener('animationend', () => this.handleAnimationEnd(i, 0));
+        cell.addEventListener('animationend', () => this.handleAnimationEnd());
       }
     }
   }
@@ -90,7 +90,7 @@ export class tutorialBoard extends LitElement {
     }
     return -1; // Column is full
   }
-  private handleAnimationEnd(row: number, col: number) {
+  private handleAnimationEnd() {
     // play sound, check win?
     playSound('token.wav')
     console.log("Animation Ended")
