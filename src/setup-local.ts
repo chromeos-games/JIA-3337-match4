@@ -8,6 +8,8 @@ export class SetupPage extends LitElement {
   @property({ type: String }) firstPlayer = 'p1';
   @property({ type: String }) p1_name = 'Player 1';
   @property({ type: String }) p2_name = 'Player 2';
+  @property({ type: Boolean }) randomize = false;
+  
   
 
   render() {
@@ -29,7 +31,7 @@ export class SetupPage extends LitElement {
           
         </div>
         <div class="card">
-          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px" >
+          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: white">
             Randomize
           </button>
         </div>
@@ -46,9 +48,10 @@ export class SetupPage extends LitElement {
     console.log(this.firstPlayer)
   }
 
-  private onClickRandom() {
-    this.firstPlayer = Math.random() < 0.5 ? 'p1' : 'p2'
-    console.log(this.firstPlayer)
+  private onClickRandom(e: { target: { style: string; }; }) {
+    this.randomize = !this.randomize
+    e.target.style = this.randomize ? "position:relative; height:55px; background-color: yellow" : "position:relative; height:55px; background-color: white"
+    console.log("randomize: " + this.randomize)
     
   }
 
@@ -65,7 +68,7 @@ export class SetupPage extends LitElement {
 
   private _onClickStart() {
     console.log("Start Clicked")
-    SettingsStore.firstPlayer = this.firstPlayer
+    SettingsStore.firstPlayer = this.randomize ? (Math.random() < 0.5 ? 'p1' : 'p2'): this.firstPlayer
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name
     SettingsStore.curr_game = ''
