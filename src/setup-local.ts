@@ -55,28 +55,28 @@ export class SetupPage extends LitElement {
     // Force a refresh of the radio buttons by changing an attribute
     this.refreshRadioButtons();
   
-    // Change the button color as a visual feedback
+    
     const buttonColor = this.randomize ? 'green' : 'red';
     this.randomize = !this.randomize; // Toggle the randomize property
     this.updateButtonColor(buttonColor);
     
-    // LitElement will automatically trigger a re-render because a property changed
+   
     this.requestUpdate();
     console.log("First Player:" + this.firstPlayer)
   }
   
   private refreshRadioButtons() {
-    // Access both radio buttons
+    
     const p1Radio = this.shadowRoot?.querySelector('#p1') as HTMLInputElement;
     const p2Radio = this.shadowRoot?.querySelector('#p2') as HTMLInputElement;
   
     if (p1Radio && p2Radio) {
-      // Toggle a dummy attribute to force re-rendering of the radio buttons
+      
       const refreshValue = (p1Radio.getAttribute('data-refresh') || 'false') === 'false' ? 'true' : 'false';
       p1Radio.setAttribute('data-refresh', refreshValue);
       p2Radio.setAttribute('data-refresh', refreshValue);
   
-      // Ensure their checked properties are synced with the firstPlayer property
+      /
       p1Radio.checked = this.firstPlayer === 'p1';
       p2Radio.checked = this.firstPlayer === 'p2';
     }
