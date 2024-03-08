@@ -79,17 +79,19 @@ export class BoardController {
             return botMovePosition
         } else {
             let board = this.board.getBoard()
-            let vals = this.minMaxSolver(board, 4, 'p2')
+            let vals = this.minMaxSolver(board, 4, -99999, 99999, 'p2')
             console.log("move: " + vals[0] + " score: " + vals[1])
             return vals[0]
             // return Math.floor(Math.random() * 7)
         }
     }
-    
-    private minMaxSolver(board: string[][], depth: number, player: string): [number, number] {
+    private  calls = 0
+    private minMaxSolver(board: string[][], depth: number, alpha: number, beta: number, player: string): [number, number] {
         //Check for base case or terminating conditions
+        this.calls += 1
         const winner = this.checkWinningNode(board)
-        console.log(winner)
+        // console.log(winner)
+        console.log(this.calls)
         if (winner !== '') {
             if (winner === 'p1') {
                 return [-1, -99999]
@@ -115,10 +117,14 @@ export class BoardController {
                 let row = validMoves[i][0]
                 let col = validMoves[i][1]
                 newBoard[row][col] = 'p2'
-                let new_score = this.minMaxSolver(newBoard, depth-1, 'p1')[1]
+                let new_score = this.minMaxSolver(newBoard, depth-1, alpha, beta, 'p1')[1]
                 if (new_score > max_score) {
                     max_score = new_score
                     selectedCol = col
+                }
+                alpha = Math.max(alpha, max_score)
+                if (beta <= alpha) {
+                    break
                 }
             }
             console.log("Max: " + [selectedCol, max_score])
@@ -133,10 +139,14 @@ export class BoardController {
                 let row = validMoves[i][0]
                 let col = validMoves[i][1]
                 newBoard[row][col] = 'p1'
-                let new_score = this.minMaxSolver(newBoard, depth-1, 'p2')[1]
+                let new_score = this.minMaxSolver(newBoard, depth-1, alpha, beta, 'p2')[1]
                 if (new_score < min_score) {
                     min_score = new_score
                     selectedCol = col
+                }
+                beta = Math.min(beta, min_score)
+                if (beta <= alpha) {
+                    break
                 }
             }
             console.log("Min: " + [selectedCol, min_score])
