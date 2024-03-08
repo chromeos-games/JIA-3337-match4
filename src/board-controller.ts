@@ -74,56 +74,103 @@ export class BoardController {
         if (SettingsStore.curr_game.length >= 6*7) {
             return -1
         }
-        let botMovePosition = this.checkThreeInARow()
+        let botMovePosition = this.checkThreeInARow('p2')
         if (botMovePosition !== -1) {
             return botMovePosition
         } else {
-            let bestScore = -100
-            for (let row = 0; row < 6; row++) {
-                for (let col = 0; col < 7; col++) {
-                    if (this.board.getSquare(row, col)) {
-                        if (this.board.getSquare(row, col) === 'p2') {
-                            let score = this.minMaxSolver(row, col)[0]
-                            let column = this.minMaxSolver(row, col)[1]
-                            //this is set up assuming the bot will take the most positive score. It could still be negative if there are no good moves to play.
-                            if (score > bestScore) {
-                                return column
-                            }
-                        }               
-                    }
+            let board = this.board.getBoard()
+            let vals = this.minMaxSolver(board, 4, 'p2')
+            console.log("move: " + vals[0] + " score: " + vals[1])
+            return vals[0]
+            // return Math.floor(Math.random() * 7)
+        }
+    }
+    
+    private minMaxSolver(board: string[][], depth: number, player: string): [number, number] {
+        //Check for base case or terminating conditions
+        const winner = this.checkWinningNode(board)
+        console.log(winner)
+        if (winner !== '') {
+            if (winner === 'p1') {
+                return [-1, -99999]
+            }
+            else if (winner === 'p2'){
+                return [-1, 99999]
+            }
+        }
+        if (depth === 0){
+            return [-1, this.scorePosition(board, player)]
+        }
+        //Draw case
+        let validMoves = this.getValidMoves(board)
+        if (validMoves.length === 0) {
+            return [-1, 0]
+        }
+        //Maximization (BOT)
+        if (player==='p2'){
+            let max_score = -9999999
+            let selectedCol = 3 //Default to center column. Could randomize instead
+            for (let i = 0; i < validMoves.length; i++){
+                let newBoard = JSON.parse(JSON.stringify(board))
+                let row = validMoves[i][0]
+                let col = validMoves[i][1]
+                newBoard[row][col] = 'p2'
+                let new_score = this.minMaxSolver(newBoard, depth-1, 'p1')[1]
+                if (new_score > max_score) {
+                    max_score = new_score
+                    selectedCol = col
                 }
             }
-            return botMovePosition
+            console.log("Max: " + [selectedCol, max_score])
+            return [selectedCol, max_score]
         }
-
-
-    }
-
-    private minMaxSolver(row: number, col: number): [number, number]{
-        let exploredPosition = this.minMaxSolverHelper(row, col, 0, 0)
-        return exploredPosition
-    }
-
-    private minMaxSolverHelper(row: number, col: number, depth: number, score: number) : [number, number]{
-        if (depth >= 4) {
-            return [score, col]
+        //Minimization (PLAYER)
+        else {
+            let min_score = 9999999
+            let selectedCol = 3
+            for (let i = 0; i < validMoves.length; i++) {
+                let newBoard = JSON.parse(JSON.stringify(board))
+                let row = validMoves[i][0]
+                let col = validMoves[i][1]
+                newBoard[row][col] = 'p1'
+                let new_score = this.minMaxSolver(newBoard, depth-1, 'p2')[1]
+                if (new_score < min_score) {
+                    min_score = new_score
+                    selectedCol = col
+                }
+            }
+            console.log("Min: " + [selectedCol, min_score])
+            return [selectedCol, min_score]
         }
-        depth = depth + 1
-        //TODO
-        //implement the AI here. The bot will try to maximize the score, and will assume the player is minimizing the score
-        this.minMaxSolverHelper(row, col, depth, score)
-        return [score, col]
-
+    }
+    private getValidMoves(board: string[][]) {
+        const validMoves = []
+        for (let col = 0; col < 7; col++){
+            let row = this.checkValidColumn(board, col)
+            if (row >= 0){
+                validMoves.push([row, col])
+            }
+        }
+        return validMoves
+    }
+    private checkValidColumn(board: string[][], col: number) {
+        //if the column is valid, return the row the token falls into
+        for (let row = 5; row >= 0; row--) {
+            if (!board[row][col]) {
+                return row
+            }
+        }
+        return -1 // Column is full
     }
     //the code could be made more efficent by having this function end the game, but it would require changes to the overall flow of the code
-    private checkThreeInARow(): number{
+    private checkThreeInARow(player: string): number{
         //check if we can get 4 in a row
         //this must be the 7th or higher move
         if (SettingsStore.curr_game.length >= 7) {
             for (let row = 0; row < 6; row++) {
                 for (let col = 0; col < 7; col++) {
                     if (this.board.getSquare(row, col)) {
-                        if (this.board.getSquare(row, col) === 'p2') {
+                        if (this.board.getSquare(row, col) === player) {
                             let bot = this.board.getSquare(row, col)
                             //we start in the top left which means we only need to check right, down, and diagonally right and left
                             if (bot === this.board.getSquare(row, col + 1) && bot === this.board.getSquare(row, col + 2)) {
@@ -150,6 +197,123 @@ export class BoardController {
             }
         }
         return -1
+    }
+    /**
+     * Returns the winning player. Returns '' if no winner
+     */
+    private checkWinningNode(board: string[][]): string{
+        //Horizontal
+        for (let col = 0; col < 7-3; col++){
+            for (let row = 0; row < 6; row++){
+                let player = board[row][col]
+                if (player === board[row][col + 1] && player === board[row][col + 2] && player === board[row][col + 3]) {
+                    return player
+                }
+            }
+        }
+        //Vertical
+        for (let col = 0; col < 7; col++){
+            for (let row = 0; row < 6-3; row++){
+                let player = board[row][col]
+                if (player === board[row+1][col] && player === board[row+2][col] && player === board[row+3][col]) {
+                    return player
+                }
+            }
+        }
+        //Diags
+        for (let col = 0; col < 7-3; col++){
+            for (let row = 0; row < 6-3; row++){
+                let player = board[row][col]
+                if (player === board[row+1][col+1] && player === board[row+2][col+2] && player === board[row+3][col+3]) {
+                    return player
+                }
+            }
+        }
+        for (let col = 0; col < 7-3; col++){
+            for (let row = 3; row < 6; row++){
+                let player = board[row][col]
+                if (player === board[row-1][col+1] && player === board[row-2][col+2] && player === board[row-3][col+3]) {
+                    return player
+                }
+            }
+        }
+        return ''
+    }
+    private scorePosition(board: string[][], player: string){
+        var score = 0
+        const COLUMN_COUNT = board[0].length
+        const ROW_COUNT = board.length
+        const WINDOW_LENGTH = 4
+        //Center column pieces are generally strong
+        const center = board[Math.floor(COLUMN_COUNT/2)]
+        score += this.getPlayerOccurrences(center, player) * 3
+        //Score horizontal positions
+        for (let r = 0; r < ROW_COUNT; r++){
+            const row = board[r]
+            for (let c = 0; c < COLUMN_COUNT - 3; c++){
+                score += this.evaluateWindow(row.slice(c, c+WINDOW_LENGTH), player)
+            }
+        }
+        //Score vertical positions
+        for (let c = 0; c < COLUMN_COUNT; c++){
+            //Javascript isn't Python pain
+            const col = board.map(x => x[c])
+            for (let r = 0; r < ROW_COUNT - 3; r++){
+                score += this.evaluateWindow(col.slice(r, r+WINDOW_LENGTH), player)
+            }
+        }
+        //Score positive diagonals
+        for (let r = 0; r < ROW_COUNT - 3; r++){
+            for (let c = 0; c < COLUMN_COUNT - 3; c++){
+                const window = []
+                for (let i = 0; i < WINDOW_LENGTH; i++){
+                    window.push(board[r+i][c+i])
+                }
+                score += this.evaluateWindow(window, player)
+            }
+        }
+        //Score negative diagonals
+        for (let r = 0; r < ROW_COUNT - 3; r++){
+            for (let c = 0; c < COLUMN_COUNT - 3; c++){
+                const window = []
+                for (let i = 0; i < WINDOW_LENGTH; i++){
+                    window.push(board[r+3-i][c+i])
+                }
+                score += this.evaluateWindow(window, player)
+            }
+        }
+        return score
+    }
+
+    private evaluateWindow(window: string[], player: string): number{
+        var score = 0
+        //Switch scoring based on turn
+        const opp_player = player === 'p1' ? 'p2' : 'p1'
+        //Prioritise a winning move
+        if (this.getPlayerOccurrences(window, player)===4) {
+            score+=1000
+        }
+        else if (this.getPlayerOccurrences(window, player)===3 && 
+                    this.getPlayerOccurrences(window, '')===1) {
+            score+=5
+        }
+        else if (this.getPlayerOccurrences(window, player)===2 && 
+        this.getPlayerOccurrences(window, '')===2) {
+            score+=2
+        } 
+        if (this.getPlayerOccurrences(window, opp_player)===4){
+            score-=1000
+        }
+        //Reduce the score if there's a win possibility for the opponent
+        else if (this.getPlayerOccurrences(window, opp_player)===3 && 
+                this.getPlayerOccurrences(window, '')===1) {
+            score-=4
+        }
+        return player === 'p2' ? score : -score
+    }
+
+    private getPlayerOccurrences(array: string[], value: any) {
+        return array.filter((v) => (v === value)).length;
     }
 
     private checkWinner() {

@@ -3,7 +3,7 @@ export class BoardModel {
     move_num: number;
     constructor() {
         this.move_num = 0
-        this.board = Array.from({ length: 6 }, () => Array(7).fill(null))
+        this.board = Array.from({ length: 6 }, () => Array(7).fill(''))
     }
 
     public setSquare(row: number, col: number, value: string) {
@@ -28,5 +28,9 @@ export class BoardModel {
             return "Invalid"
         }
         return this.board[row][col]
+    }
+
+    public getBoard() {
+        return this.board
     }
 }

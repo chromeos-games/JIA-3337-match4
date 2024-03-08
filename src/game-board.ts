@@ -104,10 +104,10 @@ export class gameBoardView extends LitElement {
 
 
   private handleAnimationEnd() {
-    this.enableMoves = true
     if (this.getNameOfPlayer(this.boardController.currentPlayerID) === 'Bot' && !this.win) {
       this.doBotMove()
     }
+    this.enableMoves = true
   }
 
   private handleWin() {
