@@ -4,6 +4,21 @@ ChromeOS Game where two players play against each other to create 4 in a row
 
 # Release Notes
 
+## Version 0.3.0
+### Features
+* Players can now play against a bot
+* The bot has 3 selectable difficulties: easy, medium, and hard
+
+### Bug Fixes
+* Fixed random button functionality when selecting move order
+* Fixed difficulty buttons not highlighting when selecting difficulty 
+* Fixed tutorial video play button shifting when playing video
+* Fixed game not ending when a draw occurs
+
+### Known Issues
+* 
+
+
 ## Version 0.2.0
 ### Features
 * Game ends when either player reaches 4 in a row and a victory message displays
@@ -20,6 +35,7 @@ ChromeOS Game where two players play against each other to create 4 in a row
 ### Known Issues
 * Randomizing which player goes first doesn't work sometimes 
 * Tutorial video play button shifts when playing video
+
 
 ## Version 0.1.0
 ### Features
