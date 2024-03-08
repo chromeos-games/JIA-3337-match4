@@ -16,7 +16,8 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * Fixed game not ending when a draw occurs
 
 ### Known Issues
-* 
+* Player naming themselves "Bot" will cause the system to confuse the player for a bot
+* If the player clicks too fast, they can make a move for the bot
 
 
 ## Version 0.2.0
