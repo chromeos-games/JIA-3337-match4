@@ -76,7 +76,7 @@ export class SetupPage extends LitElement {
       p1Radio.setAttribute('data-refresh', refreshValue);
       p2Radio.setAttribute('data-refresh', refreshValue);
   
-      /
+      
       p1Radio.checked = this.firstPlayer === 'p1';
       p2Radio.checked = this.firstPlayer === 'p2';
     }
