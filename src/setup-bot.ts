@@ -44,6 +44,9 @@ export class SetupPage extends LitElement {
         </div>
       </div>
       <div class="card">
+      <button @click=${this.onClickBack} part="button" style = "position:relative; margin-right: 20px" >
+          Back
+        </button>
         <button @click=${this._onClickStart} part="button" style = "position:relative" >
           Start Game
         </button>
@@ -111,6 +114,12 @@ export class SetupPage extends LitElement {
     SettingsStore.curr_game = ''
     this.navigate("/game")
   }
+
+  private onClickBack() {
+    console.log("Back to Main Menu")
+    window.location.href = '/'
+  }
+
   
 
   private navigate(location: string) {
