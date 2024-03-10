@@ -31,7 +31,7 @@ export class SetupPage extends LitElement {
           
         </div>
         <div class="card">
-          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: white">
+          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: green">
             Randomize
           </button>
         </div>
@@ -48,11 +48,46 @@ export class SetupPage extends LitElement {
     console.log(this.firstPlayer)
   }
 
-  private onClickRandom(e: { target: { style: string; }; }) {
-    this.randomize = !this.randomize
-    e.target.style = this.randomize ? "position:relative; height:55px; background-color: yellow" : "position:relative; height:55px; background-color: white"
-    console.log("randomize: " + this.randomize)
+  private onClickRandom() {
+    // Randomly choose between 'p1' and 'p2' and set as firstPlayer
+    this.firstPlayer = Math.random() < 0.5 ? 'p1' : 'p2';
+  
+    // Force a refresh of the radio buttons by changing an attribute
+    this.refreshRadioButtons();
+  
     
+    const buttonColor = this.randomize ? 'green' : 'red';
+    this.randomize = !this.randomize; // Toggle the randomize property
+    this.updateButtonColor(buttonColor);
+    
+   
+    this.requestUpdate();
+    console.log("First Player:" + this.firstPlayer)
+  }
+  
+  private refreshRadioButtons() {
+    
+    const p1Radio = this.shadowRoot?.querySelector('#p1') as HTMLInputElement;
+    const p2Radio = this.shadowRoot?.querySelector('#p2') as HTMLInputElement;
+  
+    if (p1Radio && p2Radio) {
+      
+      const refreshValue = (p1Radio.getAttribute('data-refresh') || 'false') === 'false' ? 'true' : 'false';
+      p1Radio.setAttribute('data-refresh', refreshValue);
+      p2Radio.setAttribute('data-refresh', refreshValue);
+  
+      
+      p1Radio.checked = this.firstPlayer === 'p1';
+      p2Radio.checked = this.firstPlayer === 'p2';
+    }
+  }
+  
+  private updateButtonColor(color: string) {
+    // Directly update the button color via shadow DOM, ensuring the element is an HTMLElement
+    const button = this.shadowRoot?.querySelector('button[part="button"]') as HTMLElement | null;
+    if (button) {
+      button.style.backgroundColor = color;
+    }
   }
 
   private onChangeP1Name(e: {target: { value: string; }}){
