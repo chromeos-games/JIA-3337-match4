@@ -8,6 +8,7 @@ export class BoardController {
     win: boolean = false
     enableMoves: boolean = true
     currentPlayerID: string = this.firstPlayer
+    difficulty: string = SettingsStore.difficulty
     // view
     view: gameBoardView
     // board
@@ -79,12 +80,31 @@ export class BoardController {
             return botMovePosition
         } else {
             let board = this.board.getBoard()
+            if (this.difficulty == 'easy') {
+                if (Math.random() < .7) {
+                    return this.getRandomMove()
+                }
+            } else if (this.difficulty == 'medium') {
+                if (Math.random() < .4) {
+                    return this.getRandomMove()
+                }
+            } else if (this.difficulty == 'hard') {
+                if (Math.random() < .1) {
+                    return this.getRandomMove()
+                }
+            } 
             let vals = this.minMaxSolver(board, 4, -99999, 99999, 'p2')
             console.log("move: " + vals[0] + " score: " + vals[1])
             return vals[0]
             // return Math.floor(Math.random() * 7)
         }
     }
+
+    private getRandomMove() {
+        const moves = this.getValidMoves(this.board.board)
+        return moves[Math.floor(Math.random() * moves.length)][1]
+    }
+
     private  calls = 0
     private minMaxSolver(board: string[][], depth: number, alpha: number, beta: number, player: string): [number, number] {
         //Check for base case or terminating conditions
