@@ -104,7 +104,6 @@ export class gameBoardView extends LitElement {
 
   private doBotMove() {
     let computedMove = this.boardController.getBotMove()
-    //this.handleCellClick(computedMove)
     this.boardController.makeMove(computedMove)
   }
 

@@ -115,6 +115,7 @@ export class SetupPage extends LitElement {
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name
     SettingsStore.curr_game = ''
+    SettingsStore.difficulty = ''
     this.navigate("/game")
   }
   
