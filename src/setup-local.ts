@@ -65,7 +65,7 @@ export class SetupPage extends LitElement {
     
    
     this.requestUpdate();
-    console.log("First Player: " + this.firstPlayer)
+    console.log("First Player:" + this.firstPlayer)
   }
   
   private refreshRadioButtons() {
