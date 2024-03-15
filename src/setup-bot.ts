@@ -58,11 +58,16 @@ export class SetupPage extends LitElement {
     console.log(this.firstPlayer)
   }
 
-  private onClickRandom(e: { target: { style: string; }; }) {
+  private onClickRandom(e: { target: { style: { backgroundColor: string; }; }; }) {
     this.randomize = !this.randomize
-    e.target.style = this.randomize ? "position:relative; height:55px; background-color: yellow" : "position:relative; height:55px; background-color: white"
+    e.target.style.backgroundColor = this.randomize ? "yellow" : "white"
     console.log("randomize: " + this.randomize)
     
+    const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
+    console.log(radios)
+    if (radios) {
+      radios.forEach((element) => element.disabled = this.randomize ? true : false)
+    }
   }
 
   private onChangeP1Name(e: {target: { value: string; }}){
