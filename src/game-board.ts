@@ -8,6 +8,7 @@ import { BoardController } from './board-controller.ts'
 export class gameBoardView extends LitElement {
 
   @property({ type: Boolean }) enableMoves: boolean = true
+  @property({ type: Boolean }) botMoving: boolean = false
   @property({ type: Boolean }) eventListenerAdded: boolean = false
   @property({ type: Boolean }) win: boolean = false
   @property({ type: Array }) winPositions: number[][] = []
@@ -74,11 +75,15 @@ export class gameBoardView extends LitElement {
   }
 
   private handleCellClick(col: number) {
-    if (!this.enableMoves || this.win) {
+    if (!this.enableMoves || this.win || this.botMoving) {
       console.log("Moves are disabled")
       return
     }
-    this.boardController.makeMove(col)
+    else {
+      if (this.boardController.makeMove(col)) {
+        this.botMoving = true
+      }
+    }
   }
 
 
@@ -99,15 +104,17 @@ export class gameBoardView extends LitElement {
 
   private doBotMove() {
     let computedMove = this.boardController.getBotMove()
-    this.handleCellClick(computedMove)
+    this.boardController.makeMove(computedMove)
   }
 
 
   private handleAnimationEnd() {
     if (this.getNameOfPlayer(this.boardController.currentPlayerID) === 'Bot' && !this.win) {
       this.doBotMove()
+    } else {
+      this.botMoving = false
+      this.enableMoves = true
     }
-    this.enableMoves = true
   }
 
   private handleWin() {

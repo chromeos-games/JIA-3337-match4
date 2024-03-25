@@ -35,6 +35,10 @@ export class BoardController {
             }
         } else {
             SettingsStore.curr_game = this.firstPlayer === 'p1' ? '0' : '1'
+            if(this.firstPlayer === 'p2' && this.difficulty !== '') {
+                // make move when bot goes first, difficulty will be empty if no bot
+                this.makeMove(this.getBotMove())
+            }
         }
     }
     
@@ -70,8 +74,6 @@ export class BoardController {
     }
 
     public getBotMove(): number {
-        //if the board is full, the game is a draw
-        //need to add a function to deal with a draw somewhere else, right now the game just goes on forever
         if (SettingsStore.curr_game.length >= 6*7) {
             return -1
         }

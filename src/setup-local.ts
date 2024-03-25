@@ -2,6 +2,7 @@
 import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
+import { buttonColor } from './enums.ts';
 
 @customElement('setup-local-page')
 export class SetupPage extends LitElement {
@@ -55,7 +56,6 @@ export class SetupPage extends LitElement {
     this.randomize = !this.randomize
     e.target.style.backgroundColor = this.randomize ? "yellow" : "white"
     console.log("randomize: " + this.randomize)
-    
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     console.log(radios)
     if (radios) {
@@ -110,6 +110,7 @@ export class SetupPage extends LitElement {
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name
     SettingsStore.curr_game = ''
+    SettingsStore.difficulty = ''
     this.navigate("/game")
   }
   

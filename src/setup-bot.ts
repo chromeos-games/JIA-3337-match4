@@ -2,6 +2,7 @@ import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
+import { buttonColor } from './enums.ts';
 
 @customElement('setup-bot-page')
 export class SetupPage extends LitElement {
@@ -10,10 +11,6 @@ export class SetupPage extends LitElement {
   @property({ type: String }) p2_name = 'Bot';
   @property({ type: String }) difficulty = 'medium';
   @property({ type: Boolean }) randomize = false;
-  @property({ type: Object }) easy_button: { style: any; } | undefined;
-  @property({ type: Object }) med_button: { style: any; } | undefined;
-  @property({ type: Object }) hard_button: { style: any; } | undefined;
-  
   
 
   render() {
@@ -22,9 +19,9 @@ export class SetupPage extends LitElement {
       <div class="card-deck">
       <input type="text" id = "p1_name" style = "position:relative;"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
       <div class="card">
-      <button @click=${this.onClickEasy} part="button" style = "position:relative; height:125px; width:125px; right:20px; background:green; color: black; font-size:20px" > Easy </button>
-      <button @click=${this.onClickMedium} part="button" style = "position:relative; height:125px; width:125px; background:yellow; color: black; font-size:20px" > Medium </button>
-      <button @click=${this.onClickHard} part="button" style = "position:relative; height:125px; width:125px; left:20px; background:red; color: black; font-size:20px" > Hard </button>
+      <button @click=${this.onClickEasy} class="difficulty" part="easy" style = "position:relative; height:125px; width:125px; right:20px; background:lightgrey; color: black; font-size:20px" > Easy </button>
+      <button @click=${this.onClickMedium} class="difficulty" part="medium" style = "position:relative; height:125px; width:125px; background:lightgrey; color: black; font-size:20px" > Medium </button>
+      <button @click=${this.onClickHard} class="difficulty" part="hard" style = "position:relative; height:125px; width:125px; left:20px; background:lightgrey; color: black; font-size:20px" > Hard </button>
   </div>
 
       <legend>Select Who Goes First</legend>
@@ -75,40 +72,40 @@ export class SetupPage extends LitElement {
     console.log(e.target.value)
   }
 
-  private onClickEasy(e: { target: { style: string; }; }){
+  private onClickEasy(){
     this.difficulty = 'easy'
     this.resetButtons()
-    e.target.style = "position:relative; height:125px; width:125px; right:20px; background:lime"
+    const button = this.shadowRoot?.querySelector('button[part="easy"]') as HTMLElement | null;
+    if (button) {
+      button.style.backgroundColor = buttonColor.Green;
+    }
     console.log('easy')
-    this.easy_button = e.target
   }
-  private onClickMedium(e: { target: { style: string; }; }){
+  private onClickMedium(){
     this.difficulty = 'medium'
     this.resetButtons()
-    e.target.style = "position:relative; height:125px; width:125px; background:yellow"
+    const button = this.shadowRoot?.querySelector('button[part="medium"]') as HTMLElement | null;
+    if (button) {
+      button.style.backgroundColor = buttonColor.Yellow;
+    }
     console.log("medium")
-    this.med_button = e.target
   }
-  private onClickHard(e: { target: { style: string; }; }){
+  private onClickHard(){
     this.difficulty = 'hard'
     this.resetButtons()
-    e.target.style = "position:relative; height:125px; width:125px; left:20px; background:#ff5252"
+    const button = this.shadowRoot?.querySelector('button[part="hard"]') as HTMLElement | null;
+    if (button) {
+      button.style.backgroundColor = buttonColor.Red;
+    }
     console.log('hard')
-    this.hard_button = e.target
   }
 
   private resetButtons(){
-    if (this.easy_button != undefined){
-      this.easy_button.style = "position:relative; height:125px; width:125px; right:20px; background:white"
-    }
-    if (this.med_button != undefined){
-      this.med_button.style = "position:relative; height:125px; width:125px; background:white"
-    }
-    if(this.hard_button != undefined){
-      this.hard_button.style = "position:relative; height:125px; width:125px; left:20px; background:white"
+    const buttons = this.shadowRoot?.querySelectorAll('button[class="difficulty"]') as NodeListOf<HTMLElement> | null;
+    if (buttons) {
+      buttons.forEach((element) => element.style.backgroundColor = "lightgrey")
     }
   }
-
 
   private _onClickStart() {
     console.log("Start Clicked")
