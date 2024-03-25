@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import { style } from './style'
 import { SettingsStore } from './utils/settings-store'
-
+import { buttonColor } from './enums'
 @customElement('main-menu')
 export class MainMenu extends LitElement {
   connectedCallback() {
@@ -15,13 +15,13 @@ export class MainMenu extends LitElement {
       <!--<h1 class='h1'>Match 4</h1>-->
       <slot></slot>
       <div class="card">
-      <button @click=${this._onClickContinue} part="button" style = "position:relative; right:70px; background:lime; color:#242424">
+      <button @click=${this._onClickContinue} part="button" style = "position:relative; right:70px; background:${buttonColor.Green}; color:#242424">
           Continue
         </button>
-        <button @click=${this._onClickLocal} part="button" style = "position:relative; left:70px; background:#ffd740; color:#242424" >
+        <button @click=${this._onClickLocal} part="button" style = "position:relative; left:70px; background:${buttonColor.Yellow}; color:#242424" >
           Play Local
         </button>
-        <button @click=${this._onClickBot} part="button" style = "position:relative; left:100px; background:#ff5252; color:#242424">
+        <button @click=${this._onClickBot} part="button" style = "position:relative; left:100px; background:${buttonColor.Red}; color:#242424">
           Play Bot
         </button>
 

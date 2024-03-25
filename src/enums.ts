@@ -6,3 +6,10 @@ export enum tokenColor {
     Brown = '#a52a2a',
     White = '#ffffff'
   }
+
+export enum buttonColor {
+   Red = '#ff5252',
+   Yellow = '#ffd740',
+   Green = '#198754',
+   Orange = '#ffa500',
+}

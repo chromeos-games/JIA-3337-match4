@@ -2,6 +2,7 @@
 import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
+import { buttonColor } from './enums.ts';
 
 @customElement('setup-local-page')
 export class SetupPage extends LitElement {
@@ -31,7 +32,7 @@ export class SetupPage extends LitElement {
           
         </div>
         <div class="card">
-          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: green">
+          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: ${buttonColor.Green}">
             Randomize
           </button>
         </div>

@@ -2,6 +2,7 @@ import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
+import { buttonColor } from './enums.ts';
 
 @customElement('setup-bot-page')
 export class SetupPage extends LitElement {
@@ -56,7 +57,7 @@ export class SetupPage extends LitElement {
 
   private onClickRandom(e: { target: { style: string; }; }) {
     this.randomize = !this.randomize
-    e.target.style = this.randomize ? "position:relative; height:55px; background-color: yellow" : "position:relative; height:55px; background-color: white"
+    e.target.style = this.randomize ? "position:relative; height:55px; color:black; background-color:"+buttonColor.Orange : "position:relative; height:55px;"
     console.log("randomize: " + this.randomize)
   }
 
@@ -70,7 +71,7 @@ export class SetupPage extends LitElement {
     this.resetButtons()
     const button = this.shadowRoot?.querySelector('button[part="easy"]') as HTMLElement | null;
     if (button) {
-      button.style.backgroundColor = "lime";
+      button.style.backgroundColor = buttonColor.Green;
     }
     console.log('easy')
   }
@@ -79,7 +80,7 @@ export class SetupPage extends LitElement {
     this.resetButtons()
     const button = this.shadowRoot?.querySelector('button[part="medium"]') as HTMLElement | null;
     if (button) {
-      button.style.backgroundColor = "yellow";
+      button.style.backgroundColor = buttonColor.Yellow;
     }
     console.log("medium")
   }
@@ -88,7 +89,7 @@ export class SetupPage extends LitElement {
     this.resetButtons()
     const button = this.shadowRoot?.querySelector('button[part="hard"]') as HTMLElement | null;
     if (button) {
-      button.style.backgroundColor = "red";
+      button.style.backgroundColor = buttonColor.Red;
     }
     console.log('hard')
   }
