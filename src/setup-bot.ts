@@ -11,7 +11,7 @@ export class SetupPage extends LitElement {
   @property({ type: String }) p2_name = 'Bot';
   @property({ type: String }) difficulty = 'medium';
   @property({ type: Boolean }) randomize = false;
-  
+  @property({ type: String }) p2IsBot = 'true';
 
   render() {
     return html`
@@ -108,6 +108,7 @@ export class SetupPage extends LitElement {
     SettingsStore.p2_name = this.p2_name
     SettingsStore.difficulty = this.difficulty
     SettingsStore.curr_game = ''
+    SettingsStore.p2IsBot = this.p2IsBot
     this.navigate("/game")
   }
 
