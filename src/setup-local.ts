@@ -32,7 +32,7 @@ export class SetupPage extends LitElement {
           
         </div>
         <div class="card">
-          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: ${buttonColor.Green}">
+          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: white">
             Randomize
           </button>
         </div>
@@ -52,21 +52,15 @@ export class SetupPage extends LitElement {
     console.log(this.firstPlayer)
   }
 
-  private onClickRandom() {
-    // Randomly choose between 'p1' and 'p2' and set as firstPlayer
-    this.firstPlayer = Math.random() < 0.5 ? 'p1' : 'p2';
-  
-    // Force a refresh of the radio buttons by changing an attribute
-    this.refreshRadioButtons();
-  
-    
-    const buttonColor = this.randomize ? 'green' : 'red';
-    this.randomize = !this.randomize; // Toggle the randomize property
-    this.updateButtonColor(buttonColor);
-    
-   
-    this.requestUpdate();
-    console.log("First Player: " + this.firstPlayer)
+  private onClickRandom(e: { target: { style: { backgroundColor: string; }; }; }) {
+    this.randomize = !this.randomize
+    e.target.style.backgroundColor = this.randomize ? "yellow" : "white"
+    console.log("randomize: " + this.randomize)
+    const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
+    console.log(radios)
+    if (radios) {
+      radios.forEach((element) => element.disabled = this.randomize ? true : false)
+    }
   }
   
   private refreshRadioButtons() {
