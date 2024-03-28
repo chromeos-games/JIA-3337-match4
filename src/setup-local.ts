@@ -16,22 +16,22 @@ export class SetupPage extends LitElement {
     return html`
       <slot></slot>
       <div class="card-deck">
-      <legend>Select Who Goes First</legend>
+      
       <div class="card">
           <input type="text" id = "p1_name" style = "position:relative; right:70px"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
           <input type="text" id = "p2_name" style = "position:relative; left:70px"  placeholder = "Player 2 Name" @change=${this.onChangeP2Name}/>
         <br>
         <br>
+        <legend>Select Who Goes First</legend>
         <input type="radio" id = "p1" style = "position:relative; right:120px" value = "p1" name="firstPlayer"
             ?checked=${this.firstPlayer === 'p1'} @change=${this._onClickRadio}/>
             <label style = "position:relative; right:120px" for="p1"> Player 1 </label>
           <input type="radio" id = "p2" style = "position:relative; left:100px" value = "p2" name="firstPlayer"
             ?checked=${this.firstPlayer === 'p2'} @change=${this._onClickRadio} />
             <label style = "position:relative; left:100px" for= "p2"> Player 2 </label>
-          
         </div>
         <div class="card">
-          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: white">
+          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px;" >
             Randomize
           </button>
         </div>
@@ -51,16 +51,15 @@ export class SetupPage extends LitElement {
     console.log(this.firstPlayer)
   }
 
-  private onClickRandom(e: { target: { style: { backgroundColor: string; }; }; }) {
+  private onClickRandom(e: { target: { style: string; }; }) {
     this.randomize = !this.randomize
-    e.target.style.backgroundColor = this.randomize ? "yellow" : "white"
+    e.target.style = this.randomize ? "position:relative; height:55px; color:black; background-color:"+buttonColor.Orange : "position:relative; height:55px;"
     console.log("randomize: " + this.randomize)
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     console.log(radios)
     if (radios) {
       radios.forEach((element) => element.disabled = this.randomize ? true : false)
     }
-  }
   
   private refreshRadioButtons() {
     
@@ -85,6 +84,7 @@ export class SetupPage extends LitElement {
     if (button) {
       button.style.backgroundColor = color;
     }
+
   }
 
   private onChangeP1Name(e: {target: { value: string; }}){

@@ -16,13 +16,13 @@ export class SetupPage extends LitElement {
   render() {
     return html`
       <slot></slot>
-      <div class="card-deck">
+    <div class="card-deck">
       <input type="text" id = "p1_name" style = "position:relative;"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
       <div class="card">
       <button @click=${this.onClickEasy} class="difficulty" part="easy" style = "position:relative; height:125px; width:125px; right:20px; background:lightgrey; color: black; font-size:20px" > Easy </button>
       <button @click=${this.onClickMedium} class="difficulty" part="medium" style = "position:relative; height:125px; width:125px; background:lightgrey; color: black; font-size:20px" > Medium </button>
       <button @click=${this.onClickHard} class="difficulty" part="hard" style = "position:relative; height:125px; width:125px; left:20px; background:lightgrey; color: black; font-size:20px" > Hard </button>
-  </div>
+      </div>
 
       <legend>Select Who Goes First</legend>
       <div class="card">
