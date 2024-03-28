@@ -47,9 +47,14 @@ export class BoardController {
         }
     }
     
-    public forfeit() {
+    public forfeit(): boolean {
+        let botsTurn = this.currentPlayerID === 'p2' && this.difficulty !== ''
+        if (this.win || this.currentPlayerDidForfeit || botsTurn) {
+            return false
+        }
         SettingsStore.curr_game += 'f'
         this.currentPlayerDidForfeit = true
+        return true
     }
 
     public makeMove(col: number, store: boolean = true): boolean {

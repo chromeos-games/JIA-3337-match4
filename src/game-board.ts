@@ -169,8 +169,9 @@ export class gameBoardView extends LitElement {
   private onClickForfeit() {
     console.log("Forfeit Clicked")
     playSound('button.wav')
-    this.boardController.forfeit()
-    this.currentPlayerDidForfeit = true
+    if (this.boardController.forfeit()) {
+      this.currentPlayerDidForfeit = true
+    }
   }
 
   private togglePause() {
