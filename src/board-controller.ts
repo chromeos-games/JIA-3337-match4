@@ -60,7 +60,7 @@ export class BoardController {
             SettingsStore.curr_game += col.toString()
         }
         this.view.onMove(row, col, this.currentPlayerID)
-        this.checkWinner()
+        this.checkGameEnd()
         if (this.win) {
             return true
         }
@@ -349,13 +349,7 @@ export class BoardController {
         return array.filter((v) => (v === value)).length;
     }
 
-    private checkWinner() {
-        //draw check
-        if (this.board.move_num >= 42){
-            this.win = true
-            this.view.onDraw(this.winPositions)
-        }
-        
+    private checkGameEnd() {
         //tokens are stored as colors
         for (let row = 0; row < 6; row++) {
             for (let col = 0; col < 7; col++) {
@@ -385,6 +379,12 @@ export class BoardController {
         if (this.winPositions.length != 0) {
             this.win = true
             this.view.onWin(this.winPositions)
+        } else {
+            //if the board is full and there is no winner, it's a draw
+            if (this.board.move_num >= 42){
+                this.win = true
+                this.view.onDraw(this.winPositions)
+            }
         }
     }
 }
