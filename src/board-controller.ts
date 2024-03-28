@@ -9,6 +9,7 @@ export class BoardController {
     enableMoves: boolean = true
     currentPlayerID: string = this.firstPlayer
     difficulty: string = SettingsStore.difficulty
+    p2IsBot: boolean = SettingsStore.p2IsBot
     // view
     view: gameBoardView
     // board
