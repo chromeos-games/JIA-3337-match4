@@ -58,34 +58,9 @@ export class SetupPage extends LitElement {
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     console.log(radios)
     //if (radios) {
-    // radios.forEach((element) => element.disabled = this.randomize ? true : false)
+    //radios.forEach((element) => element.disabled = this.randomize ? true : false)
     //}
-  }
-  private refreshRadioButtons() {
-    
-    const p1Radio = this.shadowRoot?.querySelector('#p1') as HTMLInputElement;
-    const p2Radio = this.shadowRoot?.querySelector('#p2') as HTMLInputElement;
-  
-    if (p1Radio && p2Radio) {
-      
-      const refreshValue = (p1Radio.getAttribute('data-refresh') || 'false') === 'false' ? 'true' : 'false';
-      p1Radio.setAttribute('data-refresh', refreshValue);
-      p2Radio.setAttribute('data-refresh', refreshValue);
-  
-      
-      p1Radio.checked = this.firstPlayer === 'p1';
-      p2Radio.checked = this.firstPlayer === 'p2';
-    }
-  }
-  
-  private updateButtonColor(color: string) {
-    // Directly update the button color via shadow DOM, ensuring the element is an HTMLElement
-    const button = this.shadowRoot?.querySelector('button[part="button"]') as HTMLElement | null;
-    if (button) {
-      button.style.backgroundColor = color;
-    }
-
-  }
+  }  
 
   private onChangeP1Name(e: {target: { value: string; }}){
     this.p1_name = e.target.value
