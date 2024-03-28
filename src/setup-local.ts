@@ -57,10 +57,10 @@ export class SetupPage extends LitElement {
     console.log("randomize: " + this.randomize)
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     console.log(radios)
-    if (radios) {
-      radios.forEach((element) => element.disabled = this.randomize ? true : false)
-    }
-  
+    //if (radios) {
+    // radios.forEach((element) => element.disabled = this.randomize ? true : false)
+    //}
+  }
   private refreshRadioButtons() {
     
     const p1Radio = this.shadowRoot?.querySelector('#p1') as HTMLInputElement;
