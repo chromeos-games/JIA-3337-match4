@@ -109,7 +109,8 @@ export class gameBoardView extends LitElement {
 
 
   private handleAnimationEnd() {
-    if (this.getNameOfPlayer(this.boardController.currentPlayerID) === 'Bot' && !this.win) {
+    //need a better way to keep track of bot player
+    if (this.boardController.currentPlayerID === 'p2' && this.boardController.p2IsBot && !this.win) {
       this.doBotMove()
     } else {
       this.botMoving = false

@@ -10,8 +10,7 @@ export class SetupPage extends LitElement {
   @property({ type: String }) p1_name = 'Player 1';
   @property({ type: String }) p2_name = 'Player 2';
   @property({ type: Boolean }) randomize = false;
-  
-  
+  @property({ type: Boolean }) p2IsBot = 'false';
 
   render() {
     return html`
@@ -56,6 +55,36 @@ export class SetupPage extends LitElement {
     this.randomize = !this.randomize
     e.target.style = this.randomize ? "position:relative; height:55px; color:black; background-color:"+buttonColor.Orange : "position:relative; height:55px;"
     console.log("randomize: " + this.randomize)
+    const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
+    console.log(radios)
+    if (radios) {
+      radios.forEach((element) => element.disabled = this.randomize ? true : false)
+    }
+  
+  private refreshRadioButtons() {
+    
+    const p1Radio = this.shadowRoot?.querySelector('#p1') as HTMLInputElement;
+    const p2Radio = this.shadowRoot?.querySelector('#p2') as HTMLInputElement;
+  
+    if (p1Radio && p2Radio) {
+      
+      const refreshValue = (p1Radio.getAttribute('data-refresh') || 'false') === 'false' ? 'true' : 'false';
+      p1Radio.setAttribute('data-refresh', refreshValue);
+      p2Radio.setAttribute('data-refresh', refreshValue);
+  
+      
+      p1Radio.checked = this.firstPlayer === 'p1';
+      p2Radio.checked = this.firstPlayer === 'p2';
+    }
+  }
+  
+  private updateButtonColor(color: string) {
+    // Directly update the button color via shadow DOM, ensuring the element is an HTMLElement
+    const button = this.shadowRoot?.querySelector('button[part="button"]') as HTMLElement | null;
+    if (button) {
+      button.style.backgroundColor = color;
+    }
+
   }
 
   private onChangeP1Name(e: {target: { value: string; }}){
@@ -81,6 +110,7 @@ export class SetupPage extends LitElement {
     SettingsStore.p2_name = this.p2_name
     SettingsStore.curr_game = ''
     SettingsStore.difficulty = ''
+    SettingsStore.p2IsBot = this.p2IsBot
     this.navigate("/game")
   }
   
