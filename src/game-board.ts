@@ -11,7 +11,6 @@ export class gameBoardView extends LitElement {
   @property({ type: Boolean }) botMoving: boolean = false
   @property({ type: Boolean }) eventListenerAdded: boolean = false
   @property({ type: Boolean }) win: boolean = false
-  @property({ type: Boolean }) pause: boolean = false
   @property({ type: Array }) winPositions: number[][] = []
   @property({ type: Boolean }) displayWin: boolean = false
   @property({ type: Boolean }) displayDraw: boolean = false
@@ -60,15 +59,7 @@ export class gameBoardView extends LitElement {
             <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
           </div>
       </div>
-      <div class="${this.pause ? 'winHolder' : 'hidden'}">
-          <div class="${this.pause ? 'pauseWindow' : 'hidden'}">
-            <h2 style="margin-bottom: 0px">Game Paused</h2>
-            <p >Clicking Main Menu will save the game and return you to the main menu.</p>
-            <button @click=${this.onClickMainMenu} style="position:absolute; right: 70px; bottom: 0px;">Main Menu</button>
-            <button @click=${this.togglePause} style="position:absolute; left: 70px; bottom: 0px;">Resume</button>
-          </div>
-      </div>
-      <button @click=${this.togglePause} style="${this.displayWin || this.pause ? "visibility: hidden;" : null}">Pause</button>
+      <button @click=${this.onClickMainMenu} style="${this.displayWin ? "visibility: hidden;" : null}">Main Menu</button>
     </div>
   `
   }
@@ -145,11 +136,6 @@ export class gameBoardView extends LitElement {
     console.log("Main Menu Clicked")
     window.location.href = '/'
   }
-  private togglePause() {
-    console.log("Toggling Pause")
-    this.pause = !this.pause
-  }
-
 
   private onClickBack() {
     console.log("Back Clicked")
@@ -267,15 +253,6 @@ export class gameBoardView extends LitElement {
     border: 1px solid #333;
     animation: flicker 1.5s ease-in-out;
     animation-delay: .5s;
-  }
-  .pauseWindow {
-    position: relative;
-    width: 400px;
-    height: 200px;
-    background-color: #242424;
-    border-radius: 8px;
-    border: 2px solid #ffffff;
-
   }
 
   @keyframes flicker {
