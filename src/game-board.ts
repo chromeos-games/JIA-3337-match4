@@ -109,7 +109,6 @@ export class gameBoardView extends LitElement {
 
 
   private handleAnimationEnd() {
-    //need a better way to keep track of bot player
     if (this.boardController.currentPlayerID === 'p2' && this.boardController.p2IsBot && !this.win) {
       this.doBotMove()
     } else {
@@ -118,7 +117,9 @@ export class gameBoardView extends LitElement {
     }
   }
 
+  //automatically saves games. we will need to decide on a max number of saved games and delete the oldest one when we have too many
   private handleWin() {
+    SettingsStore.savedGames.push(SettingsStore.curr_game)
     setTimeout(function () { playSound('button.wav') }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
@@ -126,6 +127,7 @@ export class gameBoardView extends LitElement {
   }
 
   private handleDraw() {
+    SettingsStore.savedGames.push(SettingsStore.curr_game)
     setTimeout(function () { playSound('button.wav') }, 800)
     setTimeout(() => { this.displayDraw = true }, 800)
     this.win = true

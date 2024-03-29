@@ -22,7 +22,10 @@ export class BoardController {
     }
 
     initBoard() {
-        if (SettingsStore.curr_game.length != 0) {
+        if (SettingsStore.isGameReplay) {
+            SettingsStore.isGameReplay = 'false'
+            this.loadGame()
+        } else if (SettingsStore.curr_game.length != 0) {
             console.log('loading previous game')
             //Set the correct current player
             if (parseInt(SettingsStore.curr_game[0]) === 0) {
@@ -42,7 +45,18 @@ export class BoardController {
             }
         }
     }
-    
+    public loadGame(){
+        //we will need a way to get the right game from the array, for now we will just load the first one for testing
+        if (parseInt(SettingsStore.savedGames[0][0]) === 0) {
+            this.currentPlayerID = "p1"
+        } else {
+            this.currentPlayerID = "p2"
+        }
+        //
+        for (let i = 1; i < SettingsStore.savedGames[0].length; i++) {
+            this.makeMove(parseInt(SettingsStore.savedGames[0][i]), false)
+        }
+    }
     public makeMove(col: number, store: boolean = true): boolean {
         if (!this.enableMoves || this.win) {
             console.log("Moves are disabled")
@@ -99,7 +113,6 @@ export class BoardController {
             let vals = this.minMaxSolver(board, 4, -99999, 99999, 'p2')
             console.log("move: " + vals[0] + " score: " + vals[1])
             return vals[0]
-            // return Math.floor(Math.random() * 7)
         }
     }
 

@@ -89,6 +89,20 @@ export class SettingsStore {
         Storage.set('p2IsBot', value)
     }
 
+    static get isGameReplay(): boolean {
+        return Storage.get('isGameReplay') === 'true'
+    }
+    static set isGameReplay(value: string) {
+        Storage.set('isGameReplay', value)
+    }
+    //storage can only hold strings not arrays
+    static get savedGames(): string[] {
+        return Storage.get("savedGames").split(',')
+    }
+    static set savedGames(value: string[]) {
+        Storage.set("savedGames", value.join(','))
+    }
+
     static get curr_game(): string {
         return Storage.get('curr_game')
     }    

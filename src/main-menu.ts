@@ -34,6 +34,9 @@ export class MainMenu extends LitElement {
         <button @click=${this._onClickSettings} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
           Settings
         </button>
+        <button @click=${this._onClickReplay} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
+          Replay
+        </button>
       </div>
     `
   }
@@ -56,6 +59,10 @@ export class MainMenu extends LitElement {
   private _onClickSettings() {
     console.log("Settings Clicked")
     this.navigate("/settings")
+  }
+  private _onClickReplay() {
+    SettingsStore.isGameReplay = 'true'
+    this.navigate("/game")
   }
   private navigate(location: string) {
     window.location.href = location
