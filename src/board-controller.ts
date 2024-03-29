@@ -6,6 +6,7 @@ export class BoardController {
     firstPlayer: string = SettingsStore.firstPlayer
     winPositions: number[][] = []
     win: boolean = false
+    currentPlayerDidForfeit: boolean = false
     enableMoves: boolean = true
     currentPlayerID: string = this.firstPlayer
     difficulty: string = SettingsStore.difficulty
@@ -31,6 +32,10 @@ export class BoardController {
             }
 
             for (let i = 1; i < SettingsStore.curr_game.length; i++) {
+                if (SettingsStore.curr_game[i] === 'f') {
+                    this.currentPlayerDidForfeit = true
+                    break
+                }
                 this.makeMove(parseInt(SettingsStore.curr_game[i]), false) // don't store already stored moves
             }
         } else {
@@ -42,8 +47,18 @@ export class BoardController {
         }
     }
     
+    public forfeit(): boolean {
+        let botsTurn = this.currentPlayerID === 'p2' && this.difficulty !== ''
+        if (this.win || this.currentPlayerDidForfeit || botsTurn) {
+            return false
+        }
+        SettingsStore.curr_game += 'f'
+        this.currentPlayerDidForfeit = true
+        return true
+    }
+
     public makeMove(col: number, store: boolean = true): boolean {
-        if (!this.enableMoves || this.win) {
+        if (!this.enableMoves || this.win || this.currentPlayerDidForfeit) {
             console.log("Moves are disabled")
             return false;
         }
