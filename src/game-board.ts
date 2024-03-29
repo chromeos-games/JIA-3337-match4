@@ -11,6 +11,7 @@ export class gameBoardView extends LitElement {
   @property({ type: Boolean }) botMoving: boolean = false
   @property({ type: Boolean }) eventListenerAdded: boolean = false
   @property({ type: Boolean }) win: boolean = false
+  @property({ type: Boolean }) currentPlayerDidForfeit: boolean = false
   @property({ type: Boolean }) pause: boolean = false
   @property({ type: Array }) winPositions: number[][] = []
   @property({ type: Boolean }) displayWin: boolean = false
@@ -32,10 +33,12 @@ export class gameBoardView extends LitElement {
     super()
     this.viewBoard = Array.from({ length: 6 }, () => Array(7).fill(null))
     this.boardController = new BoardController(this)
+    if (this.boardController.currentPlayerDidForfeit) {
+      this.currentPlayerDidForfeit = true
+    }
   }
 
   render() {
-    let winningPlayer = this.getNameOfPlayer(this.boardController.currentPlayerID)
     return html`
     <div style="--game-scale: ${this.gameScale}; transform: scale(var(--game-scale));">
       <h1>Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
@@ -53,9 +56,9 @@ export class gameBoardView extends LitElement {
       )
     )}
       </div>
-      <div class="${this.displayWin || this.displayDraw ? 'winHolder' : 'hidden'}">
-          <div class ="${this.displayWin || this.displayDraw ? 'winWindow' : 'hidden'}">
-            <h2> ${this.displayWin ? winningPlayer + " Wins!" : "Draw!"}</h2>
+      <div class="${this.shouldShowWinWindow() ? 'winHolder' : 'hidden'}">
+          <div class ="${this.shouldShowWinWindow() ? 'winWindow' : 'hidden'}">
+            <h2> ${this.getWinningMessage()}</h2>
             <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
             <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
           </div>
@@ -68,9 +71,27 @@ export class gameBoardView extends LitElement {
             <button @click=${this.togglePause} style="position:absolute; left: 70px; bottom: 0px;">Resume</button>
           </div>
       </div>
-      <button @click=${this.togglePause} style="${this.displayWin || this.pause ? "visibility: hidden;" : null}">Pause</button>
+      <button @click=${this.togglePause} style="${this.shouldHideButtons() ? "visibility: hidden;" : null}">Pause</button>
+      <button @click=${this.onClickForfeit} style="${this.shouldHideButtons() ? "visibility: hidden;" : null}">Forfeit</button>
     </div>
   `
+  }
+  shouldShowWinWindow() {
+    return this.displayWin || this.displayDraw || this.currentPlayerDidForfeit
+  }
+  shouldHideButtons() {
+    return this.shouldShowWinWindow() || this.pause 
+  }
+
+  private getWinningMessage(): string {
+    if (this.displayWin) {
+      return this.getNameOfPlayer(this.boardController.currentPlayerID) + " Wins!"
+    } else if (this.displayDraw) {
+      return "Draw!"
+    } else if (this.currentPlayerDidForfeit) {
+      return this.getNameOfPlayer(this.boardController.currentPlayerID) + " forfeits the game."
+    }
+    return "error"
   }
 
   private winFrames(row: number, col: number) {
@@ -145,6 +166,15 @@ export class gameBoardView extends LitElement {
     console.log("Main Menu Clicked")
     window.location.href = '/'
   }
+
+  private onClickForfeit() {
+    console.log("Forfeit Clicked")
+    playSound('button.wav')
+    if (this.boardController.forfeit()) {
+      this.currentPlayerDidForfeit = true
+    }
+  }
+
   private togglePause() {
     console.log("Toggling Pause")
     this.pause = !this.pause
