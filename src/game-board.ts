@@ -18,6 +18,7 @@ export class gameBoardView extends LitElement {
   @property({ type: Boolean }) displayDraw: boolean = false
   @property({ type: BoardController }) boardController
   @property({ type: Array }) viewBoard: string[][] = []
+  @property({ type: Number}) columnHoverIndex: number = -1;
 
   gameScale: number = SettingsStore.scale
 
@@ -41,12 +42,15 @@ export class gameBoardView extends LitElement {
   render() {
     return html`
     <div style="--game-scale: ${this.gameScale}; transform: scale(var(--game-scale));">
-      <h1>Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
+      <h1>Match 4${this.displayWin ? null : " - "} <span style = "color:${this.getColorForPlayer(this.boardController.currentPlayerID)}"> ${this.getNameOfPlayer(this.boardController.currentPlayerID)}'s</span> turn</h1>
       <div class="board">
         ${this.viewBoard.map((row, rowIndex) =>
       row.map((player, colIndex) =>
         html`
-              <div class="cell ${this.winFrames(rowIndex, colIndex)}" @click=${() => this.handleCellClick(colIndex)}>
+              <div class="cell ${this.winFrames(rowIndex, colIndex)}" 
+              @click=${() => this.handleCellClick(colIndex)}
+              @mouseenter=${() => this.handleColumnHover(colIndex)}
+              @mouseleave=${this.handleColumnHoverEnd}>
                 ${this.getColorForPlayer(player)
             ? html`<div class="token" style="background-color: ${this.getColorForPlayer(player)}; --rowIndex: ${rowIndex};"></div>`
             : null
@@ -55,10 +59,20 @@ export class gameBoardView extends LitElement {
             `
       )
     )}
+        ${this.columnHoverIndex >= 0 ?
+            html`
+            <div class="translucent-token"
+                style="opacity:.3; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
+                        left: ${this.columnHoverIndex * 55}px;
+                        top: ${(this.boardController.checkValidColumn(this.viewBoard, this.columnHoverIndex) + 1) * 55 + 50/2}px;">
+            </div>` : null
+        }  
+      </div>
+      </div>
       </div>
       <div class="${this.shouldShowWinWindow() ? 'winHolder' : 'hidden'}">
           <div class ="${this.shouldShowWinWindow() ? 'winWindow' : 'hidden'}">
-            <h2> ${this.getWinningMessage()}</h2>
+            <h2>${this.getWinningMessage()}</h2>
             <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
             <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
           </div>
@@ -76,6 +90,19 @@ export class gameBoardView extends LitElement {
     </div>
   `
   }
+
+  private handleColumnHover(columnIndex: number) {
+    if (this.win || this.shouldHideButtons()) {
+        this.handleColumnHoverEnd()
+    } else {
+        this.columnHoverIndex = columnIndex;
+    }
+  }
+
+  private handleColumnHoverEnd() {
+    this.columnHoverIndex = -1;
+  }
+
   shouldShowWinWindow() {
     return this.displayWin || this.displayDraw || this.currentPlayerDidForfeit
   }
@@ -83,9 +110,9 @@ export class gameBoardView extends LitElement {
     return this.shouldShowWinWindow() || this.pause 
   }
 
-  private getWinningMessage(): string {
+  private getWinningMessage() {
     if (this.displayWin) {
-      return this.getNameOfPlayer(this.boardController.currentPlayerID) + " Wins!"
+      return html`<span style="color:${this.getColorForPlayer(this.boardController.currentPlayerID)}"> ${this.getNameOfPlayer(this.boardController.currentPlayerID)}</span> Wins!`
     } else if (this.displayDraw) {
       return "Draw!"
     } else if (this.currentPlayerDidForfeit) {
@@ -152,6 +179,7 @@ export class gameBoardView extends LitElement {
     setTimeout(function () { playSound('button.wav') }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
+    this.handleColumnHoverEnd();
     console.log("Game Won!")
   }
 
@@ -255,6 +283,14 @@ export class gameBoardView extends LitElement {
     border-radius: 50%;
     background-color: var(--player-color);
     animation: drop 0.5s ease-in-out;
+  }
+
+  .translucent-token {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    pointer-events: none;
   }
 
   @keyframes drop {
