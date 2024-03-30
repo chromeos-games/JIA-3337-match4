@@ -63,8 +63,8 @@ export class gameBoardView extends LitElement {
             html`
             <div class="translucent-token"
                 style="opacity:${this.botMoving ? 0 : .3}; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
-                        left: ${this.columnHoverIndex * 55}px;
-                        top: ${(this.boardController.checkValidColumn(this.viewBoard, this.columnHoverIndex) + 1) * 55 + 50/2}px;">
+                        left: ${this.columnHoverIndex * 55 + 1}px;
+                        top: ${this.boardController.checkValidColumn(this.viewBoard, this.columnHoverIndex) * 57 + 70.5}px;">
             </div>` : null
         }  
       </div>
