@@ -41,7 +41,7 @@ export class gameBoardView extends LitElement {
   render() {
     return html`
     <div style="--game-scale: ${this.gameScale}; transform: scale(var(--game-scale));">
-      <h1>Match 4${this.displayWin ? null : " - " + this.getNameOfPlayer(this.boardController.currentPlayerID) + "'s turn"}</h1>
+      <h1>Match 4${this.displayWin ? null : " - "} <span style = "color:${this.getColorForPlayer(this.boardController.currentPlayerID)}"> ${this.getNameOfPlayer(this.boardController.currentPlayerID)}'s</span> turn</h1>
       <div class="board">
         ${this.viewBoard.map((row, rowIndex) =>
       row.map((player, colIndex) =>
@@ -58,7 +58,7 @@ export class gameBoardView extends LitElement {
       </div>
       <div class="${this.shouldShowWinWindow() ? 'winHolder' : 'hidden'}">
           <div class ="${this.shouldShowWinWindow() ? 'winWindow' : 'hidden'}">
-            <h2> ${this.getWinningMessage()}</h2>
+            <h2>${this.getWinningMessage()}</h2>
             <button @click=${this.onClickMainMenu} style="position:absolute; right: 10px; bottom: 10px">Main Menu</button>
             <button @click=${this.onClickBack} style="position:absolute; left: 10px; bottom: 10px">Replay</button>
           </div>
@@ -83,9 +83,9 @@ export class gameBoardView extends LitElement {
     return this.shouldShowWinWindow() || this.pause 
   }
 
-  private getWinningMessage(): string {
+  private getWinningMessage() {
     if (this.displayWin) {
-      return this.getNameOfPlayer(this.boardController.currentPlayerID) + " Wins!"
+      return html`<span style="color:${this.getColorForPlayer(this.boardController.currentPlayerID)}"> ${this.getNameOfPlayer(this.boardController.currentPlayerID)}</span> Wins!`
     } else if (this.displayDraw) {
       return "Draw!"
     } else if (this.currentPlayerDidForfeit) {
