@@ -32,7 +32,7 @@ export class SetupPage extends LitElement {
           
         </div>
         <div class="card">
-          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color: white">
+          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color:#1a1a1a;">
             Randomize
           </button>
         </div>
@@ -54,7 +54,7 @@ export class SetupPage extends LitElement {
 
   private onClickRandom(e: { target: { style: { backgroundColor: string; }; }; }) {
     this.randomize = !this.randomize
-    e.target.style.backgroundColor = this.randomize ? "yellow" : "white"
+    e.target.style.backgroundColor = this.randomize ? "#8B8000" : "#1a1a1a"
     console.log("randomize: " + this.randomize)
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     console.log(radios)
