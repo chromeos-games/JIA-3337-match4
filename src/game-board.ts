@@ -105,7 +105,7 @@ export class gameBoardView extends LitElement {
   }
 
   private handleCellClick(col: number) {
-    if (!this.enableMoves || this.win || this.botMoving) {
+    if (!this.enableMoves || this.win || this.botMoving || this.pause) {
       console.log("Moves are disabled")
       return
     }
