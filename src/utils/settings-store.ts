@@ -61,7 +61,6 @@ export class SettingsStore {
         Storage.set('firstPlayer', value)
     }
 
-
     static get p1_name(): string {
         return Storage.get('p1_name')
     }
@@ -81,6 +80,13 @@ export class SettingsStore {
     }
     static set difficulty(value: string) {
         Storage.set('difficulty', value)
+    }
+
+    static get p2IsBot(): boolean {
+        return Storage.get('p2IsBot') === 'true'
+    }
+    static set p2IsBot(value: string) {
+        Storage.set('p2IsBot', value)
     }
 
     static get curr_game(): string {
