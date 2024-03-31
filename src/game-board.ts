@@ -3,6 +3,7 @@ import { LitElement, html, css } from 'lit'
 import { playSound } from './main-menu.ts'
 import { SettingsStore } from './utils/settings-store.ts'
 import { BoardController } from './board-controller.ts'
+import { Leaderboard } from './utils/leaderboard.ts'
 
 @customElement('game-board')
 export class gameBoardView extends LitElement {
@@ -152,7 +153,17 @@ export class gameBoardView extends LitElement {
     setTimeout(function () { playSound('button.wav') }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
+    this.updateLeaderboard();
     console.log("Game Won!")
+  }
+
+  private updateLeaderboard() {
+    const winningPlayerName = this.getNameOfPlayer(this.boardController.currentPlayerID);
+    const LosingPlayerName = this.getNameOfLosingPlayer(this.boardController.currentPlayerID);
+    Leaderboard.updateLeaderboard(winningPlayerName, LosingPlayerName);
+    const leaderboard = Leaderboard.getLeaderboard();
+    console.log("Current Leaderboard:", leaderboard);
+    
   }
 
   private handleDraw() {
@@ -224,6 +235,18 @@ export class gameBoardView extends LitElement {
       return null
     }
   }
+
+  private getNameOfLosingPlayer(player: string) {
+    if (player === 'p1') {
+      return SettingsStore.p2_name
+    } else if (player === 'p1') {
+      return SettingsStore.p1_name
+    } else {
+      return null
+    }
+  }
+
+  
 
 
   static styles = css`
