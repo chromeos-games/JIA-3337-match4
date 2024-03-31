@@ -48,4 +48,12 @@ export class Leaderboard {
         
         this.setLeaderboard(leaderboard);
     }
+
+    // Method to reset the leaderboard
+    static resetLeaderboard(): void {
+        const leaderboard = {};
+        this.setLeaderboard(leaderboard);
+    }
+
+    
 }
