@@ -345,6 +345,14 @@ export class gameBoardView extends LitElement {
     button {
       background-color: #f9f9f9;
     }
+    .winWindow {
+      background-color: #ffffff;
+      border: 2px solid #242424;
+    }
+    .pauseWindow {
+      background-color: #ffffff;
+      border: 2px solid #242424;
+    }
   }
 `;
 }
