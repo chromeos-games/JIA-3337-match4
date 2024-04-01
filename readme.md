@@ -4,6 +4,26 @@ ChromeOS Game where two players play against each other to create 4 in a row
 
 # Release Notes
 
+## Version 0.4.0
+### Features
+* Game can be paused midgame
+* Players can exit out of a game and continue it later
+* Leaderboard records player stats
+* Game Replays are saved and can be reopened for later viewing
+
+### Bug Fixes
+* Fixed the bot not being able to make the first move
+* Fixed players naming themselves "Bot" will make the system play for them
+* Fixed players being able to make a move for the bot if they click fast enough
+* Fixed game drawing if the last move to fill up the board is a winning move
+* Fixed random button not working the same for local setup and bot setup
+
+### Known Issues
+* Tutorial doesn't finish when 4 in a row is achieved
+* Buttons are in unintuitive spots, like the back button and the pause button
+* Leaderboard doesn't update when the game is drawed
+
+
 ## Version 0.3.0
 ### Features
 * Players can now play against a bot
