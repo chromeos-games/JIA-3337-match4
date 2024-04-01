@@ -201,7 +201,7 @@ export class BoardController {
         }
         return validMoves
     }
-    private checkValidColumn(board: string[][], col: number) {
+    public checkValidColumn(board: string[][], col: number) {
         //if the column is valid, return the row the token falls into
         for (let row = 5; row >= 0; row--) {
             if (!board[row][col]) {

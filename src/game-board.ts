@@ -19,6 +19,7 @@ export class gameBoardView extends LitElement {
   @property({ type: Boolean }) displayDraw: boolean = false
   @property({ type: BoardController }) boardController
   @property({ type: Array }) viewBoard: string[][] = []
+  @property({ type: Number}) columnHoverIndex: number = -1;
 
   gameScale: number = SettingsStore.scale
 
@@ -47,7 +48,10 @@ export class gameBoardView extends LitElement {
         ${this.viewBoard.map((row, rowIndex) =>
       row.map((player, colIndex) =>
         html`
-              <div class="cell ${this.winFrames(rowIndex, colIndex)}" @click=${() => this.handleCellClick(colIndex)}>
+              <div class="cell ${this.winFrames(rowIndex, colIndex)}" 
+              @click=${() => this.handleCellClick(colIndex)}
+              @mouseenter=${() => this.handleColumnHover(colIndex)}
+              @mouseleave=${this.handleColumnHoverEnd}>
                 ${this.getColorForPlayer(player)
             ? html`<div class="token" style="background-color: ${this.getColorForPlayer(player)}; --rowIndex: ${rowIndex};"></div>`
             : null
@@ -56,6 +60,16 @@ export class gameBoardView extends LitElement {
             `
       )
     )}
+        ${this.columnHoverIndex >= 0 ?
+            html`
+            <div class="translucent-token"
+                style="opacity:${this.botMoving ? 0 : .3}; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
+                        left: ${this.columnHoverIndex * 55 + 1}px;
+                        top: ${this.boardController.checkValidColumn(this.viewBoard, this.columnHoverIndex) * 57 + 70.5}px;">
+            </div>` : null
+        }  
+      </div>
+      </div>
       </div>
       <div class="${this.shouldShowWinWindow() ? 'winHolder' : 'hidden'}">
           <div class ="${this.shouldShowWinWindow() ? 'winWindow' : 'hidden'}">
@@ -77,6 +91,19 @@ export class gameBoardView extends LitElement {
     </div>
   `
   }
+
+  private handleColumnHover(columnIndex: number) {
+    if (this.win || this.shouldHideButtons()) {
+        this.handleColumnHoverEnd()
+    } else {
+        this.columnHoverIndex = columnIndex;
+    }
+  }
+
+  private handleColumnHoverEnd() {
+    this.columnHoverIndex = -1;
+  }
+
   shouldShowWinWindow() {
     return this.displayWin || this.displayDraw || this.currentPlayerDidForfeit
   }
@@ -156,6 +183,7 @@ export class gameBoardView extends LitElement {
     setTimeout(function () { playSound('button.wav') }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
+    this.handleColumnHoverEnd();
     this.updateLeaderboard();
     console.log("Game Won!")
   }
@@ -281,6 +309,14 @@ export class gameBoardView extends LitElement {
     border-radius: 50%;
     background-color: var(--player-color);
     animation: drop 0.5s ease-in-out;
+  }
+
+  .translucent-token {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    pointer-events: none;
   }
 
   @keyframes drop {
