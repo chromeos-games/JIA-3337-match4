@@ -34,6 +34,12 @@ export const style = css`
   line-height: 1.1;
 }
 
+.column {
+    white-space: pre-line;
+     height: 525px;
+     float:left;
+}
+
 ::slotted(h1) {
   font-size: 3.2em;
   line-height: 1.1;

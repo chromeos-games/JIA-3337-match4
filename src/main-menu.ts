@@ -28,7 +28,10 @@ export class MainMenu extends LitElement {
       </div>
       
       <div class="card">
-        <button @click=${this._onClickHelp} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px" >
+      <button @click=${this._onClickLeaderboard} part="button" style = "position:relative; right:250px; top:50px; height:75px; width:75px;" >
+          Records
+        </button>  
+      <button @click=${this._onClickHelp} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px" >
           Help
         </button>
         <button @click=${this._onClickSettings} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
@@ -57,6 +60,11 @@ export class MainMenu extends LitElement {
     console.log("Settings Clicked")
     this.navigate("/settings")
   }
+  private _onClickLeaderboard() {
+    console.log("Leadeboard Clicked")
+    this.navigate("/leaderboard")
+  }
+  
   private navigate(location: string) {
     window.location.href = location
   }

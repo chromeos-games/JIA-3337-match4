@@ -4,6 +4,7 @@ import { playSound } from './main-menu.ts'
 import { SettingsStore } from './utils/settings-store.ts'
 import { BoardController } from './board-controller.ts'
 import { ReplayStore } from './utils/replay-store.ts'
+import { Leaderboard } from './utils/leaderboard-store.ts'
 
 @customElement('game-board')
 export class gameBoardView extends LitElement {
@@ -19,6 +20,7 @@ export class gameBoardView extends LitElement {
   @property({ type: Boolean }) displayDraw: boolean = false
   @property({ type: BoardController }) boardController
   @property({ type: Array }) viewBoard: string[][] = []
+  @property({ type: Number}) columnHoverIndex: number = -1;
 
   gameScale: number = SettingsStore.scale
 
@@ -47,7 +49,10 @@ export class gameBoardView extends LitElement {
         ${this.viewBoard.map((row, rowIndex) =>
       row.map((player, colIndex) =>
         html`
-              <div class="cell ${this.winFrames(rowIndex, colIndex)}" @click=${() => this.handleCellClick(colIndex)}>
+              <div class="cell ${this.winFrames(rowIndex, colIndex)}" 
+              @click=${() => this.handleCellClick(colIndex)}
+              @mouseenter=${() => this.handleColumnHover(colIndex)}
+              @mouseleave=${this.handleColumnHoverEnd}>
                 ${this.getColorForPlayer(player)
             ? html`<div class="token" style="background-color: ${this.getColorForPlayer(player)}; --rowIndex: ${rowIndex};"></div>`
             : null
@@ -56,6 +61,16 @@ export class gameBoardView extends LitElement {
             `
       )
     )}
+        ${this.columnHoverIndex >= 0 ?
+            html`
+            <div class="translucent-token"
+                style="opacity:${this.botMoving ? 0 : .3}; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
+                        left: ${this.columnHoverIndex * 55 + 1}px;
+                        top: ${this.boardController.checkValidColumn(this.viewBoard, this.columnHoverIndex) * 57 + 70.5}px;">
+            </div>` : null
+        }  
+      </div>
+      </div>
       </div>
       <div class="${this.shouldShowWinWindow() ? 'winHolder' : 'hidden'}">
           <div class ="${this.shouldShowWinWindow() ? 'winWindow' : 'hidden'}">
@@ -77,6 +92,19 @@ export class gameBoardView extends LitElement {
     </div>
   `
   }
+
+  private handleColumnHover(columnIndex: number) {
+    if (this.win || this.shouldHideButtons()) {
+        this.handleColumnHoverEnd()
+    } else {
+        this.columnHoverIndex = columnIndex;
+    }
+  }
+
+  private handleColumnHoverEnd() {
+    this.columnHoverIndex = -1;
+  }
+
   shouldShowWinWindow() {
     return this.displayWin || this.displayDraw || this.currentPlayerDidForfeit
   }
@@ -90,6 +118,9 @@ export class gameBoardView extends LitElement {
     } else if (this.displayDraw) {
       return "Draw!"
     } else if (this.currentPlayerDidForfeit) {
+      const losingPlayerName = this.getNameOfPlayer(this.boardController.currentPlayerID);
+      const winningPlayerName = this.getNameOfLosingPlayer(this.boardController.currentPlayerID);
+      Leaderboard.updateLeaderboard(winningPlayerName, losingPlayerName);
       return this.getNameOfPlayer(this.boardController.currentPlayerID) + " forfeits the game."
     }
     return "error"
@@ -106,7 +137,7 @@ export class gameBoardView extends LitElement {
   }
 
   private handleCellClick(col: number) {
-    if (!this.enableMoves || this.win || this.botMoving) {
+    if (!this.enableMoves || this.win || this.botMoving || this.pause) {
       console.log("Moves are disabled")
       return
     }
@@ -154,7 +185,18 @@ export class gameBoardView extends LitElement {
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game)
+    this.handleColumnHoverEnd();
+    this.updateLeaderboard();
     console.log("Game Won!")
+  }
+
+  private updateLeaderboard() {
+    const winningPlayerName = this.getNameOfPlayer(this.boardController.currentPlayerID);
+    const LosingPlayerName = this.getNameOfLosingPlayer(this.boardController.currentPlayerID);
+    Leaderboard.updateLeaderboard(winningPlayerName, LosingPlayerName);
+    const leaderboard = Leaderboard.getLeaderboard();
+    console.log("Current Leaderboard:", leaderboard);
+    
   }
 
   private handleDraw() {
@@ -228,6 +270,18 @@ export class gameBoardView extends LitElement {
     }
   }
 
+  private getNameOfLosingPlayer(player: string) {
+    if (player === 'p1') {
+      return SettingsStore.p2_name
+    } else if (player === 'p1') {
+      return SettingsStore.p1_name
+    } else {
+      return null
+    }
+  }
+
+  
+
 
   static styles = css`
   :host {
@@ -258,6 +312,14 @@ export class gameBoardView extends LitElement {
     border-radius: 50%;
     background-color: var(--player-color);
     animation: drop 0.5s ease-in-out;
+  }
+
+  .translucent-token {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    pointer-events: none;
   }
 
   @keyframes drop {
@@ -347,6 +409,14 @@ export class gameBoardView extends LitElement {
     }
     button {
       background-color: #f9f9f9;
+    }
+    .winWindow {
+      background-color: #ffffff;
+      border: 2px solid #242424;
+    }
+    .pauseWindow {
+      background-color: #ffffff;
+      border: 2px solid #242424;
     }
   }
 `;
