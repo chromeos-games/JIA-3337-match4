@@ -3,6 +3,7 @@ import { LitElement, html, css } from 'lit'
 import { playSound } from './main-menu.ts'
 import { SettingsStore } from './utils/settings-store.ts'
 import { BoardController } from './board-controller.ts'
+import { ReplayStore } from './utils/replay-store.ts'
 import { Leaderboard } from './utils/leaderboard-store.ts'
 
 @customElement('game-board')
@@ -183,6 +184,7 @@ export class gameBoardView extends LitElement {
     setTimeout(function () { playSound('button.wav') }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
+    ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game)
     this.handleColumnHoverEnd();
     this.updateLeaderboard();
     console.log("Game Won!")
@@ -201,6 +203,7 @@ export class gameBoardView extends LitElement {
     setTimeout(function () { playSound('button.wav') }, 800)
     setTimeout(() => { this.displayDraw = true }, 800)
     this.win = true
+    ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game);
     console.log("Game draw.")
   }
 
