@@ -2,10 +2,12 @@ import { LitElement, css, html } from 'lit'
 import { customElement, property} from 'lit/decorators.js'
 import { playSound} from './main-menu.ts';
 import { SettingsStore } from './utils/settings-store.ts'
+import { tokenColor } from './enums.ts';
+import { TokenInfo } from './utils/token-info.ts';
 
 @customElement('replay-page')
 export class ReplayPage extends LitElement {
-  @property({ type: Array }) viewBoard: string[][] = [];
+  @property({ type: Array }) viewBoard: TokenInfo[][] = [];
   @property({ type: String }) currentPlayer: string = SettingsStore.curr_replay[0];
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
   @property({ type: Array}) moves: string = SettingsStore.curr_replay[2]
@@ -30,6 +32,7 @@ export class ReplayPage extends LitElement {
   }
 
   render() {
+    console.log(this.colorToName(this.getColorForPlayer(this.currentPlayer)))
     return html`
       <div style="display: flex; flex-direction: column; align-items: center;">
       <h1>Match 4 <span style = "color:${this.getColorForPlayer(this.currentPlayer)}"> ${this.currentPlayer}'s</span> turn</h1>
@@ -39,7 +42,7 @@ export class ReplayPage extends LitElement {
             html`
             <div class="cell">
               ${cell
-                ? html`<div class="token ${cell}" style="--rowIndex: ${rowIndex};"></div>`
+                ? html`<div class="token ${this.colorToName(cell.color)}" style="--rowIndex: ${rowIndex};"></div>`
                 : null
               }
             </div>
@@ -63,6 +66,27 @@ export class ReplayPage extends LitElement {
     }
   }
 
+  private colorToName(color: string) {
+    if (color === tokenColor.RED) {
+      return "Red"
+    }
+    if (color === tokenColor.GREEN) {
+      return "Green"
+    } 
+    if (color === tokenColor.BLUE) {
+      return "Blue"
+    }
+    if (color === tokenColor.ORANGE) {
+      return "Orange"
+    }
+    if (color === tokenColor.BROWN) {
+      return "Brown"
+    }
+    if (color === tokenColor.WHITE) {
+      return "White"
+    }
+  }
+
   private onTriggerReplay() {
     if (this.slideIndex == 0) {
       console.log("Replay Started")
@@ -78,14 +102,15 @@ export class ReplayPage extends LitElement {
   }
 
   private updateCell() {
-    console.log("Updating Cell")
     const col = Number(this.moves[this.slideIndex]); // Convert col to a number
-    console.log(col)
     const row = this.findAvailableRow(col);
     this.slideIndex++;
-    console.log("Row: " + row + " Col: " + col)
     if (row !== -1) {
-      this.viewBoard[row][col] = this.currentPlayer;
+      this.viewBoard[row][col] = {
+        player: this.currentPlayer,
+        color: this.getColorForPlayer(this.currentPlayer)
+      };
+      
       this.currentPlayer = this.currentPlayer ===  SettingsStore.curr_replay[0] ? SettingsStore.curr_replay[1] : SettingsStore.curr_replay[0];
     }
   }
@@ -155,8 +180,12 @@ export class ReplayPage extends LitElement {
     animation: drop 0.5s ease-in-out;
   }
 
-  .Red { background-color: #ff5252; }
-  .Yellow { background-color: #ffd740; }
+  .Red { background-color: #ff0000; }
+  .Green { background-color: #00ff00; }
+  .Blue { background-color: #0000ff; }
+  .Orange { background-color: #ffa500; }
+  .Brown { background-color: #a52a2a; }
+  .White { background-color: #ffffff; }
 
   @keyframes drop {
     from {

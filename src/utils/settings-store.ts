@@ -33,7 +33,7 @@ export class SettingsStore {
     }
 
     static get player1TokenColor(): tokenColor {
-        return Storage.get('player1TokenColor') as tokenColor || tokenColor.Red
+        return Storage.get('player1TokenColor') as tokenColor || tokenColor.RED
     }
 
     static set player1TokenColor(value: tokenColor) {
@@ -44,7 +44,7 @@ export class SettingsStore {
     }
 
     static get player2TokenColor(): tokenColor {
-        return Storage.get('player2TokenColor') as tokenColor || tokenColor.Green
+        return Storage.get('player2TokenColor') as tokenColor || tokenColor.GREEN
     }
 
     static set player2TokenColor(value: tokenColor) {
