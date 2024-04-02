@@ -24,7 +24,7 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * Leaderboard doesn't update when the game is drawed
 * Game replay doesn't display names if the winning player replays
 * Game replay colors are incorrect if player 2 did not go first
-* Game replay always shows an extra move at 0,0
+* Game replay sometimes starts with an extra move at 0,0
 
 
 ## Version 0.3.0
