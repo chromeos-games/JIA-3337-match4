@@ -22,6 +22,8 @@ ChromeOS Game where two players play against each other to create 4 in a row
 * Tutorial doesn't finish when 4 in a row is achieved
 * Buttons are in unintuitive spots, like the back button and the pause button
 * Leaderboard doesn't update when the game is drawed
+* Game replay doesn't display names if the winning player replays
+* Game replay colors are incorrect if player 2 did not go first
 
 
 ## Version 0.3.0
