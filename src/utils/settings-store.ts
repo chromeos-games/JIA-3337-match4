@@ -95,4 +95,11 @@ export class SettingsStore {
     static set curr_game(value: string) {
         Storage.set('curr_game', value)
     }
+
+    static get curr_replay(): string[] {
+        return Storage.get('curr_replay').split('_')
+    }
+    static set curr_replay(value: string) {
+        Storage.set('curr_replay', value)
+    }
 }
