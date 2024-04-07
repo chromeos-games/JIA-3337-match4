@@ -162,6 +162,23 @@ export class gameBoardView extends LitElement {
         cell.addEventListener('animationend', () => this.handleAnimationEnd())
       }
     }
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+  }
+
+  private keydown(e: Event) {
+    const keycode = (e as KeyboardEvent).code
+    if ((keycode === "Escape" || keycode === "KeyP") && !this.win && !this.currentPlayerDidForfeit) {
+      this.togglePause()
+    }
+    if(keycode === "KeyB" && (this.pause || this.win || this.currentPlayerDidForfeit)) {
+      this.onClickMainMenu()
+    }
+    if(keycode === "KeyF" && !(this.pause || this.win || this.currentPlayerDidForfeit)) {
+      this.onClickForfeit()
+    }
+    if(keycode === "Enter" && (this.pause || this.win || this.currentPlayerDidForfeit)) {
+      this.onClickBack()
+    }
   }
 
   private doBotMove() {
