@@ -39,7 +39,13 @@ export class LeaderboardPage extends LitElement {
   }
 
   updated() {
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
     this.displayLeaderboard()
+  }
+  private keydown(e: Event) {
+    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
+      this.onClickBack()
+    }
   }
   
   
