@@ -54,6 +54,9 @@ export class SetupPage extends LitElement {
     if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
       this.onClickBack()
     }
+    if((e as KeyboardEvent).code === "Enter") {
+      this._onClickStart()
+    }
   }
 
   private _onClickRadio(e: { target: { value: string; }; }) {
