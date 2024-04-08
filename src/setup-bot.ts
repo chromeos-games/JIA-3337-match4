@@ -50,6 +50,16 @@ export class SetupPage extends LitElement {
       </div>
     `
   }
+
+  updated() {
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+  }
+  private keydown(e: Event) {
+    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
+      this.onClickBack()
+    }
+  }
+
   private _onClickRadio(e: { target: { value: string; }; }) {
     this.firstPlayer = e.target.value
     console.log(this.firstPlayer)

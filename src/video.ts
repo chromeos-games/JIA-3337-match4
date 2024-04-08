@@ -54,7 +54,7 @@ export class VideoPage extends LitElement {
       <button @click=${this.onClickBack}> Back </button>
     `
   }
-
+  
 
   private onTriggerTutorial() {
     console.log("Tutorial Started")
@@ -129,6 +129,13 @@ export class VideoPage extends LitElement {
         const cell = cells[i];
         cell.addEventListener('animationend', () => this.handleAnimationEnd(i, 0));
       }
+    }
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+  }
+  
+  private keydown(e: Event) {
+    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
+      this.onClickBack()
     }
   }
 

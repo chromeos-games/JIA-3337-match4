@@ -80,7 +80,14 @@ export class tutorialBoard extends LitElement {
         cell.addEventListener('animationend', () => this.handleAnimationEnd());
       }
     }
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
   }
+  private keydown(e: Event) {
+    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
+      this.onClickBack()
+    }
+  }
+
 
   private findAvailableRow(col: number): number {
     for (let row = 5; row >= 0; row--) {
