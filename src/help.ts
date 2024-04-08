@@ -14,6 +14,11 @@ export class HelpPage extends LitElement {
 
   render() {
     return html`
+    <div class="card">
+      <button @click=${this._onClickBack} part="button" style = "position:relative; right:450px; top:135px; height:75px; width:75px">
+        Back
+      </button>
+    </div>
       <!--<h1 class='h1'>How to Play</h1>-->
       <slot></slot>
       <div class="card">
@@ -39,11 +44,6 @@ export class HelpPage extends LitElement {
           Play Tutorial
       </button>
 
-      <div class="card">
-      <button @click=${this._onClickBack} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
-          Back
-      </button>
-    
       </div>
 
     `
