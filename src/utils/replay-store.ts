@@ -1,13 +1,13 @@
 import {Storage} from './storage';
 
 export class ReplayStore {
-    static getReplays(): Array<String> {
+    static getReplays(): Array<Array<String>> {
         const replaysStr = Storage.get('replays');
         if (replaysStr) {
             try {
-                return JSON.parse(replaysStr);
+                return JSON.parse(replaysStr) as string[][];
             } catch (error) {
-                console.error('Error parsing leaderboard JSON:', error);
+                console.error('Error parsing leaderboard:', error);
                 return [];
             }
         }
@@ -15,7 +15,7 @@ export class ReplayStore {
     }
 
     // Method to save the leaderboard to cookies
-    static setReplays(replays: Array<String>): void {
+    static setReplays(replays: Array<Array<String>>): void {
         try {
             const replaysStr = JSON.stringify(replays);
             Storage.set('replays', replaysStr);
@@ -27,13 +27,15 @@ export class ReplayStore {
     // Method to update the replay array with the last game
     static updateReplays(p1Name: string, p2Name: string, gameString: string): void {
         const replays = this.getReplays();
-        console.log(replays)
         if (replays.length >= 30){
             replays.shift();
         }
-        let saveString = p1Name + "_" + p2Name + "_" + gameString
+        let saveString = [p1Name , p2Name , gameString]
         replays.push(saveString)
         this.setReplays(replays);
-        console.log(replays)
+    }
+    static resetReplays(): void {
+        const replays = new Array<Array<String>>();
+        this.setReplays(replays);
     }
 }

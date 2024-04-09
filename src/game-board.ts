@@ -36,6 +36,7 @@ export class gameBoardView extends LitElement {
     super()
     this.viewBoard = Array.from({ length: 6 }, () => Array(7).fill(null))
     this.boardController = new BoardController(this)
+    this.boardController.initBoard()
     if (this.boardController.currentPlayerDidForfeit) {
       this.currentPlayerDidForfeit = true
     }
@@ -225,12 +226,10 @@ export class gameBoardView extends LitElement {
   }
 
   private onClickMainMenu() {
-    console.log("Main Menu Clicked")
     window.location.href = '/'
   }
 
   private onClickForfeit() {
-    console.log("Forfeit Clicked")
     playSound('button.wav')
     if (this.boardController.forfeit()) {
       this.currentPlayerDidForfeit = true
@@ -238,13 +237,10 @@ export class gameBoardView extends LitElement {
   }
 
   private togglePause() {
-    console.log("Toggling Pause")
     this.pause = !this.pause
   }
 
-
   private onClickBack() {
-    console.log("Back Clicked")
     window.history.back()
   }
 
@@ -280,22 +276,18 @@ export class gameBoardView extends LitElement {
   private getNameOfPlayer(player: string) {
     if (player === 'p1') {
       return SettingsStore.p1_name
-    } else if (player === 'p2') {
+    } else 
       return SettingsStore.p2_name
-    } else {
-      return null
-    }
   }
 
   private getNameOfLosingPlayer(player: string) {
     if (player === 'p1') {
       return SettingsStore.p2_name
-    } else if (player === 'p1') {
-      return SettingsStore.p1_name
     } else {
-      return null
+      return SettingsStore.p1_name
     }
   }
+     
 
   
 
