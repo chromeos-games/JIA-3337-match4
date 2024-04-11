@@ -180,6 +180,15 @@ export class gameBoardView extends LitElement {
     if(keycode === "Enter" && (this.pause || this.win || this.currentPlayerDidForfeit)) {
       this.onClickBack()
     }
+    if (keycode === "ArrowLeft" && this.columnHoverIndex > 0) {
+      this.columnHoverIndex--
+    }
+    if (keycode === "ArrowRight" && this.columnHoverIndex < 6) {
+      this.columnHoverIndex++
+    }
+    if (keycode === "KeyX" && this.columnHoverIndex >= 0) {
+      this.handleCellClick(this.columnHoverIndex)
+    }
   }
 
   private doBotMove() {
