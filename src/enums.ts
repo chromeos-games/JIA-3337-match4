@@ -4,7 +4,11 @@ export enum tokenColor {
     BLUE = '#0000ff',
     ORANGE = '#ffa500',
     BROWN = '#a52a2a',
-    WHITE = '#ffffff'
+    YELLOW = '#ffd740',
+    GRAY = '#808080',
+    PURPLE = '#800080',
+    PINK = '#ff69b4',
+    CYAN = '#00ffff', 
   }
 
 export enum buttonColor {
