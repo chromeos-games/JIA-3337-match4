@@ -107,13 +107,11 @@ export class LeaderboardPage extends LitElement {
   }
   
   private onClickBack() {
-    console.log("Back to Main Menu")
     window.location.href = '/'
   }
 
 
   private _onClickReset() {
-    console.log("Reset Clicked")
     Leaderboard.resetLeaderboard()
     ReplayStore.resetReplays()
   }

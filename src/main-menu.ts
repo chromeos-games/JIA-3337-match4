@@ -41,27 +41,21 @@ export class MainMenu extends LitElement {
     `
   }
   private _onClickContinue() {
-    console.log("Continue Clicked")
     this.navigate("/game")
   }
   private _onClickLocal() {
-    console.log("Play Local Clicked")
     this.navigate("/setup-local")
   }
   private _onClickBot() {
-    console.log("Play Bot Clicked")
     this.navigate("/setup-bot")
   }
   private _onClickHelp() {
-    console.log("Help Clicked")
     this.navigate("/help")
   }
   private _onClickSettings() {
-    console.log("Settings Clicked")
     this.navigate("/settings")
   }
   private _onClickLeaderboard() {
-    console.log("Leadeboard Clicked")
     this.navigate("/leaderboard")
   }
   
@@ -76,7 +70,6 @@ function playSound(filename: string) {
   var audio = new Audio(filename)
   audio.volume = SettingsStore.volume
   audio.play().catch(function(error) {
-    console.log(error);
   });
 }
 
