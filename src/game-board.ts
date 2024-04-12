@@ -36,6 +36,7 @@ export class gameBoardView extends LitElement {
     super()
     this.viewBoard = Array.from({ length: 6 }, () => Array(7).fill(null))
     this.boardController = new BoardController(this)
+    this.boardController.initBoard()
     if (this.boardController.currentPlayerDidForfeit) {
       this.currentPlayerDidForfeit = true
     }
@@ -162,6 +163,32 @@ export class gameBoardView extends LitElement {
         cell.addEventListener('animationend', () => this.handleAnimationEnd())
       }
     }
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+  }
+
+  private keydown(e: Event) {
+    const keycode = (e as KeyboardEvent).code
+    if ((keycode === "Escape" || keycode === "KeyP") && !this.win && !this.currentPlayerDidForfeit) {
+      this.togglePause()
+    }
+    if(keycode === "KeyB" && (this.pause || this.win || this.currentPlayerDidForfeit)) {
+      this.onClickMainMenu()
+    }
+    if(keycode === "KeyF" && !(this.pause || this.win || this.currentPlayerDidForfeit)) {
+      this.onClickForfeit()
+    }
+    if(keycode === "Enter" && (this.pause || this.win || this.currentPlayerDidForfeit)) {
+      this.onClickBack()
+    }
+    if (keycode === "ArrowLeft" && this.columnHoverIndex > 0) {
+      this.columnHoverIndex--
+    }
+    if (keycode === "ArrowRight" && this.columnHoverIndex < 6) {
+      this.columnHoverIndex++
+    }
+    if (keycode === "KeyX" && this.columnHoverIndex >= 0) {
+      this.handleCellClick(this.columnHoverIndex)
+    }
   }
 
   private doBotMove() {
@@ -208,12 +235,10 @@ export class gameBoardView extends LitElement {
   }
 
   private onClickMainMenu() {
-    console.log("Main Menu Clicked")
     window.location.href = '/'
   }
 
   private onClickForfeit() {
-    console.log("Forfeit Clicked")
     playSound('button.wav')
     if (this.boardController.forfeit()) {
       this.currentPlayerDidForfeit = true
@@ -221,13 +246,10 @@ export class gameBoardView extends LitElement {
   }
 
   private togglePause() {
-    console.log("Toggling Pause")
     this.pause = !this.pause
   }
 
-
   private onClickBack() {
-    console.log("Back Clicked")
     window.history.back()
   }
 
@@ -263,22 +285,18 @@ export class gameBoardView extends LitElement {
   private getNameOfPlayer(player: string) {
     if (player === 'p1') {
       return SettingsStore.p1_name
-    } else if (player === 'p2') {
+    } else 
       return SettingsStore.p2_name
-    } else {
-      return null
-    }
   }
 
   private getNameOfLosingPlayer(player: string) {
     if (player === 'p1') {
       return SettingsStore.p2_name
-    } else if (player === 'p1') {
-      return SettingsStore.p1_name
     } else {
-      return null
+      return SettingsStore.p1_name
     }
   }
+     
 
   
 

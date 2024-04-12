@@ -31,7 +31,7 @@ export class SetupPage extends LitElement {
             <label style = "position:relative; left:100px" for= "p2"> Player 2 </label>
         </div>
         <div class="card">
-          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px; background-color:#1a1a1a;">
+          <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px;">
             Randomize
           </button>
         </div>
@@ -46,6 +46,19 @@ export class SetupPage extends LitElement {
       </div>
     `
   }
+
+  updated() {
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+  }
+  private keydown(e: Event) {
+    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
+      this.onClickBack()
+    }
+    if((e as KeyboardEvent).code === "Enter") {
+      this._onClickStart()
+    }
+  }
+
   private _onClickRadio(e: { target: { value: string; }; }) {
     this.firstPlayer = e.target.value
     console.log(this.firstPlayer)
@@ -53,7 +66,7 @@ export class SetupPage extends LitElement {
 
   private onClickRandom(e: { target: { style: string; }; }) {
     this.randomize = !this.randomize
-    e.target.style.backgroundColor = this.randomize ? "#8B8000" : "#1a1a1a"
+    e.target.style.backgroundColor = this.randomize ? buttonColor.Orange : ""
     console.log("randomize: " + this.randomize)
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     console.log(radios)

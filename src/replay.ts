@@ -1,16 +1,21 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property} from 'lit/decorators.js'
 import { playSound} from './main-menu.ts';
+import { SettingsStore } from './utils/settings-store.ts'
+import { tokenColor } from './enums.ts';
+import { TokenInfo } from './utils/token-info.ts';
 
-@customElement('video-page')
-export class VideoPage extends LitElement {
-  @property({ type: Array }) board: string[][] = [];
-  @property({ type: String }) currentPlayer: string = 'Red';
+@customElement('replay-page')
+export class ReplayPage extends LitElement {
+  @property({ type: Array }) viewBoard: TokenInfo[][] = [];
+  @property({ type: String }) currentPlayer: string = SettingsStore.curr_replay[0];
   @property({ type: Boolean }) eventListenerAdded: boolean = false;
-  @property({ type: Array}) moves: number[] = [4, 5, 3, 5, 2, 2, 1]
+  @property({ type: Array}) moves: string = SettingsStore.curr_replay[2]
   @property({ type: Number}) slideIndex: number = 0;
 
-
+  player1Color: string = SettingsStore.player1TokenColor
+  player2Color: string = SettingsStore.player2TokenColor
+  
   connectedCallback() {
     super.connectedCallback()
     playSound('button.wav')
@@ -23,23 +28,20 @@ export class VideoPage extends LitElement {
   }
 
   initBoard() {
-    this.board = Array.from({ length: 6 }, () => Array(7).fill(null));
+    this.viewBoard = Array.from({ length: 6 }, () => Array(7).fill(null));
   }
-
 
   render() {
     return html`
       <div style="display: flex; flex-direction: column; align-items: center;">
-      <h1>Match4 Video Tutorial</h1>
-        <p id="p1"> ${this.getTutorialText()} </p>
-
+      <h1>Match 4 <span style = "color:${this.getColorForPlayer(this.currentPlayer)}"> ${this.currentPlayer}'s</span> turn</h1>
         <div class="board">
-          ${this.board.map((row, rowIndex) =>
+          ${this.viewBoard.map((row, rowIndex) =>
             row.map((cell) =>
             html`
             <div class="cell">
               ${cell
-                ? html`<div class="token ${cell}" style="--rowIndex: ${rowIndex};"></div>`
+                ? html`<div class="token" style="--rowIndex: ${rowIndex}; background-color: ${cell.color as tokenColor}"></div>`
                 : null
               }
             </div>
@@ -49,54 +51,51 @@ export class VideoPage extends LitElement {
         </div>
       </div>
       
-      <button @click=${this.onTriggerTutorial}> ${this.slideIndex == 0 ? 'Start' : (this.slideIndex == this.moves.length ? 'Reset' : 'Playing')} 
+      <button @click=${this.onTriggerReplay}> ${this.slideIndex == 0 ? 'Start' : (this.slideIndex == this.moves.length ? 'Reset' : 'Playing')} 
         </button>
       <button @click=${this.onClickBack}> Back </button>
     `
   }
-  
 
-  private onTriggerTutorial() {
-    console.log("Tutorial Started")
+  private getColorForPlayer(player: string) {
+    if (player === SettingsStore.curr_replay[0]) {
+      return this.player1Color
+    } else {
+      return this.player2Color
+    }
+  }
+
+  private onTriggerReplay() {
     if (this.slideIndex == 0) {
+      console.log("Replay Started")
       for (let i = 0; i < this.moves.length; i++) {
         setTimeout(() => this.updateCell(), 900 * i);
       }
     } else if (this.slideIndex == this.moves.length) {
+      console.log("Resetting")
       this.slideIndex = 0;
       this.initBoard();
     }
     
   }
 
-  private getTutorialText() {
-      let tutorialTexts = ["A player begins by placing a token in any column.",
-      "Players alternate turns, each placing a token of a different color.",
-      "Be the first to connect 4 to win!"];
-    if (this.slideIndex == 0) {
-      return tutorialTexts[0];
-    }
-    if (this.slideIndex == this.moves.length) {
-      return tutorialTexts[2];
-    }
-    return tutorialTexts[1];
-  }
-
   private updateCell() {
-    console.log("Cell Updated")
-    const col = this.moves[this.slideIndex];
+    const col = Number(this.moves[this.slideIndex]); // Convert col to a number
     const row = this.findAvailableRow(col);
     this.slideIndex++;
-    console.log("Row: " + row + " Col: " + col)
     if (row !== -1) {
-      this.board[row][col] = this.currentPlayer;
-      this.currentPlayer = this.currentPlayer === 'Red' ? 'Yellow' : 'Red';
+      this.viewBoard[row][col] = {
+        player: this.currentPlayer,
+        color: this.getColorForPlayer(this.currentPlayer)
+      };
+      
+      this.currentPlayer = this.currentPlayer ===  SettingsStore.curr_replay[0] ? SettingsStore.curr_replay[1] : SettingsStore.curr_replay[0];
     }
   }
 
   private findAvailableRow(col: number): number {
     for (let row = 5; row >= 0; row--) {
-      if (!this.board[row][col]) {
+      if (!this.viewBoard[row][col]) {
         return row;
       }
     }
@@ -126,13 +125,6 @@ export class VideoPage extends LitElement {
         const cell = cells[i];
         cell.addEventListener('animationend', () => this.handleAnimationEnd());
       }
-    }
-    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
-  }
-  
-  private keydown(e: Event) {
-    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
-      this.onClickBack()
     }
   }
 
@@ -165,9 +157,6 @@ export class VideoPage extends LitElement {
     border-radius: 50%;
     animation: drop 0.5s ease-in-out;
   }
-
-  .Red { background-color: #ff5252; }
-  .Yellow { background-color: #ffd740; }
 
   @keyframes drop {
     from {
@@ -209,6 +198,6 @@ export class VideoPage extends LitElement {
 }
 declare global {
   interface HTMLElementTagNameMap {
-    'video-page': VideoPage
+    'replay-page': ReplayPage
   }
 }

@@ -19,7 +19,6 @@ export class BoardController {
     constructor(gameBoard: gameBoardView) {
         this.board = new BoardModel()
         this.view = gameBoard
-        this.initBoard()
     }
 
     initBoard() {
@@ -114,7 +113,6 @@ export class BoardController {
             let vals = this.minMaxSolver(board, 4, -99999, 99999, 'p2')
             console.log("move: " + vals[0] + " score: " + vals[1])
             return vals[0]
-            // return Math.floor(Math.random() * 7)
         }
     }
 
@@ -128,7 +126,6 @@ export class BoardController {
         //Check for base case or terminating conditions
         this.calls += 1
         const winner = this.checkWinningNode(board)
-        // console.log(winner)
         console.log(this.calls)
         if (winner !== '') {
             if (winner === 'p1') {

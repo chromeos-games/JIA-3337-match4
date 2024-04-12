@@ -49,6 +49,15 @@ export class HelpPage extends LitElement {
     `
   }
 
+  updated() {
+    this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+  }
+  private keydown(e: Event) {
+    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
+      this._onClickBack()
+    }
+  }
+
   private _onClickBack() {
     console.log("Back Clicked")
     window.history.back()
