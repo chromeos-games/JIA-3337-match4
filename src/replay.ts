@@ -32,7 +32,6 @@ export class ReplayPage extends LitElement {
   }
 
   render() {
-    console.log(this.colorToName(this.getColorForPlayer(this.currentPlayer)))
     return html`
       <div style="display: flex; flex-direction: column; align-items: center;">
       <h1>Match 4 <span style = "color:${this.getColorForPlayer(this.currentPlayer)}"> ${this.currentPlayer}'s</span> turn</h1>
@@ -42,7 +41,7 @@ export class ReplayPage extends LitElement {
             html`
             <div class="cell">
               ${cell
-                ? html`<div class="token ${this.colorToName(cell.color)}" style="--rowIndex: ${rowIndex};"></div>`
+                ? html`<div class="token" style="--rowIndex: ${rowIndex}; background-color: ${cell.color as tokenColor}"></div>`
                 : null
               }
             </div>
@@ -63,27 +62,6 @@ export class ReplayPage extends LitElement {
       return this.player1Color
     } else {
       return this.player2Color
-    }
-  }
-
-  private colorToName(color: string) {
-    if (color === tokenColor.RED) {
-      return "Red"
-    }
-    if (color === tokenColor.GREEN) {
-      return "Green"
-    } 
-    if (color === tokenColor.BLUE) {
-      return "Blue"
-    }
-    if (color === tokenColor.ORANGE) {
-      return "Orange"
-    }
-    if (color === tokenColor.BROWN) {
-      return "Brown"
-    }
-    if (color === tokenColor.WHITE) {
-      return "White"
     }
   }
 
@@ -179,13 +157,6 @@ export class ReplayPage extends LitElement {
     border-radius: 50%;
     animation: drop 0.5s ease-in-out;
   }
-
-  .Red { background-color: #ff0000; }
-  .Green { background-color: #00ff00; }
-  .Blue { background-color: #0000ff; }
-  .Orange { background-color: #ffa500; }
-  .Brown { background-color: #a52a2a; }
-  .White { background-color: #ffffff; }
 
   @keyframes drop {
     from {
