@@ -45,6 +45,9 @@ export class SettingsPage extends LitElement {
   }
     render() {
         return html`
+          <button @click=${this._onClickBack} part="button" style = "position:relative; right:360px; top:130px; height:75px; width:75px">
+            Back
+          </button>
         <h1 class='h1'>Settings</h1>
         <img src="src/assets/volume-off.svg" alt="volume-off" style="width:50px;height:50px;"/>
             <input class="slider" id="vol_input" value=${SettingsStore.volume} type="range" min="0" max="1" step="0.01" @change=${(e: { target: { value: string; }; }) => this.updateSlider(parseFloat(e.target.value))} />
@@ -75,11 +78,7 @@ export class SettingsPage extends LitElement {
       </div>
     `)}
     </div>
-    <div class="card">
-      <button @click=${this._onClickBack} part="button" style = "position:relative; left:250px; top:50px; height:75px; width:75px">
-          Back
-      </button>
-    </div>
+    
   `;
         
     }
