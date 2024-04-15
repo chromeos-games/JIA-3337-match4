@@ -58,20 +58,17 @@ export class gameBoardView extends LitElement {
             ? html`<div class="token" style="background-color: ${this.getColorForPlayer(player)}; --rowIndex: ${rowIndex};"></div>`
             : null
           }
+          ${this.columnHoverIndex == colIndex && (player == null) && (rowIndex == 5 || this.boardController.board.board[rowIndex + 1][colIndex] !== "") ?
+            html`
+            <div class="token"
+                style="opacity:${this.botMoving ? 0 : .3}; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
+                        --rowIndex: ${rowIndex}; animation: null;">
+            </div>` : null
+        } 
               </div>
             `
       )
     )}
-        ${this.columnHoverIndex >= 0 ?
-            html`
-            <div class="translucent-token"
-                style="opacity:${this.botMoving ? 0 : .3}; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
-                        left: ${this.columnHoverIndex * 55 + 1}px;
-                        top: ${this.boardController.checkValidColumn(this.viewBoard, this.columnHoverIndex) * 57 + 70.5}px;">
-            </div>` : null
-        }  
-      </div>
-      </div>
       </div>
       <div class="${this.shouldShowWinWindow() ? 'winHolder' : 'hidden'}">
           <div class ="${this.shouldShowWinWindow() ? 'winWindow' : 'hidden'}">
@@ -182,9 +179,15 @@ export class gameBoardView extends LitElement {
     }
     if (keycode === "ArrowLeft" && this.columnHoverIndex > 0) {
       this.columnHoverIndex--
+      while(this.columnHoverIndex > 0 && this.boardController.board.board[0][this.columnHoverIndex] !== "") {
+        this.columnHoverIndex--
+      }
     }
     if (keycode === "ArrowRight" && this.columnHoverIndex < 6) {
-      this.columnHoverIndex++
+        this.columnHoverIndex++
+      while(this.columnHoverIndex < 6 && this.boardController.board.board[0][this.columnHoverIndex] !== "") {
+        this.columnHoverIndex++
+      }
     }
     if (keycode === "KeyX" && this.columnHoverIndex >= 0) {
       this.handleCellClick(this.columnHoverIndex)
@@ -330,14 +333,6 @@ export class gameBoardView extends LitElement {
     border-radius: 50%;
     background-color: var(--player-color);
     animation: drop 0.5s ease-in-out;
-  }
-
-  .translucent-token {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    pointer-events: none;
   }
 
   @keyframes drop {
