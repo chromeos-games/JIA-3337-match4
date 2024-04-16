@@ -189,6 +189,30 @@ export class gameBoardView extends LitElement {
     if (keycode === "KeyX" && this.columnHoverIndex >= 0) {
       this.handleCellClick(this.columnHoverIndex)
     }
+
+    if (keycode === "Digit1") {
+      this.handleCellClick(0)
+    }
+    if (keycode === "Digit2") {
+      this.handleCellClick(1)
+    }
+    if (keycode === "Digit3") {
+      this.handleCellClick(2)
+    }
+    if (keycode === "Digit4") {
+      this.handleCellClick(3)
+    }
+    if (keycode === "Digit5") {
+      this.handleCellClick(4)
+    }
+    if (keycode === "Digit6") {
+      this.handleCellClick(5)
+    }
+    if (keycode === "Digit7") {
+      this.handleCellClick(6)
+    }
+    
+    
   }
 
   private doBotMove() {
