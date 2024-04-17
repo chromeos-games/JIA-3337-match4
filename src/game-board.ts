@@ -221,8 +221,6 @@ export class gameBoardView extends LitElement {
     const winningPlayerName = this.getNameOfPlayer(this.boardController.currentPlayerID);
     const LosingPlayerName = this.getNameOfLosingPlayer(this.boardController.currentPlayerID);
     Leaderboard.updateLeaderboard(winningPlayerName, LosingPlayerName);
-    const leaderboard = Leaderboard.getLeaderboard();
-    console.log("Current Leaderboard:", leaderboard);
     
   }
 
