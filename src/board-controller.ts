@@ -97,16 +97,17 @@ export class BoardController {
             return botMovePosition
         } else {
             let board = this.board.getBoard()
+            let randomRoll = Math.random()
             if (this.difficulty == 'easy') {
-                if (Math.random() < .7) {
+                if (randomRoll < .7) {
                     return this.getRandomMove()
                 }
             } else if (this.difficulty == 'medium') {
-                if (Math.random() < .4) {
+                if (randomRoll < .4) {
                     return this.getRandomMove()
                 }
             } else if (this.difficulty == 'hard') {
-                if (Math.random() < .1) {
+                if (randomRoll < .01) {
                     return this.getRandomMove()
                 }
             } 
@@ -126,7 +127,7 @@ export class BoardController {
         //Check for base case or terminating conditions
         this.calls += 1
         const winner = this.checkWinningNode(board)
-        console.log(this.calls)
+        // console.log(this.calls)
         if (winner !== '') {
             if (winner === 'p1') {
                 return [-1, -99999]
@@ -162,7 +163,7 @@ export class BoardController {
                     break
                 }
             }
-            console.log("Max: " + [selectedCol, max_score])
+            // console.log("Max: " + [selectedCol, max_score])
             return [selectedCol, max_score]
         }
         //Minimization (PLAYER)
@@ -184,11 +185,16 @@ export class BoardController {
                     break
                 }
             }
-            console.log("Min: " + [selectedCol, min_score])
+            // console.log("Min: " + [selectedCol, min_score])
             return [selectedCol, min_score]
         }
     }
-    private getValidMoves(board: string[][]) {
+    /**
+     * Get and return list of valid columns and their corresponding rows
+     * @param board 
+     * @returns Array of [row, col] moves that are valid
+     */
+    private getValidMoves(board: string[][]): number[][] {
         const validMoves = []
         for (let col = 0; col < 7; col++){
             let row = this.checkValidColumn(board, col)

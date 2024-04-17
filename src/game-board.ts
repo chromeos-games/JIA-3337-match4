@@ -212,6 +212,7 @@ export class gameBoardView extends LitElement {
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game)
+    SettingsStore.curr_game = ''
     this.handleColumnHoverEnd();
     this.updateLeaderboard();
     console.log("Game Won!")
@@ -231,6 +232,7 @@ export class gameBoardView extends LitElement {
     setTimeout(() => { this.displayDraw = true }, 800)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game);
+    SettingsStore.curr_game = ''
     console.log("Game draw.")
   }
 
@@ -242,6 +244,7 @@ export class gameBoardView extends LitElement {
     playSound('button.wav')
     if (this.boardController.forfeit()) {
       this.currentPlayerDidForfeit = true
+      SettingsStore.curr_game = ''
     }
   }
 

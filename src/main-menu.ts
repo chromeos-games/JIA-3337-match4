@@ -15,9 +15,11 @@ export class MainMenu extends LitElement {
       <!--<h1 class='h1'>Match 4</h1>-->
       <slot></slot>
       <div class="card">
-      <button @click=${this._onClickContinue} part="button" style = "position:relative; right:70px; background:${buttonColor.Green}; color:#242424">
+      ${SettingsStore.curr_game !== '' ? html`
+        <button @click=${this._onClickContinue} part="button" style="position:relative; right:70px; background:${buttonColor.Green}; color:#242424">
           Continue
         </button>
+      ` : ''}
         <button @click=${this._onClickLocal} part="button" style = "position:relative; left:70px; background:${buttonColor.Yellow}; color:#242424" >
           Play Local
         </button>
