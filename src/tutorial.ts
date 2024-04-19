@@ -1,8 +1,8 @@
 import { customElement, property } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
 import {playSound} from './main-menu.ts';
-import { BoardModel } from './board-model.ts';
-
+import buttonwav from '../button.wav'
+import tokenwav from '../token.wav'
 @customElement('tutorial-board')
 export class tutorialBoard extends LitElement {
   @property({ type: Array }) board: string[][] = [];
@@ -14,7 +14,8 @@ export class tutorialBoard extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+  
+    playSound(buttonwav)
   }
 
   constructor() {
@@ -93,7 +94,7 @@ export class tutorialBoard extends LitElement {
   }
 
   private onClickMainMenu() {
-    window.location.href = '/'
+    window.history.go(-2)
   }
 
 
@@ -131,7 +132,8 @@ export class tutorialBoard extends LitElement {
       return
     }
     // play sound, check win?
-    playSound('token.wav')
+    playSound(tokenwav)
+    // console.log("Animation Ended")
     this.enableMoves = true;
     // Simulate opponent's move. Tutorial opponent cannot act intelligently.
     if (this.currentPlayer === 'Yellow') {

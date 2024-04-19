@@ -3,7 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
 import { buttonColor } from './enums.ts';
-
+import { playSound } from './main-menu.ts';
+import buttonwav from '../button.wav'
 @customElement('setup-bot-page')
 export class SetupPage extends LitElement {
   @property({ type: String }) firstPlayer = 'p1';
@@ -12,7 +13,11 @@ export class SetupPage extends LitElement {
   @property({ type: String }) difficulty = 'medium';
   @property({ type: Boolean }) randomize = false;
   @property({ type: String }) p2IsBot = 'true';
-
+  connectedCallback() {
+    super.connectedCallback()
+    playSound(buttonwav)
+    
+  }
   render() {
     return html`
     <slot></slot>
@@ -73,7 +78,7 @@ export class SetupPage extends LitElement {
     
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     if (radios) {
-      radios.forEach((element) => element.disabled = this.randomize ? true : false)
+      radios.forEach((element) => (element as HTMLButtonElement).disabled = this.randomize ? true : false)
     }
   }
 
@@ -120,11 +125,11 @@ export class SetupPage extends LitElement {
     SettingsStore.difficulty = this.difficulty
     SettingsStore.curr_game = ''
     SettingsStore.p2IsBot = this.p2IsBot
-    this.navigate("/game")
+    this.navigate("./game")
   }
 
   private onClickBack() {
-    window.location.href = '/'
+    window.history.back()
   }
 
   

@@ -1,7 +1,8 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property} from 'lit/decorators.js'
 import { playSound} from './main-menu.ts';
-
+import buttonwav from '../button.wav'
+import tokenwav from '../token.wav'
 @customElement('video-page')
 export class VideoPage extends LitElement {
   @property({ type: Array }) board: string[][] = [];
@@ -13,7 +14,7 @@ export class VideoPage extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
     
   }
 
@@ -106,9 +107,9 @@ export class VideoPage extends LitElement {
 
   private handleAnimationEnd() {
     if (this.slideIndex != this.moves.length) {
-      playSound('token.wav')
+      playSound(tokenwav)
     } else {
-      playSound('button.wav')
+      playSound(buttonwav)
     }
   }
 

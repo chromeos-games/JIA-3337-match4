@@ -3,7 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
 import { buttonColor } from './enums.ts';
-
+import { playSound } from './main-menu.ts';
+import buttonwav from '../button.wav'
 @customElement('setup-local-page')
 export class SetupPage extends LitElement {
   @property({ type: String }) firstPlayer = 'p1';
@@ -11,7 +12,11 @@ export class SetupPage extends LitElement {
   @property({ type: String }) p2_name = 'Player 2';
   @property({ type: Boolean }) randomize = false;
   @property({ type: Boolean }) p2IsBot = 'false';
-
+  connectedCallback() {
+    super.connectedCallback()
+    playSound(buttonwav)
+    
+  }
   render() {
     return html`
       <slot></slot>
@@ -62,18 +67,15 @@ export class SetupPage extends LitElement {
     this.firstPlayer = e.target.value
   }
 
-  private onClickRandom(e: { target: { style: string; }; }) {
+  private onClickRandom(e: { target: { style: { backgroundColor: string; }  }  }) {
     this.randomize = !this.randomize
     e.target.style.backgroundColor = this.randomize ? buttonColor.Orange : ""
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
-    radios.forEach(radio => {
-      radio.disabled = this.randomize;
-      }); 
     
     console.log(radios)
-    //if (radios) {
-    //radios.forEach((element) => element.disabled = this.randomize ? true : false)
-    //}
+    if (radios) {
+      radios.forEach((element) => (element as HTMLButtonElement).disabled = this.randomize ? true : false)
+    }
   }  
 
   private onChangeP1Name(e: {target: { value: string; }}){
@@ -85,7 +87,8 @@ export class SetupPage extends LitElement {
   }
 
   private onClickBack() {
-    window.location.href = '/'
+    window.history.back()
+
   }
 
 
@@ -96,7 +99,7 @@ export class SetupPage extends LitElement {
     SettingsStore.curr_game = ''
     SettingsStore.difficulty = ''
     SettingsStore.p2IsBot = this.p2IsBot
-    this.navigate("/game")
+    this.navigate("./game")
   }
   
 

@@ -5,7 +5,8 @@ import { SettingsStore } from './utils/settings-store.ts'
 import { BoardController } from './board-controller.ts'
 import { ReplayStore } from './utils/replay-store.ts'
 import { Leaderboard } from './utils/leaderboard-store.ts'
-
+import buttonwav from '../button.wav'
+import tokenwav from '../token.wav'
 @customElement('game-board')
 export class gameBoardView extends LitElement {
 
@@ -29,7 +30,7 @@ export class gameBoardView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
   }
 
   constructor() {
@@ -234,7 +235,7 @@ export class gameBoardView extends LitElement {
   }
 
   private handleWin() {
-    setTimeout(function () { playSound('button.wav') }, 2500)
+    setTimeout(function () { playSound(buttonwav) }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game)
@@ -247,11 +248,10 @@ export class gameBoardView extends LitElement {
     const winningPlayerName = this.getNameOfPlayer(this.boardController.currentPlayerID);
     const LosingPlayerName = this.getNameOfLosingPlayer(this.boardController.currentPlayerID);
     Leaderboard.updateLeaderboard(winningPlayerName, LosingPlayerName);
-    const leaderboard = Leaderboard.getLeaderboard();
   }
 
   private handleDraw() {
-    setTimeout(function () { playSound('button.wav') }, 800)
+    setTimeout(function () { playSound(buttonwav) }, 800)
     setTimeout(() => { this.displayDraw = true }, 800)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game);
@@ -259,11 +259,12 @@ export class gameBoardView extends LitElement {
   }
 
   private onClickMainMenu() {
-    window.location.href = '/'
+    window.history.go(-2)
+
   }
 
   private onClickForfeit() {
-    playSound('button.wav')
+    playSound(buttonwav)
     if (this.boardController.forfeit()) {
       this.currentPlayerDidForfeit = true
       SettingsStore.curr_game = ''
@@ -280,7 +281,7 @@ export class gameBoardView extends LitElement {
 
   onMove(row: number, col: number, value: string): void {
     this.viewBoard[row][col] = value
-    playSound('token.wav')
+    playSound(tokenwav)
   }
 
   onWin(winPositions: number[][]) {
