@@ -94,7 +94,7 @@ export class tutorialBoard extends LitElement {
   }
 
   private onClickMainMenu() {
-    window.history.go(-2)
+    window.location.href = './index'
   }
 
 

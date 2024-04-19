@@ -259,8 +259,7 @@ export class gameBoardView extends LitElement {
   }
 
   private onClickMainMenu() {
-    window.history.go(-2)
-
+    window.location.href = "./index"
   }
 
   private onClickForfeit() {
