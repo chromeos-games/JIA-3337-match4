@@ -34,8 +34,9 @@ export class HelpPage extends LitElement {
       
       <div class="card">
         <p> Two players will alternate turns. <br>
-          Click on a column to drop you color disc into that column of the game board. <br>
-          The first player to match four in a row of their color discs is the winner. </p>
+            Click on a column to drop a disc of your color into that column of the game board. <br>
+            Alternatively, you may use the left and right arrow keys to select a column and drop your disc with the 'x' key. <br>
+            The first player to match four in a row of their color discs is the winner. </p>
       
       <button @click=${this._onClickVideo} part="button" style = "position:relative; right:30px; height:120px; width:150px">
           Watch Video
@@ -59,17 +60,14 @@ export class HelpPage extends LitElement {
   }
 
   private _onClickBack() {
-    console.log("Back Clicked")
     window.history.back()
   }
 
   private _onClickTutorial() {
-    console.log("Tutorial Clicked")
     this.navigate("/tutorial")
   }
 
   private _onClickVideo() {
-    console.log("Video Clicked")
     this.navigate("/video")
   }
 

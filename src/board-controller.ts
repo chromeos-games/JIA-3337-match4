@@ -23,7 +23,6 @@ export class BoardController {
 
     initBoard() {
         if (SettingsStore.curr_game.length != 0) {
-            console.log('loading previous game')
             //Set the correct current player
             if (parseInt(SettingsStore.curr_game[0]) === 0) {
                 this.currentPlayerID = "p1"
@@ -59,7 +58,6 @@ export class BoardController {
 
     public makeMove(col: number, store: boolean = true): boolean {
         if (!this.enableMoves || this.win || this.currentPlayerDidForfeit) {
-            console.log("Moves are disabled")
             return false;
         }
         const row = this.board.checkValidColumn(col);
@@ -130,7 +128,6 @@ export class BoardController {
         //Check for base case or terminating conditions
         this.calls += 1
         const winner = this.checkWinningNode(board)
-        console.log(this.calls)
         if (winner !== '') {
             if (winner === 'p1') {
                 return [-1, -99999]
@@ -166,7 +163,6 @@ export class BoardController {
                     break
                 }
             }
-            console.log("Max: " + [selectedCol, max_score])
             return [selectedCol, max_score]
         }
         //Minimization (PLAYER)
@@ -188,7 +184,6 @@ export class BoardController {
                     break
                 }
             }
-            console.log("Min: " + [selectedCol, min_score])
             return [selectedCol, min_score]
         }
     }

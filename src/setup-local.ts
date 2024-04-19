@@ -60,13 +60,11 @@ export class SetupPage extends LitElement {
 
   private _onClickRadio(e: { target: { value: string; }; }) {
     this.firstPlayer = e.target.value
-    console.log(this.firstPlayer)
   }
 
   private onClickRandom(e: { target: { style: string; }; }) {
     this.randomize = !this.randomize
     e.target.style.backgroundColor = this.randomize ? buttonColor.Orange : ""
-    console.log("randomize: " + this.randomize)
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     radios.forEach(radio => {
       radio.disabled = this.randomize;
@@ -80,22 +78,18 @@ export class SetupPage extends LitElement {
 
   private onChangeP1Name(e: {target: { value: string; }}){
     this.p1_name = e.target.value
-    console.log(e.target.value)
   }
 
   private onChangeP2Name(e: {target: { value: string; }}){
     this.p2_name = e.target.value
-    console.log(e.target.value)
   }
 
   private onClickBack() {
-    console.log("Back to Main Menu")
     window.location.href = '/'
   }
 
 
   private _onClickStart() {
-    console.log("Start Clicked")
     SettingsStore.firstPlayer = this.randomize ? (Math.random() < 0.5 ? 'p1' : 'p2'): this.firstPlayer
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name

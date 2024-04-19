@@ -67,12 +67,10 @@ export class ReplayPage extends LitElement {
 
   private onTriggerReplay() {
     if (this.slideIndex == 0) {
-      console.log("Replay Started")
       for (let i = 0; i < this.moves.length; i++) {
         setTimeout(() => this.updateCell(), 900 * i);
       }
     } else if (this.slideIndex == this.moves.length) {
-      console.log("Resetting")
       this.slideIndex = 0;
       this.initBoard();
     }
