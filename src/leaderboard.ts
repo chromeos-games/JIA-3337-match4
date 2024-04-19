@@ -10,7 +10,10 @@ export class LeaderboardPage extends LitElement {
 
   render() {
     return html`
-      <slot></slot>
+      <slot> </slot>
+      <button @click=${this.onClickBack} part="button" style = "position:relative; right:788px; bottom:95px; height:75px; width:75px">
+        Back
+      </button>
       <div class="column" style="width:300px">
           <h2>Player Name</h2>
           <p name="name"></p>
@@ -33,9 +36,6 @@ export class LeaderboardPage extends LitElement {
       </div>
       
       <div class="card">
-        <button @click=${this.onClickBack} part="button" style = "position:relative; margin-right: 20px" >
-          Back
-        </button>
         <button @click=${this._onClickReset} part="button" style = "position:relative" >
           Reset Records
         </button>

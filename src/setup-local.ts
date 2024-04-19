@@ -15,8 +15,10 @@ export class SetupPage extends LitElement {
   render() {
     return html`
       <slot></slot>
+      <button @click=${this.onClickBack} part="button" style = "position:relative; right:350px; bottom:95px; height:75px; width:75px">
+        Back
+      </button>
       <div class="card-deck">
-      
       <div class="card">
           <input type="text" id = "p1_name" style = "position:relative; right:70px"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
           <input type="text" id = "p2_name" style = "position:relative; left:70px"  placeholder = "Player 2 Name" @change=${this.onChangeP2Name}/>
@@ -37,9 +39,6 @@ export class SetupPage extends LitElement {
         </div>
       </div>
       <div class="card">
-        <button @click=${this.onClickBack} part="button" style = "position:relative; margin-right: 20px" >
-          Back
-        </button>
         <button @click=${this._onClickStart} part="button" style = "position:relative" >
           Start Game
         </button>
