@@ -1,8 +1,8 @@
 import { customElement, property } from 'lit/decorators.js';
 import { LitElement, html, css } from 'lit';
 import {playSound} from './main-menu.ts';
-import { BoardModel } from './board-model.ts';
-
+import buttonwav from '../button.wav'
+import tokenwav from '../token.wav'
 @customElement('tutorial-board')
 export class tutorialBoard extends LitElement {
   @property({ type: Array }) board: string[][] = [];
@@ -15,7 +15,7 @@ export class tutorialBoard extends LitElement {
   connectedCallback() {
     super.connectedCallback()
   
-    playSound('button.wav')
+    playSound(buttonwav)
   }
 
   constructor() {
@@ -62,14 +62,11 @@ export class tutorialBoard extends LitElement {
   }
 
   private handleCellClick(col: number) {
-    console.log("Cell Clicked")
     if (!this.enableMoves) {
-      console.log("move disabled")
       return;
     }
     
     const row = this.findAvailableRow(col);
-    console.log("Row: " + row + " Col: " + col)
     if (row !== -1) {
       this.board[row][col] = this.currentPlayer;
       const winner = this.checkWinningNode(this.board);
@@ -97,8 +94,7 @@ export class tutorialBoard extends LitElement {
   }
 
   private onClickMainMenu() {
-    console.log("Main Menu Clicked")
-    window.location.href = '/'
+    window.history.go(-2)
   }
 
 
@@ -136,19 +132,17 @@ export class tutorialBoard extends LitElement {
       return
     }
     // play sound, check win?
-    playSound('token.wav')
+    playSound(tokenwav)
     // console.log("Animation Ended")
     this.enableMoves = true;
     // Simulate opponent's move. Tutorial opponent cannot act intelligently.
     if (this.currentPlayer === 'Yellow') {
-        //console.log("Simulating Opponent's Move")
         this.handleCellClick(Math.floor(Math.random() * 7));
     }
   }
 
   private checkWinningNode(board: string[][]): string{
     //Horizontal
-    console.log(this.currentPlayer)
     
     for (let col = 0; col < 7-3; col++){
         for (let row = 0; row < 6; row++){
@@ -190,7 +184,6 @@ export class tutorialBoard extends LitElement {
 }
 
   private onClickBack() {
-    console.log("Back Clicked")
     window.history.back()
   }
 

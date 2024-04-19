@@ -3,11 +3,12 @@ import { customElement } from 'lit/decorators.js'
 import { style } from './style'
 import { SettingsStore } from './utils/settings-store'
 import { buttonColor } from './enums'
+import buttonwav from '../button.wav'
 @customElement('main-menu')
 export class MainMenu extends LitElement {
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
   }
 
   render() {
@@ -15,9 +16,11 @@ export class MainMenu extends LitElement {
       <!--<h1 class='h1'>Match 4</h1>-->
       <slot></slot>
       <div class="card">
-      <button @click=${this._onClickContinue} part="button" style = "position:relative; right:70px; background:${buttonColor.Green}; color:#242424">
+      ${SettingsStore.curr_game !== '' ? html`
+        <button @click=${this._onClickContinue} part="button" style="position:relative; right:70px; background:${buttonColor.Green}; color:#242424">
           Continue
         </button>
+      ` : ''}
         <button @click=${this._onClickLocal} part="button" style = "position:relative; left:70px; background:${buttonColor.Yellow}; color:#242424" >
           Play Local
         </button>
@@ -41,28 +44,22 @@ export class MainMenu extends LitElement {
     `
   }
   private _onClickContinue() {
-    console.log("Continue Clicked")
-    this.navigate("/game")
+    this.navigate("./game")
   }
   private _onClickLocal() {
-    console.log("Play Local Clicked")
-    this.navigate("/setup-local")
+    this.navigate("./setup-local")
   }
   private _onClickBot() {
-    console.log("Play Bot Clicked")
-    this.navigate("/setup-bot")
+    this.navigate("./setup-bot")
   }
   private _onClickHelp() {
-    console.log("Help Clicked")
-    this.navigate("/help")
+    this.navigate("./help")
   }
   private _onClickSettings() {
-    console.log("Settings Clicked")
-    this.navigate("/settings")
+    this.navigate("./settings")
   }
   private _onClickLeaderboard() {
-    console.log("Leadeboard Clicked")
-    this.navigate("/leaderboard")
+    this.navigate("./leaderboard")
   }
   
   private navigate(location: string) {
@@ -75,8 +72,7 @@ export class MainMenu extends LitElement {
 function playSound(filename: string) {
   var audio = new Audio(filename)
   audio.volume = SettingsStore.volume
-  audio.play().catch(function(error) {
-    console.log(error);
+  audio.play().catch(function() {
   });
 }
 

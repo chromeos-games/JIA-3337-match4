@@ -3,7 +3,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
 import { buttonColor } from './enums.ts';
-
+import { playSound } from './main-menu.ts';
+import buttonwav from '../button.wav'
 @customElement('setup-bot-page')
 export class SetupPage extends LitElement {
   @property({ type: String }) firstPlayer = 'p1';
@@ -12,7 +13,11 @@ export class SetupPage extends LitElement {
   @property({ type: String }) difficulty = 'medium';
   @property({ type: Boolean }) randomize = false;
   @property({ type: String }) p2IsBot = 'true';
-
+  connectedCallback() {
+    super.connectedCallback()
+    playSound(buttonwav)
+    
+  }
   render() {
     return html`
     <slot></slot>
@@ -65,24 +70,20 @@ export class SetupPage extends LitElement {
 
   private _onClickRadio(e: { target: { value: string; }; }) {
     this.firstPlayer = e.target.value
-    console.log(this.firstPlayer)
   }
 
   private onClickRandom(e: { target: { style: { backgroundColor: string; }; }; }) {
     this.randomize = !this.randomize
     e.target.style.backgroundColor = this.randomize ? buttonColor.Orange: ""
-    console.log("randomize: " + this.randomize)
     
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
-    console.log(radios)
     if (radios) {
-      radios.forEach((element) => element.disabled = this.randomize ? true : false)
+      radios.forEach((element) => (element as HTMLButtonElement).disabled = this.randomize ? true : false)
     }
   }
 
   private onChangeP1Name(e: {target: { value: string; }}){
     this.p1_name = e.target.value
-    console.log(e.target.value)
   }
 
   private onClickEasy(){
@@ -92,7 +93,6 @@ export class SetupPage extends LitElement {
     if (button) {
       button.style.backgroundColor = buttonColor.Green;
     }
-    console.log('easy')
   }
   private onClickMedium(){
     this.difficulty = 'medium'
@@ -101,7 +101,6 @@ export class SetupPage extends LitElement {
     if (button) {
       button.style.backgroundColor = buttonColor.Yellow;
     }
-    console.log("medium")
   }
   private onClickHard(){
     this.difficulty = 'hard'
@@ -110,7 +109,6 @@ export class SetupPage extends LitElement {
     if (button) {
       button.style.backgroundColor = buttonColor.Red;
     }
-    console.log('hard')
   }
 
   private resetButtons(){
@@ -121,19 +119,17 @@ export class SetupPage extends LitElement {
   }
 
   private _onClickStart() {
-    console.log("Start Clicked")
     SettingsStore.firstPlayer = this.randomize ? (Math.random() < 0.5 ? 'p1' : 'p2'): this.firstPlayer
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name
     SettingsStore.difficulty = this.difficulty
     SettingsStore.curr_game = ''
     SettingsStore.p2IsBot = this.p2IsBot
-    this.navigate("/game")
+    this.navigate("./game")
   }
 
   private onClickBack() {
-    console.log("Back to Main Menu")
-    window.location.href = '/'
+    window.history.back()
   }
 
   

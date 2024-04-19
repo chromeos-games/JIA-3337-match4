@@ -2,7 +2,43 @@
 ChromeOS Game where two players play against each other to create 4 in a row
 
 
+# Install Guide
+
+This project runs on [Node.js](https://nodejs.org/en/) with [LitElement](https://lit.dev/).
+
+
+First, install Node.js [here](https://nodejs.org/en/download).
+
+In the Node.js command prompt, navigate to the repo directory and run the following command:
+```
+npm install
+```
+
+After the files needed to the run project are downloaded, run the following command to activate a test build and run the app:
+```
+npm run dev
+```
+
+
+
 # Release Notes
+
+## Version 0.5.0
+### Features
+* Keyboard shortcuts added
+* Tokens can be played with number keys
+* Tokens can be played with arrow keys
+* Game can be paused and played with keyboard
+
+### Bug Fixes
+* Fixed the continue button showing up when there is no game to continue
+* Fixed tutorial not finishing when 4 in a row is achieved
+* Fixed the back button and pause button position
+* Fixed bot difficulty weights to make their behavior less random
+
+### Known Issues
+* Various game replay issues
+
 
 ## Version 0.4.0
 ### Features

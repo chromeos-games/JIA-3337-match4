@@ -54,7 +54,6 @@ export class BoardController {
 
     public makeMove(col: number, store: boolean = true): boolean {
         if (!this.enableMoves || this.win || this.currentPlayerDidForfeit) {
-            console.log("Moves are disabled")
             return false;
         }
         const row = this.board.checkValidColumn(col);
@@ -92,20 +91,25 @@ export class BoardController {
             return botMovePosition
         } else {
             let board = this.board.getBoard()
+            let depth = 1
+            let randomRoll = Math.random()
             if (this.difficulty == 'easy') {
-                if (Math.random() < .7) {
+                if (randomRoll < .7) {
                     return this.getRandomMove()
                 }
+                depth = 2
             } else if (this.difficulty == 'medium') {
-                if (Math.random() < .4) {
+                if (randomRoll < .4) {
                     return this.getRandomMove()
                 }
+                depth = 4
             } else if (this.difficulty == 'hard') {
-                if (Math.random() < .1) {
+                if (randomRoll < .01) {
                     return this.getRandomMove()
                 }
+                depth = 5
             } 
-            let vals = this.minMaxSolver(board, 4, -99999, 99999, 'p2')
+            let vals = this.minMaxSolver(board, depth, -99999, 99999, 'p2')
             console.log("move: " + vals[0] + " score: " + vals[1])
             return vals[0]
         }
@@ -121,7 +125,6 @@ export class BoardController {
         //Check for base case or terminating conditions
         this.calls += 1
         const winner = this.checkWinningNode(board)
-        console.log(this.calls)
         if (winner !== '') {
             if (winner === 'p1') {
                 return [-1, -99999]
@@ -157,7 +160,6 @@ export class BoardController {
                     break
                 }
             }
-            console.log("Max: " + [selectedCol, max_score])
             return [selectedCol, max_score]
         }
         //Minimization (PLAYER)
@@ -179,11 +181,15 @@ export class BoardController {
                     break
                 }
             }
-            console.log("Min: " + [selectedCol, min_score])
             return [selectedCol, min_score]
         }
     }
-    private getValidMoves(board: string[][]) {
+    /**
+     * Get and return list of valid columns and their corresponding rows
+     * @param board 
+     * @returns Array of [row, col] moves that are valid
+     */
+    private getValidMoves(board: string[][]): number[][] {
         const validMoves = []
         for (let col = 0; col < 7; col++){
             let row = this.checkValidColumn(board, col)
@@ -331,7 +337,7 @@ export class BoardController {
         const opp_player = player === 'p1' ? 'p2' : 'p1'
         //Prioritise a winning move
         if (this.getPlayerOccurrences(window, player)===4) {
-            score+=1000
+            score+=1000000
         }
         else if (this.getPlayerOccurrences(window, player)===3 && 
                     this.getPlayerOccurrences(window, '')===1) {
@@ -342,12 +348,12 @@ export class BoardController {
             score+=2
         } 
         if (this.getPlayerOccurrences(window, opp_player)===4){
-            score-=1000
+            score-=1000000
         }
         //Reduce the score if there's a win possibility for the opponent
         else if (this.getPlayerOccurrences(window, opp_player)===3 && 
                 this.getPlayerOccurrences(window, '')===1) {
-            score-=4
+            score-=5
         }
         return player === 'p2' ? score : -score
     }

@@ -4,6 +4,8 @@ import { playSound} from './main-menu.ts';
 import { SettingsStore } from './utils/settings-store.ts'
 import { tokenColor } from './enums.ts';
 import { TokenInfo } from './utils/token-info.ts';
+import buttonwav from '../button.wav'
+import tokenwav from '../token.wav'
 
 @customElement('replay-page')
 export class ReplayPage extends LitElement {
@@ -18,7 +20,7 @@ export class ReplayPage extends LitElement {
   
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
     
   }
 
@@ -67,12 +69,10 @@ export class ReplayPage extends LitElement {
 
   private onTriggerReplay() {
     if (this.slideIndex == 0) {
-      console.log("Replay Started")
       for (let i = 0; i < this.moves.length; i++) {
         setTimeout(() => this.updateCell(), 900 * i);
       }
     } else if (this.slideIndex == this.moves.length) {
-      console.log("Resetting")
       this.slideIndex = 0;
       this.initBoard();
     }
@@ -108,9 +108,9 @@ export class ReplayPage extends LitElement {
 
   private handleAnimationEnd() {
     if (this.slideIndex != this.moves.length) {
-      playSound('token.wav')
+      playSound(tokenwav)
     } else {
-      playSound('button.wav')
+      playSound(buttonwav)
     }
   }
 

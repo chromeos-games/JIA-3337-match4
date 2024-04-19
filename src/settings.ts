@@ -4,6 +4,9 @@ import {playSound} from './main-menu.ts';
 import { style } from './style.ts';
 import { SettingsStore } from './utils/settings-store.ts';
 import { tokenColor } from './enums.ts';
+import volume_up from './assets/volume-up.png';
+import volume_off from './assets/volume-off.png';
+import buttonwav from '../button.wav'
 @customElement('settings-page')
 export class SettingsPage extends LitElement {
   @property({ type: tokenColor }) selectedColorPlayer1 = SettingsStore.player1TokenColor;
@@ -11,7 +14,7 @@ export class SettingsPage extends LitElement {
   
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
 
   }
 
@@ -30,17 +33,16 @@ export class SettingsPage extends LitElement {
       this.selectedColorPlayer2 = color;
       SettingsStore.player2TokenColor = color;
     }
-    playSound('button.wav');
+    playSound(buttonwav);
   }
 
   updateSlider(value: number) {
     
     SettingsStore.volume = value
-    playSound('button.wav')
+    playSound(buttonwav)
   }
 
   updateScale(value: number) {
-    console.log(value)
     SettingsStore.scale = value
   }
     render() {
@@ -49,9 +51,9 @@ export class SettingsPage extends LitElement {
             Back
           </button>
         <h1 class='h1'>Settings</h1>
-        <img src="src/assets/volume-off.svg" alt="volume-off" style="width:50px;height:50px;"/>
+        <img src=${volume_off} alt="volume-off" style="width:40px;height:40px;"/>
             <input class="slider" id="vol_input" value=${SettingsStore.volume} type="range" min="0" max="1" step="0.01" @change=${(e: { target: { value: string; }; }) => this.updateSlider(parseFloat(e.target.value))} />
-        <img src="src/assets/volume-up.svg" alt="volume-up" style="width:50px;height:50px;"/>
+        <img src=${volume_up} alt="volume-up" style="width:40px;height:40px;"/>
   
         <div id="display-message"></div>
     <h2>Game Scale:
@@ -93,7 +95,6 @@ export class SettingsPage extends LitElement {
     }
 
     private _onClickBack() {
-        console.log("Back Clicked")
         window.history.back()
       }
 

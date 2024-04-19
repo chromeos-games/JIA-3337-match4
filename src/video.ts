@@ -1,7 +1,8 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property} from 'lit/decorators.js'
 import { playSound} from './main-menu.ts';
-
+import buttonwav from '../button.wav'
+import tokenwav from '../token.wav'
 @customElement('video-page')
 export class VideoPage extends LitElement {
   @property({ type: Array }) board: string[][] = [];
@@ -13,7 +14,7 @@ export class VideoPage extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
     
   }
 
@@ -57,7 +58,6 @@ export class VideoPage extends LitElement {
   
 
   private onTriggerTutorial() {
-    console.log("Tutorial Started")
     if (this.slideIndex == 0) {
       for (let i = 0; i < this.moves.length; i++) {
         setTimeout(() => this.updateCell(), 900 * i);
@@ -83,11 +83,9 @@ export class VideoPage extends LitElement {
   }
 
   private updateCell() {
-    console.log("Cell Updated")
     const col = this.moves[this.slideIndex];
     const row = this.findAvailableRow(col);
     this.slideIndex++;
-    console.log("Row: " + row + " Col: " + col)
     if (row !== -1) {
       this.board[row][col] = this.currentPlayer;
       this.currentPlayer = this.currentPlayer === 'Red' ? 'Yellow' : 'Red';
@@ -109,9 +107,9 @@ export class VideoPage extends LitElement {
 
   private handleAnimationEnd() {
     if (this.slideIndex != this.moves.length) {
-      playSound('token.wav')
+      playSound(tokenwav)
     } else {
-      playSound('button.wav')
+      playSound(buttonwav)
     }
   }
 

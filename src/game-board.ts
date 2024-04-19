@@ -5,7 +5,8 @@ import { SettingsStore } from './utils/settings-store.ts'
 import { BoardController } from './board-controller.ts'
 import { ReplayStore } from './utils/replay-store.ts'
 import { Leaderboard } from './utils/leaderboard-store.ts'
-
+import buttonwav from '../button.wav'
+import tokenwav from '../token.wav'
 @customElement('game-board')
 export class gameBoardView extends LitElement {
 
@@ -29,7 +30,7 @@ export class gameBoardView extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
   }
 
   constructor() {
@@ -58,20 +59,17 @@ export class gameBoardView extends LitElement {
             ? html`<div class="token" style="background-color: ${this.getColorForPlayer(player)}; --rowIndex: ${rowIndex};"></div>`
             : null
           }
+          ${this.columnHoverIndex == colIndex && (player == null) && (rowIndex == 5 || this.boardController.board.board[rowIndex + 1][colIndex] !== "") ?
+            html`
+            <div class="token"
+                style="opacity:${this.botMoving ? 0 : .3}; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
+                        --rowIndex: ${rowIndex}; animation: null;">
+            </div>` : null
+        } 
               </div>
             `
       )
     )}
-        ${this.columnHoverIndex >= 0 ?
-            html`
-            <div class="translucent-token"
-                style="opacity:${this.botMoving ? 0 : .3}; background-color: ${this.getColorForPlayer(this.boardController.currentPlayerID)};
-                        left: ${this.columnHoverIndex * 55 + 1}px;
-                        top: ${this.boardController.checkValidColumn(this.viewBoard, this.columnHoverIndex) * 57 + 70.5}px;">
-            </div>` : null
-        }  
-      </div>
-      </div>
       </div>
       <div class="${this.shouldShowWinWindow() ? 'winHolder' : 'hidden'}">
           <div class ="${this.shouldShowWinWindow() ? 'winWindow' : 'hidden'}">
@@ -139,7 +137,6 @@ export class gameBoardView extends LitElement {
 
   private handleCellClick(col: number) {
     if (!this.enableMoves || this.win || this.botMoving || this.pause) {
-      console.log("Moves are disabled")
       return
     }
     else {
@@ -182,13 +179,43 @@ export class gameBoardView extends LitElement {
     }
     if (keycode === "ArrowLeft" && this.columnHoverIndex > 0) {
       this.columnHoverIndex--
+      while(this.columnHoverIndex > 0 && this.boardController.board.board[0][this.columnHoverIndex] !== "") {
+        this.columnHoverIndex--
+      }
     }
     if (keycode === "ArrowRight" && this.columnHoverIndex < 6) {
-      this.columnHoverIndex++
+        this.columnHoverIndex++
+      while(this.columnHoverIndex < 6 && this.boardController.board.board[0][this.columnHoverIndex] !== "") {
+        this.columnHoverIndex++
+      }
     }
     if (keycode === "KeyX" && this.columnHoverIndex >= 0) {
       this.handleCellClick(this.columnHoverIndex)
     }
+
+    if (keycode === "Digit1") {
+      this.handleCellClick(0)
+    }
+    if (keycode === "Digit2") {
+      this.handleCellClick(1)
+    }
+    if (keycode === "Digit3") {
+      this.handleCellClick(2)
+    }
+    if (keycode === "Digit4") {
+      this.handleCellClick(3)
+    }
+    if (keycode === "Digit5") {
+      this.handleCellClick(4)
+    }
+    if (keycode === "Digit6") {
+      this.handleCellClick(5)
+    }
+    if (keycode === "Digit7") {
+      this.handleCellClick(6)
+    }
+    
+    
   }
 
   private doBotMove() {
@@ -208,38 +235,39 @@ export class gameBoardView extends LitElement {
   }
 
   private handleWin() {
-    setTimeout(function () { playSound('button.wav') }, 2500)
+    setTimeout(function () { playSound(buttonwav) }, 2500)
     setTimeout(() => { this.displayWin = true }, 2500)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game)
+    SettingsStore.curr_game = ''
     this.handleColumnHoverEnd();
     this.updateLeaderboard();
-    console.log("Game Won!")
   }
 
   private updateLeaderboard() {
     const winningPlayerName = this.getNameOfPlayer(this.boardController.currentPlayerID);
     const LosingPlayerName = this.getNameOfLosingPlayer(this.boardController.currentPlayerID);
     Leaderboard.updateLeaderboard(winningPlayerName, LosingPlayerName);
-    
   }
 
   private handleDraw() {
-    setTimeout(function () { playSound('button.wav') }, 800)
+    setTimeout(function () { playSound(buttonwav) }, 800)
     setTimeout(() => { this.displayDraw = true }, 800)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game);
-    console.log("Game draw.")
+    SettingsStore.curr_game = ''
   }
 
   private onClickMainMenu() {
-    window.location.href = '/'
+    window.history.go(-2)
+
   }
 
   private onClickForfeit() {
-    playSound('button.wav')
+    playSound(buttonwav)
     if (this.boardController.forfeit()) {
       this.currentPlayerDidForfeit = true
+      SettingsStore.curr_game = ''
     }
   }
 
@@ -253,7 +281,7 @@ export class gameBoardView extends LitElement {
 
   onMove(row: number, col: number, value: string): void {
     this.viewBoard[row][col] = value
-    playSound('token.wav')
+    playSound(tokenwav)
   }
 
   onWin(winPositions: number[][]) {
@@ -328,14 +356,6 @@ export class gameBoardView extends LitElement {
     border-radius: 50%;
     background-color: var(--player-color);
     animation: drop 0.5s ease-in-out;
-  }
-
-  .translucent-token {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    pointer-events: none;
   }
 
   @keyframes drop {
