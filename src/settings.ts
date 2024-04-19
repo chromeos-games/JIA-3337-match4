@@ -40,7 +40,6 @@ export class SettingsPage extends LitElement {
   }
 
   updateScale(value: number) {
-    console.log(value)
     SettingsStore.scale = value
   }
     render() {
@@ -93,7 +92,6 @@ export class SettingsPage extends LitElement {
     }
 
     private _onClickBack() {
-        console.log("Back Clicked")
         window.history.back()
       }
 

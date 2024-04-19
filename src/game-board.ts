@@ -136,7 +136,6 @@ export class gameBoardView extends LitElement {
 
   private handleCellClick(col: number) {
     if (!this.enableMoves || this.win || this.botMoving || this.pause) {
-      console.log("Moves are disabled")
       return
     }
     else {
@@ -241,7 +240,6 @@ export class gameBoardView extends LitElement {
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game)
     this.handleColumnHoverEnd();
     this.updateLeaderboard();
-    console.log("Game Won!")
   }
 
   private updateLeaderboard() {
@@ -249,8 +247,6 @@ export class gameBoardView extends LitElement {
     const LosingPlayerName = this.getNameOfLosingPlayer(this.boardController.currentPlayerID);
     Leaderboard.updateLeaderboard(winningPlayerName, LosingPlayerName);
     const leaderboard = Leaderboard.getLeaderboard();
-    console.log("Current Leaderboard:", leaderboard);
-    
   }
 
   private handleDraw() {
@@ -258,7 +254,6 @@ export class gameBoardView extends LitElement {
     setTimeout(() => { this.displayDraw = true }, 800)
     this.win = true
     ReplayStore.updateReplays(SettingsStore.p1_name, SettingsStore.p2_name, SettingsStore.curr_game);
-    console.log("Game draw.")
   }
 
   private onClickMainMenu() {

@@ -59,17 +59,14 @@ export class HelpPage extends LitElement {
   }
 
   private _onClickBack() {
-    console.log("Back Clicked")
     window.history.back()
   }
 
   private _onClickTutorial() {
-    console.log("Tutorial Clicked")
     this.navigate("/tutorial")
   }
 
   private _onClickVideo() {
-    console.log("Video Clicked")
     this.navigate("/video")
   }
 
