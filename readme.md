@@ -3,11 +3,17 @@ ChromeOS Game where two players play against each other to create 4 in a row
 
 
 # Install Guide
+## For development
+This project runs on [Node.js](https://nodejs.org/en/) with [LitElement](https://lit.dev/) and [Vite](https://vitejs.dev/).
 
-This project runs on [Node.js](https://nodejs.org/en/) with [LitElement](https://lit.dev/).
+To clone the repo with git, run the following command:
+```
+git clone https://github.com/chromeos-games/JIA-3337-match4.git
+```
 
+You may also download the repo as a zip file using the GitHub repo webpage and extract it to a directory.
 
-First, install Node.js [here](https://nodejs.org/en/download).
+Second, install Node.js [here](https://nodejs.org/en/download).
 
 In the Node.js command prompt, navigate to the repo directory and run the following command:
 ```
@@ -19,7 +25,63 @@ After the files needed to the run project are downloaded, run the following comm
 npm run dev
 ```
 
+Running the command should start a webserver for the project and print out the link that you can open in your browser.
 
+## For Deployment
+Through Vite, it's possible to build the project into static pages and assets that can be deployed in any hosting service like Netlify or Herkou.
+
+### Manual Building
+With Node.js installed according to [their guide](https://nodejs.org/en/download), install the packages by running the following command in the repo directory:
+```
+npm install
+```
+
+Then, build the project by running:
+```
+npm run build
+```
+
+This will generate a directory called dist which should contain static files that can be uploaded at any hosting provider.
+
+### Automatic Deployment
+We have included a GitHub workflow for automatic deployment to GitHub pages which we obtained from [Vite's doucumentation](https://vitejs.dev/guide/static-deploy). Please refer to that page for additional information. 
+
+You may clone the repo and push it to your own repository to use the workflow.
+
+Here are the steps to do so:
+0. You must have the git command line installed on your machine. You can download it [here](https://git-scm.com/downloads).
+1. Create a new repository on GitHub.
+2. Go to settings->pages in your repository
+3. Set the source to GitHub Actions
+4. Clone the repo to your local machine.
+```
+git clone https://github.com/chromeos-games/JIA-3337-match4.git
+```
+5. Change the remote URL to your new repository.
+Here's an example of how to do it, you may also refer to the [GitHub documentation](https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories) for more information.
+```
+git remote set-url origin ***your-repository-url***.git
+```
+6. Push the changes to your repository.
+```
+git push -u origin main
+```
+
+The workflow should automatically deploy the project to GitHub pages. You can access the deployed project by going to the settings->pages in your repository and clicking on the link provided.
+
+## Common Issues
+
+### Node.js not installed
+If you encounter an error that says "npm is not recognized as an internal or external command", you may not have Node.js installed on your machine. Please refer to the [Node.js website](https://nodejs.org/en/download) to download and install Node.js.
+
+### Packages installation failed
+Please make sure you have an up to date version of Node.js installed on your machine. You can check the version by running the following command:
+```
+node -v
+```
+We have tested the project on Node.js version 20.9.0.
+
+If you encounter any issues with the project, please refer to the [Vite documentation](https://vitejs.dev/guide/) or the [LitElement documentation](https://lit.dev/docs/). Please feel free to als o reach out to the developers of the project for assistance.
 
 # Release Notes
 
