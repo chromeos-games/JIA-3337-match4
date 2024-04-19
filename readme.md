@@ -85,7 +85,7 @@ If you encounter any issues with the project, please refer to the [Vite document
 
 # Release Notes
 
-## Version 0.5.0
+## Version 1.0.0
 ### Features
 * Keyboard shortcuts added
 * Tokens can be played with number keys
