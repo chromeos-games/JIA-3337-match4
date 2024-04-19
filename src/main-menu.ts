@@ -3,11 +3,12 @@ import { customElement } from 'lit/decorators.js'
 import { style } from './style'
 import { SettingsStore } from './utils/settings-store'
 import { buttonColor } from './enums'
+import buttonwav from '../button.wav'
 @customElement('main-menu')
 export class MainMenu extends LitElement {
   connectedCallback() {
     super.connectedCallback()
-    playSound('button.wav')
+    playSound(buttonwav)
   }
 
   render() {
@@ -43,22 +44,22 @@ export class MainMenu extends LitElement {
     `
   }
   private _onClickContinue() {
-    this.navigate("/game")
+    this.navigate("./game")
   }
   private _onClickLocal() {
-    this.navigate("/setup-local")
+    this.navigate("./setup-local")
   }
   private _onClickBot() {
-    this.navigate("/setup-bot")
+    this.navigate("./setup-bot")
   }
   private _onClickHelp() {
-    this.navigate("/help")
+    this.navigate("./help")
   }
   private _onClickSettings() {
-    this.navigate("/settings")
+    this.navigate("./settings")
   }
   private _onClickLeaderboard() {
-    this.navigate("/leaderboard")
+    this.navigate("./leaderboard")
   }
   
   private navigate(location: string) {
@@ -71,7 +72,7 @@ export class MainMenu extends LitElement {
 function playSound(filename: string) {
   var audio = new Audio(filename)
   audio.volume = SettingsStore.volume
-  audio.play().catch(function(error) {
+  audio.play().catch(function() {
   });
 }
 

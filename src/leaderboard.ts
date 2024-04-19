@@ -1,13 +1,17 @@
-import { LitElement, css, html } from 'lit'
-import { customElement, property } from 'lit/decorators.js';
+import { LitElement, TemplateResult, css, html } from 'lit'
+import { customElement } from 'lit/decorators.js';
 import { style } from './style.ts';
 import { Leaderboard } from './utils/leaderboard-store.ts';
 import { ReplayStore } from './utils/replay-store.ts';
 import { SettingsStore } from './utils/settings-store.ts';
-
+import { playSound } from './main-menu.ts';
+import buttonwav from '../button.wav'
 @customElement('leaderboard-page')
 export class LeaderboardPage extends LitElement {
-
+  connectedCallback() {
+    super.connectedCallback()
+    playSound(buttonwav)
+  }
   render() {
     return html`
       <slot> </slot>
@@ -97,7 +101,7 @@ export class LeaderboardPage extends LitElement {
   }
 
   private getReplayButtons() {
-    var buttons = []
+    var buttons: TemplateResult<1>[] = []
     var leaderboard = Leaderboard.getLeaderboard()
     var keys = Object.keys(leaderboard).slice(0,15)
     keys.forEach( (value) =>{
@@ -108,7 +112,8 @@ export class LeaderboardPage extends LitElement {
   }
   
   private onClickBack() {
-    window.location.href = '/'
+    window.history.back()
+
   }
 
 
@@ -126,7 +131,7 @@ export class LeaderboardPage extends LitElement {
         break
       }
     }
-    this.navigate("/replay")
+    this.navigate("./replay")
   }
   
   private navigate(location: string) {
