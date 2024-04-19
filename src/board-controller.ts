@@ -96,18 +96,19 @@ export class BoardController {
         } else {
             let board = this.board.getBoard()
             let depth = 1
+            let randomRoll = Math.random()
             if (this.difficulty == 'easy') {
-                if (Math.random() < .7) {
+                if (randomRoll < .7) {
                     return this.getRandomMove()
                 }
                 depth = 2
             } else if (this.difficulty == 'medium') {
-                if (Math.random() < .4) {
+                if (randomRoll < .4) {
                     return this.getRandomMove()
                 }
                 depth = 4
             } else if (this.difficulty == 'hard') {
-                if (Math.random() < .1) {
+                if (randomRoll < .01) {
                     return this.getRandomMove()
                 }
                 depth = 5
@@ -187,7 +188,12 @@ export class BoardController {
             return [selectedCol, min_score]
         }
     }
-    private getValidMoves(board: string[][]) {
+    /**
+     * Get and return list of valid columns and their corresponding rows
+     * @param board 
+     * @returns Array of [row, col] moves that are valid
+     */
+    private getValidMoves(board: string[][]): number[][] {
         const validMoves = []
         for (let col = 0; col < 7; col++){
             let row = this.checkValidColumn(board, col)
