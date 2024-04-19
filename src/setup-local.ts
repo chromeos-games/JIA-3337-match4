@@ -12,6 +12,7 @@ export class SetupPage extends LitElement {
   @property({ type: String }) p2_name = 'Player 2';
   @property({ type: Boolean }) randomize = false;
   @property({ type: Boolean }) p2IsBot = 'false';
+  @property({ type: Boolean}) isTypingName = false;
   connectedCallback() {
     super.connectedCallback()
     playSound(buttonwav)
@@ -53,9 +54,23 @@ export class SetupPage extends LitElement {
 
   updated() {
     this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+    const p1NameField = this.shadowRoot?.getElementById('p1_name') as HTMLInputElement
+    p1NameField.addEventListener('focus', () => {
+      this.isTypingName = true;
+    });
+    p1NameField.addEventListener('blur', () => {
+      this.isTypingName = false;
+    });
+    const p2NameField = this.shadowRoot?.getElementById('p2_name') as HTMLInputElement
+    p2NameField.addEventListener('focus', () => {
+      this.isTypingName = true;
+    });
+    p2NameField.addEventListener('blur', () => {
+      this.isTypingName = false;
+    });
   }
   private keydown(e: Event) {
-    if ((e as KeyboardEvent).code === "Escape" || (e as KeyboardEvent).code === "KeyB") {
+    if ((e as KeyboardEvent).code === "Escape" || ((e as KeyboardEvent).code === "KeyB" && !this.isTypingName)) {
       this.onClickBack()
     }
     if((e as KeyboardEvent).code === "Enter") {
