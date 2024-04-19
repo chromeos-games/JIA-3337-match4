@@ -38,7 +38,6 @@ export class BoardController {
                 this.makeMove(parseInt(SettingsStore.curr_game[i]), false) // don't store already stored moves
             }
         } else {
-            SettingsStore.curr_game = this.firstPlayer === 'p1' ? '0' : '1'
             if(this.firstPlayer === 'p2' && this.difficulty !== '') {
                 // make move when bot goes first, difficulty will be empty if no bot
                 this.makeMove(this.getBotMove())
@@ -114,7 +113,6 @@ export class BoardController {
                 depth = 5
             } 
             let vals = this.minMaxSolver(board, depth, -99999, 99999, 'p2')
-            console.log("move: " + vals[0] + " score: " + vals[1])
             return vals[0]
         }
     }
