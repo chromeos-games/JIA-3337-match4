@@ -61,6 +61,7 @@ export class LeaderboardPage extends LitElement {
     var winrateList = "";
 
     var leaderboard = Leaderboard.getLeaderboard()
+    
 
     var keys = Object.keys(leaderboard).slice(0,15)
 
@@ -107,13 +108,11 @@ export class LeaderboardPage extends LitElement {
   }
   
   private onClickBack() {
-    console.log("Back to Main Menu")
     window.location.href = '/'
   }
 
 
   private _onClickReset() {
-    console.log("Reset Clicked")
     Leaderboard.resetLeaderboard()
     ReplayStore.resetReplays()
   }

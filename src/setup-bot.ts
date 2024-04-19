@@ -65,16 +65,13 @@ export class SetupPage extends LitElement {
 
   private _onClickRadio(e: { target: { value: string; }; }) {
     this.firstPlayer = e.target.value
-    console.log(this.firstPlayer)
   }
 
   private onClickRandom(e: { target: { style: { backgroundColor: string; }; }; }) {
     this.randomize = !this.randomize
     e.target.style.backgroundColor = this.randomize ? buttonColor.Orange: ""
-    console.log("randomize: " + this.randomize)
     
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
-    console.log(radios)
     if (radios) {
       radios.forEach((element) => element.disabled = this.randomize ? true : false)
     }
@@ -82,7 +79,6 @@ export class SetupPage extends LitElement {
 
   private onChangeP1Name(e: {target: { value: string; }}){
     this.p1_name = e.target.value
-    console.log(e.target.value)
   }
 
   private onClickEasy(){
@@ -92,7 +88,6 @@ export class SetupPage extends LitElement {
     if (button) {
       button.style.backgroundColor = buttonColor.Green;
     }
-    console.log('easy')
   }
   private onClickMedium(){
     this.difficulty = 'medium'
@@ -101,7 +96,6 @@ export class SetupPage extends LitElement {
     if (button) {
       button.style.backgroundColor = buttonColor.Yellow;
     }
-    console.log("medium")
   }
   private onClickHard(){
     this.difficulty = 'hard'
@@ -110,7 +104,6 @@ export class SetupPage extends LitElement {
     if (button) {
       button.style.backgroundColor = buttonColor.Red;
     }
-    console.log('hard')
   }
 
   private resetButtons(){
@@ -121,7 +114,6 @@ export class SetupPage extends LitElement {
   }
 
   private _onClickStart() {
-    console.log("Start Clicked")
     SettingsStore.firstPlayer = this.randomize ? (Math.random() < 0.5 ? 'p1' : 'p2'): this.firstPlayer
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name
@@ -132,7 +124,6 @@ export class SetupPage extends LitElement {
   }
 
   private onClickBack() {
-    console.log("Back to Main Menu")
     window.location.href = '/'
   }
 

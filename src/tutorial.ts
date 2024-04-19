@@ -14,7 +14,6 @@ export class tutorialBoard extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-  
     playSound('button.wav')
   }
 
@@ -62,14 +61,11 @@ export class tutorialBoard extends LitElement {
   }
 
   private handleCellClick(col: number) {
-    console.log("Cell Clicked")
     if (!this.enableMoves) {
-      console.log("move disabled")
       return;
     }
     
     const row = this.findAvailableRow(col);
-    console.log("Row: " + row + " Col: " + col)
     if (row !== -1) {
       this.board[row][col] = this.currentPlayer;
       const winner = this.checkWinningNode(this.board);
@@ -97,7 +93,6 @@ export class tutorialBoard extends LitElement {
   }
 
   private onClickMainMenu() {
-    console.log("Main Menu Clicked")
     window.location.href = '/'
   }
 
@@ -137,18 +132,15 @@ export class tutorialBoard extends LitElement {
     }
     // play sound, check win?
     playSound('token.wav')
-    // console.log("Animation Ended")
     this.enableMoves = true;
     // Simulate opponent's move. Tutorial opponent cannot act intelligently.
     if (this.currentPlayer === 'Yellow') {
-        //console.log("Simulating Opponent's Move")
         this.handleCellClick(Math.floor(Math.random() * 7));
     }
   }
 
   private checkWinningNode(board: string[][]): string{
     //Horizontal
-    console.log(this.currentPlayer)
     
     for (let col = 0; col < 7-3; col++){
         for (let row = 0; row < 6; row++){
@@ -190,7 +182,6 @@ export class tutorialBoard extends LitElement {
 }
 
   private onClickBack() {
-    console.log("Back Clicked")
     window.history.back()
   }
 

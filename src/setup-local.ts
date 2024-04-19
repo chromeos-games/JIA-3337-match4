@@ -20,17 +20,17 @@ export class SetupPage extends LitElement {
       </button>
       <div class="card-deck">
       <div class="card">
-          <input type="text" id = "p1_name" style = "position:relative; right:70px"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
-          <input type="text" id = "p2_name" style = "position:relative; left:70px"  placeholder = "Player 2 Name" @change=${this.onChangeP2Name}/>
+          <input type="text" id = "p1_name" style = "position:relative; right:70px; width: 200px; height: 30px; font-size: 16px"  placeholder = "Player 1 Name" @change=${this.onChangeP1Name}/>
+          <input type="text" id = "p2_name" style = "position:relative; left:70px; width: 200px; height: 30px; font-size: 16px"  placeholder = "Player 2 Name" @change=${this.onChangeP2Name}/>
         <br>
         <br>
-        <legend>Select Who Goes First</legend>
+        <h2>Select Who Goes First</h2>
         <input type="radio" id = "p1" style = "position:relative; right:120px" value = "p1" name="firstPlayer"
             ?checked=${this.firstPlayer === 'p1'} @change=${this._onClickRadio}/>
-            <label style = "position:relative; right:120px" for="p1"> Player 1 </label>
+            <label style = "position:relative; right:120px; font-size: 18px; " for="p1"> Player 1 </label>
           <input type="radio" id = "p2" style = "position:relative; left:100px" value = "p2" name="firstPlayer"
             ?checked=${this.firstPlayer === 'p2'} @change=${this._onClickRadio} />
-            <label style = "position:relative; left:100px" for= "p2"> Player 2 </label>
+            <label style = "position:relative; left:100px; font-size: 18px; " for= "p2"> Player 2 </label>
         </div>
         <div class="card">
           <button @click=${this.onClickRandom} part="button" style = "position:relative; height:55px;">
@@ -60,14 +60,16 @@ export class SetupPage extends LitElement {
 
   private _onClickRadio(e: { target: { value: string; }; }) {
     this.firstPlayer = e.target.value
-    console.log(this.firstPlayer)
   }
 
   private onClickRandom(e: { target: { style: string; }; }) {
     this.randomize = !this.randomize
     e.target.style.backgroundColor = this.randomize ? buttonColor.Orange : ""
-    console.log("randomize: " + this.randomize)
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
+    radios.forEach(radio => {
+      radio.disabled = this.randomize;
+      }); 
+    
     console.log(radios)
     //if (radios) {
     //radios.forEach((element) => element.disabled = this.randomize ? true : false)
@@ -76,22 +78,18 @@ export class SetupPage extends LitElement {
 
   private onChangeP1Name(e: {target: { value: string; }}){
     this.p1_name = e.target.value
-    console.log(e.target.value)
   }
 
   private onChangeP2Name(e: {target: { value: string; }}){
     this.p2_name = e.target.value
-    console.log(e.target.value)
   }
 
   private onClickBack() {
-    console.log("Back to Main Menu")
     window.location.href = '/'
   }
 
 
   private _onClickStart() {
-    console.log("Start Clicked")
     SettingsStore.firstPlayer = this.randomize ? (Math.random() < 0.5 ? 'p1' : 'p2'): this.firstPlayer
     SettingsStore.p1_name = this.p1_name
     SettingsStore.p2_name = this.p2_name
