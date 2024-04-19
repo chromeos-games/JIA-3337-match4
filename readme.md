@@ -4,6 +4,23 @@ ChromeOS Game where two players play against each other to create 4 in a row
 
 # Release Notes
 
+## Version 0.5.0
+### Features
+* Keyboard shortcuts added
+* Tokens can be played with number keys
+* Tokens can be played with arrow keys
+* Game can be paused and played with keyboard
+
+### Bug Fixes
+* Fixed the continue button showing up when there is no game to continue
+* Fixed tutorial not finishing when 4 in a row is achieved
+* Fixed the back button and pause button position
+* Fixed bot difficulty weights to make their behavior less random
+
+### Known Issues
+* Various game replay issues
+
+
 ## Version 0.4.0
 ### Features
 * Game can be paused midgame
