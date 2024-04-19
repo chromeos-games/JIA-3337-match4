@@ -14,7 +14,6 @@ export class tutorialBoard extends LitElement {
 
   connectedCallback() {
     super.connectedCallback()
-  
     playSound('button.wav')
   }
 
