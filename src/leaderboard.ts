@@ -61,6 +61,7 @@ export class LeaderboardPage extends LitElement {
     var winrateList = "";
 
     var leaderboard = Leaderboard.getLeaderboard()
+    
 
     var keys = Object.keys(leaderboard).slice(0,15)
 
