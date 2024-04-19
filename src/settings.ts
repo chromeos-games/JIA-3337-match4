@@ -49,9 +49,9 @@ export class SettingsPage extends LitElement {
             Back
           </button>
         <h1 class='h1'>Settings</h1>
-        <img src="src/assets/volume-off.svg" alt="volume-off" style="width:50px;height:50px;"/>
+        <img src="src/assets/volume-off.png" alt="volume-off" style="width:40px;height:40px;"/>
             <input class="slider" id="vol_input" value=${SettingsStore.volume} type="range" min="0" max="1" step="0.01" @change=${(e: { target: { value: string; }; }) => this.updateSlider(parseFloat(e.target.value))} />
-        <img src="src/assets/volume-up.svg" alt="volume-up" style="width:50px;height:50px;"/>
+        <img src="src/assets/volume-up.png" alt="volume-up" style="width:50px;height:50px;"/>
   
         <div id="display-message"></div>
     <h2>Game Scale:
