@@ -36,7 +36,7 @@ export class HelpPage extends LitElement {
       </div>  
       
       <div class="card">
-        <p> Two players will alternate turns. <br>
+        <p style = "font-size: 18px; margin-bottom: 70px;"> Two players will alternate turns. <br>
             Click on a column to drop a disc of your color into that column of the game board. <br>
             Alternatively, you may use the left and right arrow keys to select a column and drop your disc with the 'x' key. <br>
             The first player to match four in a row of their color discs is the winner. </p>
