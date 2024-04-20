@@ -60,6 +60,12 @@ export class SettingsStore {
     static set firstPlayer(value: string) {
         Storage.set('firstPlayer', value)
     }
+    static get forfeit(): string {
+        return Storage.get('currentPlayerID')
+    }
+    static set forfeit(value: string) {
+        Storage.set('currentPlayerID', value)
+    }
 
     static get p1_name(): string {
         return Storage.get('p1_name')

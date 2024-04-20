@@ -11,6 +11,7 @@ export class BoardController {
     currentPlayerID: string = this.firstPlayer
     difficulty: string = SettingsStore.difficulty
     p2IsBot: boolean = SettingsStore.p2IsBot
+    storedForfeit: string = SettingsStore.forfeit
     // view
     view: gameBoardView
     // board
@@ -23,22 +24,17 @@ export class BoardController {
 
     initBoard() {
         if (SettingsStore.curr_game.length != 0) {
-            //Set the correct current player
-            if (parseInt(SettingsStore.curr_game[0]) === 0) {
-                this.currentPlayerID = "p1"
-            } else {
-                this.currentPlayerID = "p2"
-            }
-
-            for (let i = 1; i < SettingsStore.curr_game.length; i++) {
-                if (SettingsStore.curr_game[i] === 'f') {
+            console.log('loading previous game')
+            for (let i = 0; i < SettingsStore.curr_game.length; i++) {
+                if (this.storedForfeit === 'true') {
                     this.currentPlayerDidForfeit = true
                     break
                 }
                 this.makeMove(parseInt(SettingsStore.curr_game[i]), false) // don't store already stored moves
             }
         } else {
-            SettingsStore.curr_game = this.firstPlayer === 'p1' ? '0' : '1'
+            SettingsStore.firstPlayer = this.firstPlayer
+            SettingsStore.forfeit = 'false'
             if(this.firstPlayer === 'p2' && this.difficulty !== '') {
                 // make move when bot goes first, difficulty will be empty if no bot
                 this.makeMove(this.getBotMove())
@@ -51,7 +47,7 @@ export class BoardController {
         if (this.win || this.currentPlayerDidForfeit || botsTurn) {
             return false
         }
-        SettingsStore.curr_game += 'f'
+        SettingsStore.forfeit = 'true'
         this.currentPlayerDidForfeit = true
         return true
     }
