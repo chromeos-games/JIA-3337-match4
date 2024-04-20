@@ -161,6 +161,11 @@ export class gameBoardView extends LitElement {
       }
     }
     this.getRootNode().addEventListener('keydown', (e: Event) => this.keydown(e));
+    window.addEventListener("keydown", function(e) {
+      if(["Space","ArrowUp","ArrowDown"].indexOf(e.code) > -1) {
+          e.preventDefault();
+      }
+  }, false);
   }
 
   private keydown(e: Event) {
@@ -189,7 +194,7 @@ export class gameBoardView extends LitElement {
         this.columnHoverIndex++
       }
     }
-    if (keycode === "KeyX" && this.columnHoverIndex >= 0) {
+    if ((keycode === "KeyX" || keycode === "ArrowDown" || keycode === "Space") && this.columnHoverIndex >= 0) {
       this.handleCellClick(this.columnHoverIndex)
     }
 

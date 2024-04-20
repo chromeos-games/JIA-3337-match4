@@ -110,7 +110,6 @@ export class BoardController {
                 depth = 5
             } 
             let vals = this.minMaxSolver(board, depth, -99999, 99999, 'p2')
-            console.log("move: " + vals[0] + " score: " + vals[1])
             return vals[0]
         }
     }

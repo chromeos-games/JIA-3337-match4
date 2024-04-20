@@ -87,7 +87,6 @@ export class SetupPage extends LitElement {
     e.target.style.backgroundColor = this.randomize ? buttonColor.Orange : ""
     const radios = this.shadowRoot?.querySelectorAll('[name="firstPlayer"]') as NodeListOf<HTMLElement> | null;
     
-    console.log(radios)
     if (radios) {
       radios.forEach((element) => (element as HTMLButtonElement).disabled = this.randomize ? true : false)
     }
