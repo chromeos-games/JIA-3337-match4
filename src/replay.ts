@@ -103,6 +103,7 @@ export class ReplayPage extends LitElement {
   }
 
   private onClickBack() {
+    SettingsStore.curr_replay = ''
     window.history.back()
   }
 
