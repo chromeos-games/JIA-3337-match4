@@ -13,6 +13,7 @@ export class LeaderboardPage extends LitElement {
     playSound(buttonwav)
   }
   render() {
+    console.log(ReplayStore.getReplays())
     return html`
       <slot> </slot>
       <button @click=${this.onClickBack} part="button" style = "position:relative; right:788px; bottom:95px; height:75px; width:75px">
@@ -126,7 +127,7 @@ export class LeaderboardPage extends LitElement {
     let allReplays = ReplayStore.getReplays()
     //iterate through array backwards to put most recent games first
     for (let i = allReplays.length - 1; i >= 0; i--) {
-      if (allReplays[i][0] === value || allReplays[i][2] === value) {
+      if (allReplays[i][0] === value || allReplays[i][1] === value) {
         SettingsStore.curr_replay = allReplays[i].join("_")
         break
       }

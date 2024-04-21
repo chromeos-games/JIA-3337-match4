@@ -34,6 +34,7 @@ export class ReplayPage extends LitElement {
   }
 
   render() {
+  console.log(SettingsStore.curr_replay)
     return html`
       <div style="display: flex; flex-direction: column; align-items: center;">
       <h1>Match 4 <span style = "color:${this.getColorForPlayer(this.currentPlayer)}"> ${this.currentPlayer}'s</span> turn</h1>
@@ -103,6 +104,7 @@ export class ReplayPage extends LitElement {
   }
 
   private onClickBack() {
+    SettingsStore.curr_replay = ''
     window.history.back()
   }
 
