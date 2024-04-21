@@ -33,7 +33,6 @@ export class ReplayStore {
         let saveString = [p1Name , p2Name , gameString]
         replays.push(saveString)
         this.setReplays(replays);
-        console.log(replays)
     }
     static resetReplays(): void {
         const replays = new Array<Array<String>>();

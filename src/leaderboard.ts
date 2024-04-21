@@ -13,7 +13,6 @@ export class LeaderboardPage extends LitElement {
     playSound(buttonwav)
   }
   render() {
-    console.log(ReplayStore.getReplays())
     return html`
       <slot> </slot>
       <button @click=${this.onClickBack} part="button" style = "position:relative; right:788px; bottom:95px; height:75px; width:75px">
